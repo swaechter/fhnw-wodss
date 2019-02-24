@@ -1,7 +1,5 @@
-package ch.fhnw.wodss.webapplication.configuration;
+package ch.fhnw.wodss.webapplication.components.accounts;
 
-import ch.fhnw.wodss.webapplication.components.accounts.Account;
-import ch.fhnw.wodss.webapplication.components.accounts.AccountService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -29,17 +27,11 @@ public class AccountUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(userName);
         }
 
-        // NOTE: An authority without a ROLE_ prefix is an authority, one with the prefix a role
+        // NOTE: An authority without a ROLE_ prefix is an authority, one with the prefix a Role
         // For more information see: http://www.baeldung.com/spring-security-granted-authority-vs-role
         Account realAccount = account.get();
         ArrayList<GrantedAuthority> authority = new ArrayList<>();
-        if (realAccount.getAccountType() == Account.AccountType.USER) {
-            authority.add(new SimpleGrantedAuthority("ROLE_USER"));
-        } else if (realAccount.getAccountType() == Account.AccountType.ADIMN) {
-            authority.add(new SimpleGrantedAuthority("ROLE_USER"));
-            authority.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
-
+        authority.add(new SimpleGrantedAuthority(realAccount.getRole().getName()));
         return new User(realAccount.getUserName(), realAccount.getPasswordHash(), authority);
     }
 }

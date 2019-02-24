@@ -1,41 +1,41 @@
 package ch.fhnw.wodss.webapplication.components.accounts;
 
+import ch.fhnw.wodss.webapplication.components.roles.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table
+@Table(name = "ACCOUNT")
 public class Account {
 
-    public enum AccountType {
-        USER,
-        ADIMN
-    }
-
     @Id
+    @Column(name = "ACCOUNT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "USERNAME", nullable = false)
     private String userName;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "PASSWORD_HASH", nullable = false)
+    @JsonIgnore // Don't show the password hash to the client
     private String passwordHash;
 
-    @NotNull
-    @Column(nullable = false)
-    private AccountType accountType;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ROLE_ID") // TODO: Use a DTO with the role ID to break up the entity relationship
+    private Role role; // TODO: Use a better one-to-many relationship + JPQL (Minimized queries)
 
     // Mandatory JPA default constructor
     public Account() {
     }
 
-    public Account(String userName, String passwordHash, AccountType accountType) {
+    public Account(String userName, String passwordHash, Role role) {
         this.userName = userName;
         this.passwordHash = passwordHash;
-        this.accountType = accountType;
+        this.role = role;
     }
 
     public Long getId() {
@@ -62,11 +62,11 @@ public class Account {
         this.passwordHash = passwordHash;
     }
 
-    public AccountType getAccountType() {
-        return accountType;
+    public Role getRole() {
+        return role;
     }
 
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

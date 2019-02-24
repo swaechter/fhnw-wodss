@@ -1,8 +1,10 @@
 package ch.fhnw.wodss.webapplication.components.accounts;
 
+import ch.fhnw.wodss.webapplication.components.roles.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,8 +19,8 @@ public class AccountService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Account createAccount(String userName, String rawPassword, Account.AccountType accountType) {
-        Account account = new Account(userName, passwordEncoder.encode(rawPassword), accountType);
+    public Account createAccount(String userName, String rawPassword, Role role) {
+        Account account = new Account(userName, passwordEncoder.encode(rawPassword), role);
         accountRepository.save(account);
         return account;
     }
@@ -29,5 +31,9 @@ public class AccountService {
 
     public Optional<Account> getAccount(String userName, String passwordHash) {
         return accountRepository.getAccountByUserNameAndPasswordHash(userName, passwordHash);
+    }
+
+    public List<Account> getAccounts() {
+        return accountRepository.findAll();
     }
 }
