@@ -1,31 +1,27 @@
 package ch.fhnw.wodss.webapplication.configuration;
 
-import ch.fhnw.wodss.webapplication.components.accounts.AccountUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final AccountUserDetailsService accountUserDetailsService;
+    /*private final EmployeeDetailsService employeeDetailsService;
 
-    public SecurityConfiguration(AccountUserDetailsService accountUserDetailsService) {
-        this.accountUserDetailsService = accountUserDetailsService;
+    public SecurityConfiguration(EmployeeDetailsService employeeDetailsService) {
+        this.employeeDetailsService = employeeDetailsService;
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder authenticationbuilder) throws Exception {
         // Provide a username/password based user detail service
-        authenticationbuilder.userDetailsService(accountUserDetailsService);
-    }
+        authenticationbuilder.userDetailsService(employeeDetailsService);
+    }*/
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        // Enable basic authentication
+        /*// Enable basic authentication
         // TODO: Force people to use this example with transport layer security-only
         httpSecurity
             .httpBasic();
@@ -35,9 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity
             .authorizeRequests()
             .antMatchers("/").permitAll()
-            .antMatchers("/api/**").hasAnyRole("USER", "ADMIN")
-            .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-            .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/api/**").hasAnyRole("ADMINISTRATOR", "PROJECTMANAGER", "DEVELOPER")
             .anyRequest().authenticated();
 
         // Enable CSRF: Write the CSRF token a client-side accessible cookie, but also accept it via header value. For more information see:
@@ -53,6 +47,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .logout()
             .logoutUrl("/logout") // Has to be triggered via POST
             .invalidateHttpSession(true)
-            .deleteCookies("JSESSIONID");
+            .deleteCookies("JSESSIONID");*/
     }
 }

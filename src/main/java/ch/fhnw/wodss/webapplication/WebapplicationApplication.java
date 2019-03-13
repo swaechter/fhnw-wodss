@@ -1,12 +1,7 @@
 package ch.fhnw.wodss.webapplication;
 
-import ch.fhnw.wodss.webapplication.components.accounts.AccountService;
-import ch.fhnw.wodss.webapplication.components.roles.Role;
-import ch.fhnw.wodss.webapplication.components.roles.RoleService;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.stereotype.Service;
 
 @SpringBootApplication
 public class WebapplicationApplication {
@@ -15,7 +10,7 @@ public class WebapplicationApplication {
         SpringApplication.run(WebapplicationApplication.class, args);
     }
 
-    @Service
+/*    @Service
     public class AccountRunner implements CommandLineRunner {
 
         private final RoleService roleService;
@@ -35,6 +30,5 @@ public class WebapplicationApplication {
             accountService.createAccount("user", "user", userRole);
             accountService.createAccount("admin", "admin", adminRole);
         }
-    }
-
+    }*/
 }
