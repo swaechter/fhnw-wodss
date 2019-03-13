@@ -28,7 +28,7 @@ public class AllocationController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "New allocation with the generated ID"),
         @ApiResponse(code = 403, message = "Missing permission to create a allocation"),
-        @ApiResponse(code = 404, message = "Contract or project not found"),
+        @ApiResponse(code = 404, message = "Employee or project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Allocation> createAllocation(
@@ -42,6 +42,7 @@ public class AllocationController {
     @ApiOperation("Get all allocations")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "All allocations (Administrator) or only the own ones (Project Manager/Developer)"),
+        @ApiResponse(code = 404, message = "Employee or project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Allocation> getAllocations(
@@ -71,7 +72,7 @@ public class AllocationController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific updated allocation"),
         @ApiResponse(code = 403, message = "Missing permission to update this allocation"),
-        @ApiResponse(code = 404, message = "Allocation, contract or project not found"),
+        @ApiResponse(code = 404, message = "Allocation, employee or project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Allocation> updateAllocation(
