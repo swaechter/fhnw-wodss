@@ -29,7 +29,7 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Allocation> createAllocation(
-        @Valid @RequestBody @ApiParam("Allocation to create (The ID in the body will be ignored)") Allocation allocation
+        @Valid @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) Allocation allocation
     ) {
         allocation = allocationService.createAllocation(allocation);
         return new ResponseEntity<>(allocation, HttpStatus.CREATED);
@@ -43,8 +43,8 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Allocation> getAllocations(
-        @RequestParam(value = "employeeId", required = false) @ApiParam("Filter the allocations by an employee (Multiple filters can stack)") Long employeeId,
-        @RequestParam(value = "projectId", required = false) @ApiParam("Filter the allocations by a project (Multiple filters can stack)") Long projectId
+        @RequestParam(value = "employeeId", required = false) @ApiParam(value = "Filter the allocations by an employee (Multiple filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long employeeId,
+        @RequestParam(value = "projectId", required = false) @ApiParam(value = "Filter the allocations by a project (Multiple filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectId
     ) {
         return allocationService.getAllocations(employeeId, projectId);
     }
@@ -58,7 +58,7 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Allocation> getAllocation(
-        @PathVariable("id") @ApiParam("ID of the allocation") long id
+        @PathVariable("id") @ApiParam(value = "ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         Allocation allocation = allocationService.getAllocation(id);
         return new ResponseEntity<>(allocation, HttpStatus.OK);
@@ -74,8 +74,8 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Allocation> updateAllocation(
-        @PathVariable("id") @ApiParam("ID of the allocation to be updated") Long id,
-        @Valid @RequestBody @ApiParam("Updated allocation (The ID in the body will be ignored)") Allocation allocation
+        @PathVariable("id") @ApiParam(value = "ID of the allocation to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
+        @Valid @RequestBody @ApiParam(value = "Updated allocation (The ID in the body will be ignored)", required = true) Allocation allocation
     ) {
         allocationService.updateAllocation(id, allocation);
         return new ResponseEntity<>(allocation, HttpStatus.OK);
@@ -90,7 +90,7 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Void> deleteAllocation(
-        @PathVariable("id") @ApiParam("ID of the allocation to be deleted") long id
+        @PathVariable("id") @ApiParam(value = "ID of the allocation to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         allocationService.deleteAllocation(id);
         return new ResponseEntity<>(HttpStatus.OK);

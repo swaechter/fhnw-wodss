@@ -14,33 +14,33 @@ public class Allocation {
     @NotNull
     @Min(1)
     @Max(Long.MAX_VALUE)
-    @ApiModelProperty(value = "Allocation ID", allowableValues = "range[1, 9223372036854775807]", example = "42", position = 1)
+    @ApiModelProperty(value = "Allocation ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
     private Long id;
 
     @NotNull
-    @ApiModelProperty(value = "Allocation start date (YYYY-MM-DD)", example = "2019-03-13", position = 2)
+    @ApiModelProperty(value = "Allocation start date (YYYY-MM-DD)", example = "2019-03-13", required = true, position = 2)
     private LocalDate startDate;
 
     @NotNull
-    @ApiModelProperty(value = "Allocation end date (YYYY-MM-DD)", example = "2019-06-13", position = 3)
+    @ApiModelProperty(value = "Allocation end date (YYYY-MM-DD)", example = "2019-06-13", required = true, position = 3)
     private LocalDate endDate;
 
     @NotNull
     @Min(0)
     @Max(100)
-    @ApiModelProperty(value = "Full time equivalent for the contract as percentage value (0.5 FTE = 50%)", allowableValues = "range[0, 100]", example = "50 (= 0.5 FTE)", position = 4)
+    @ApiModelProperty(value = "Full time equivalent for the contract as percentage value (0.5 FTE = 50%)", allowableValues = "range[0, 100]", example = "50 (= 0.5 FTE)", required = true, position = 4)
     private Long pensumPercentage;
 
     @NotNull
     @Min(1)
     @Max(Long.MAX_VALUE)
-    @ApiModelProperty(value = "Employee ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", position = 5)
+    @ApiModelProperty(value = "Employee ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true, position = 5)
     private Long employeeId;
 
     @NotNull
     @Min(1)
     @Max(Long.MAX_VALUE)
-    @ApiModelProperty(value = "Project ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", position = 6)
+    @ApiModelProperty(value = "Project ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true, position = 6)
     private Long projectId;
 
     public Allocation() {

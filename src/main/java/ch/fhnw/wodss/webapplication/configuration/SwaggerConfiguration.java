@@ -26,10 +26,10 @@ public class SwaggerConfiguration {
 
     private ApiInfo getApiInfo() {
         return new ApiInfoBuilder()
-            .title("FHNW wodss project")
-            .description("This documentation provides an overview about the FHNW wodss API.")
-            .contact(new Contact("Simon Wächter", "https://github.com/swaechter", "simon.waechter@students.fhnw.ch"))
-            .version("0.0.1")
+            .title("FHNW Projektplanung (Modul wodss)")
+            .description("This documentation provides an overview of the FHNW wodss API.")
+            .contact(new Contact("Wächter Simon", "https://github.com/swaechter", "simon.waechter@students.fhnw.ch"))
+            .version("1.2.0")
             .build();
     }
 }

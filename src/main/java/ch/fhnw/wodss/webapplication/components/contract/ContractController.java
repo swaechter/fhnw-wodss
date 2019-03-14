@@ -29,7 +29,7 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Contract> createContract(
-        @Valid @RequestBody @ApiParam("Contract to create (The ID in the body will be ignored)") Contract contract
+        @Valid @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) Contract contract
     ) {
         contract = contractService.createContract(contract);
         return new ResponseEntity<>(contract, HttpStatus.CREATED);
@@ -54,7 +54,7 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Contract> getContract(
-        @PathVariable("id") @ApiParam("ID of the contract") long id
+        @PathVariable("id") @ApiParam(value = "ID of the contract", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         Contract contract = contractService.getContract(id);
         return new ResponseEntity<>(contract, HttpStatus.OK);
@@ -70,8 +70,8 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Contract> updateContract(
-        @PathVariable("id") @ApiParam("ID of the contract to be updated") long id,
-        @Valid @RequestBody @ApiParam("Updated contract (The ID in the body will be ignored)") Contract contract
+        @PathVariable("id") @ApiParam(value = "ID of the contract to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
+        @Valid @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) Contract contract
     ) {
         contractService.updateContract(id, contract);
         return new ResponseEntity<>(contract, HttpStatus.OK);
@@ -86,7 +86,7 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Void> deleteContract(
-        @PathVariable("id") @ApiParam("ID of the contract to be deleted") long id
+        @PathVariable("id") @ApiParam(value = "ID of the contract to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         contractService.deleteContract(id);
         return new ResponseEntity<>(HttpStatus.OK);

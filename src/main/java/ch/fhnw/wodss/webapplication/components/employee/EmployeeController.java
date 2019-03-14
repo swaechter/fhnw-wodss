@@ -28,7 +28,7 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Employee> createEmployee(
-        @Valid @RequestBody @ApiParam("Employee to create (The ID in the body will be ignored)") Employee employee
+        @Valid @RequestBody @ApiParam(value = "Employee to create (The ID in the body will be ignored)", required = true) Employee employee
     ) {
         employee = employeeService.createEmployee(employee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
@@ -53,7 +53,7 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Employee> getEmployee(
-        @PathVariable("id") @ApiParam("ID of the employee") long id
+        @PathVariable("id") @ApiParam(value = "ID of the employee", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         Employee employee = employeeService.getEmployee(id);
         return new ResponseEntity<>(employee, HttpStatus.OK);
@@ -69,8 +69,8 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Employee> updateEmployee(
-        @PathVariable("id") @ApiParam("ID of the employee to be updated") long id,
-        @Valid @RequestBody @ApiParam("Updated employee (The ID in the body will be ignored)") Employee employee
+        @PathVariable("id") @ApiParam(value = "ID of the employee to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
+        @Valid @RequestBody @ApiParam(value = "Updated employee (The ID in the body will be ignored)", required = true) Employee employee
     ) {
         employeeService.updateEmployee(id, employee);
         return new ResponseEntity<>(employee, HttpStatus.OK);
@@ -85,7 +85,7 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Void> deleteEmployee(
-        @PathVariable("id") @ApiParam("ID of the employee to be deleted") long id
+        @PathVariable("id") @ApiParam(value = "ID of the employee to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         employeeService.deleteEmployee(id);
         return new ResponseEntity<>(HttpStatus.OK);

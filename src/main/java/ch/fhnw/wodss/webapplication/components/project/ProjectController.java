@@ -28,7 +28,7 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Project> createProject(
-        @Valid @RequestBody @ApiParam("Project to create (The ID in the body will be ignored)") Project project
+        @Valid @RequestBody @ApiParam(value = "Project to create (The ID in the body will be ignored)", required = true) Project project
     ) {
         project = projectService.createProject(project);
         return new ResponseEntity<>(project, HttpStatus.CREATED);
@@ -41,7 +41,7 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Project> getProjects(
-        @RequestParam(value = "includePast", required = false) @ApiParam("Flag to include previous, already finished/ended projects") boolean includePast
+        @RequestParam(value = "includePast", required = false) @ApiParam(value = "Flag to include previous, already finished/ended projects", allowableValues = "true, false", example = "true", required = false) boolean includePast
     ) {
         return projectService.getProjects(includePast);
     }
@@ -55,7 +55,7 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Project> getProject(
-        @PathVariable("id") @ApiParam("ID of the project") long id
+        @PathVariable("id") @ApiParam(value = "ID of the project", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         Project project = projectService.getProject(id);
         return new ResponseEntity<>(project, HttpStatus.OK);
@@ -71,8 +71,8 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Project> updateProject(
-        @PathVariable("id") @ApiParam("ID of the project to be updated") long id,
-        @Valid @RequestBody @ApiParam("Updated project (The ID in the body will be ignored)") Project project
+        @PathVariable("id") @ApiParam(value = "ID of the project to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
+        @Valid @RequestBody @ApiParam(value = "Updated project (The ID in the body will be ignored)", required = true) Project project
     ) {
         projectService.updateProject(id, project);
         return new ResponseEntity<>(project, HttpStatus.OK);
@@ -87,7 +87,7 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Void> deleteProject(
-        @PathVariable("id") @ApiParam("ID of the project to be deleted") long id
+        @PathVariable("id") @ApiParam(value = "ID of the project to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         projectService.deleteProject(id);
         return new ResponseEntity<>(HttpStatus.OK);
