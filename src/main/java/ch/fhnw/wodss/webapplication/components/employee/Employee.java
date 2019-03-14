@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.*;
 
-@ApiModel(value = "Employee", description = "Represents the employee of the FHNW. An employee can have one current (and several older/invalid) contracts. In addition he can work in multiple projects and act as project leader")
+@ApiModel(value = "Employee", description = "Represents the employee of the FHNW. An employee can have several non-overlapping contracts. In addition he can work in multiple projects and act as project leader")
 public class Employee {
 
     @NotNull
