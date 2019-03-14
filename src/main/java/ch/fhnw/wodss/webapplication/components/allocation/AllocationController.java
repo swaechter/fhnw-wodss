@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/allocation", consumes = "application/json", produces = "application/json")
+@RequestMapping(value = "/api/allocation", produces = "application/json")
 @Api(tags = "Allocation", description = "Endpoint for managing all allocations")
 public class AllocationController {
 

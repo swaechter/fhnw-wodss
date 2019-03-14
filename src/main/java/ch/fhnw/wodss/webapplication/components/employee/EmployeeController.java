@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/employee", consumes = "application/json", produces = "application/json")
+@RequestMapping(value = "/api/employee", produces = "application/json")
 @Api(tags = "Employee", description = "Endpoint for managing all employees")
 public class EmployeeController {
 

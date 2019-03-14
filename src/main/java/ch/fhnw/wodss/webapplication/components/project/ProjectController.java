@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/project", consumes = "application/json", produces = "application/json")
+@RequestMapping(value = "/api/project", produces = "application/json")
 @Api(tags = "Project", description = "Endpoint for managing all projects")
 public class ProjectController {
 
