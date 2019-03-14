@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/me")
+@RequestMapping(value = "va/api/me", consumes = "application/json", produces = "application/json")
 @Api(tags = "Me", description = "Endpoint to get to know yourself")
 public class MeController {
 
@@ -24,7 +24,7 @@ public class MeController {
     }
 
     @GetMapping("")
-    @ApiOperation("Get to know yourself as employee")
+    @ApiOperation(value = "Get to know yourself as employee", nickname = "getYourself")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "You, the employee"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")

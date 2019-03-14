@@ -12,5 +12,4 @@ public class WebapplicationApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
 }

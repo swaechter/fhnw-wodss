@@ -1,9 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.employee;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +9,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/employee")
+@RequestMapping(value = "/api/employee", consumes = "application/json", produces = "application/json")
 @Api(tags = "Employee", description = "Endpoint for managing all employees")
 public class EmployeeController {
 
@@ -23,21 +20,22 @@ public class EmployeeController {
     }
 
     @PostMapping("")
-    @ApiOperation("Create a new employee")
+    @ApiOperation(value = "Create a new employee", nickname = "createEmployee")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "New employee with the generated ID"),
         @ApiResponse(code = 403, message = "Missing permission to create an employee"),
+        @ApiResponse(code = 412, message = "Precondition for the employee failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Employee> createEmployee(
-        @Valid @RequestBody Employee employee
+        @Valid @RequestBody @ApiParam("Employee to create (The ID in the body will be ignored)") Employee employee
     ) {
         employee = employeeService.createEmployee(employee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
     @GetMapping("")
-    @ApiOperation("Get all employees")
+    @ApiOperation(value = "Get all employees", nickname = "getEmployees")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "All employees (Administrator/Project Manager/Developer)"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -47,46 +45,47 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation("Get a specific employee")
+    @ApiOperation(value = "Get a specific employee", nickname = "getEmployee")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific employee"),
-        @ApiResponse(code = 403, message = "Missing permission to get this employee"),
+        @ApiResponse(code = 403, message = "Missing permission to get the employee"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Employee> getEmployee(
-        @PathVariable("id") long id
+        @PathVariable("id") @ApiParam("ID of the employee") long id
     ) {
         Employee employee = employeeService.getEmployee(id);
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    @ApiOperation("Update a specific employee")
+    @ApiOperation(value = "Update a specific employee", nickname = "updateEmployee")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific updated employee"),
-        @ApiResponse(code = 403, message = "Missing permission to update this employee"),
+        @ApiResponse(code = 403, message = "Missing permission to update the employee"),
         @ApiResponse(code = 404, message = "Employee not found"),
+        @ApiResponse(code = 412, message = "Precondition for the employee failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Employee> updateEmployee(
-        @PathVariable("id") long id,
-        @Valid @RequestBody Employee employee
+        @PathVariable("id") @ApiParam("ID of the employee to be updated") long id,
+        @Valid @RequestBody @ApiParam("Updated employee (The ID in the body will be ignored)") Employee employee
     ) {
         employeeService.updateEmployee(id, employee);
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation("Delete a specific employee")
+    @ApiOperation(value = "Delete a specific employee", nickname = "deleteEmployee")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Employee successfully deleted"),
-        @ApiResponse(code = 403, message = "Missing permission to delete this employee"),
+        @ApiResponse(code = 403, message = "Missing permission to delete the employee"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Void> deleteEmployee(
-        @PathVariable("id") long id
+        @PathVariable("id") @ApiParam("ID of the employee to be deleted") long id
     ) {
         employeeService.deleteEmployee(id);
         return new ResponseEntity<>(HttpStatus.OK);
