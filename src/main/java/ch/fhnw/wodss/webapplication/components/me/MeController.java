@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "va/api/me", produces = "application/json")
+@RequestMapping(value = "/api/me", produces = "application/json")
 @Api(tags = "Me", description = "Endpoint to get to know yourself")
 public class MeController {
 
