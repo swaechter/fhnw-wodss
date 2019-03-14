@@ -34,7 +34,7 @@ public class Employee {
     private Boolean isActive;
 
     @NotNull
-    @ApiModelProperty(value = "Single employee role", allowableValues = "ADMINISTRATOR, PROJECTMANAGER, DEVELOPER", example = "DEVELOPER", required = true, position = 6)
+    @ApiModelProperty(value = "Single employee role", allowableValues = "ADMINISTRATOR, PROJECTMANAGER, DEVELOPER", example = "DEVELOPER", readOnly = true, position = 6)
     private Role role;
 
     public Employee() {
