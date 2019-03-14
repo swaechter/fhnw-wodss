@@ -22,7 +22,7 @@ public class AllocationController {
     @PostMapping("")
     @ApiOperation(value = "Create a new allocation", nickname = "createAllocation")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "New allocation with the generated ID"),
+        @ApiResponse(code = 201, message = "New allocation with the generated ID"),
         @ApiResponse(code = 403, message = "Missing permission to create a allocation"),
         @ApiResponse(code = 404, message = "Employee or project not found"),
         @ApiResponse(code = 412, message = "Precondition for the allocation failed"),

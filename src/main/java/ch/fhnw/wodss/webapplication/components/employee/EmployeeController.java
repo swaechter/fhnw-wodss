@@ -22,7 +22,7 @@ public class EmployeeController {
     @PostMapping("")
     @ApiOperation(value = "Create a new employee", nickname = "createEmployee")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "New employee with the generated ID"),
+        @ApiResponse(code = 201, message = "New employee with the generated ID"),
         @ApiResponse(code = 403, message = "Missing permission to create an employee"),
         @ApiResponse(code = 412, message = "Precondition for the employee failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")

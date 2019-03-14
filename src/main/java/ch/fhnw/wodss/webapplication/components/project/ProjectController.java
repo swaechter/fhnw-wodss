@@ -22,7 +22,7 @@ public class ProjectController {
     @PostMapping("")
     @ApiOperation(value = "Create a new project", nickname = "createProject")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "New project with the generated ID"),
+        @ApiResponse(code = 201, message = "New project with the generated ID"),
         @ApiResponse(code = 403, message = "Missing permission to create a project"),
         @ApiResponse(code = 412, message = "Precondition for the project failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")

@@ -22,7 +22,7 @@ public class ContractController {
     @PostMapping("")
     @ApiOperation(value = "Create a new contract", nickname = "createContract")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "New contract with the generated ID"),
+        @ApiResponse(code = 201, message = "New contract with the generated ID"),
         @ApiResponse(code = 403, message = "Missing permission to create a contract"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 412, message = "Precondition for the contract failed"),
