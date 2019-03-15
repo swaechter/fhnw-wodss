@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.contract;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "employeeId"})
 @ApiModel(value = "Contract", description = "Represents the contract an employee can have (Multiple contracts are possible, but date overlapping is not allowed)")
 public class Contract {
 

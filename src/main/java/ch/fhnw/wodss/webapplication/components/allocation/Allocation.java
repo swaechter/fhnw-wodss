@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.allocation;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "employeeId", "projectId"})
 @ApiModel(value = "Allocation", description = "Represents the work unit an employee is doing for a project")
 public class Allocation {
 

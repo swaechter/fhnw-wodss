@@ -1,10 +1,12 @@
 package ch.fhnw.wodss.webapplication.components.employee;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.*;
 
+@JsonPropertyOrder({"id", "firstName", "lastName", "emailAddress", "isActive", "role"})
 @ApiModel(value = "Employee", description = "Represents the employee of the FHNW. An employee can have several non-overlapping contracts. In addition he can work in multiple projects and act as project leader")
 public class Employee {
 

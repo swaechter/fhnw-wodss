@@ -1,11 +1,13 @@
 package ch.fhnw.wodss.webapplication.components.project;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
+@JsonPropertyOrder({"id", "name", "ftePercentage", "startDate", "endDate", "projectManagerId"})
 @ApiModel(value = "Project", description = "Represents a FHNW research project with a given full-time-equivalent (FTE) workload in percentages managed by a project manager employee")
 public class Project {
 
