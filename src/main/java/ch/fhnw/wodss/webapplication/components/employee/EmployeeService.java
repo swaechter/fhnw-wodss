@@ -24,6 +24,6 @@ public class EmployeeService {
     public void updateEmployee(long id, Employee employee) {
     }
 
-    public void deleteEmployee(long id) {
+    public void anonymizeEmployee(long id) {
     }
 }

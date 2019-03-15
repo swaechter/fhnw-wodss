@@ -82,7 +82,7 @@ public class AllocationController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete a specific allocation including all associated allocations", nickname = "deleteAllocation")
+    @ApiOperation(value = "Delete a specific allocation", nickname = "deleteAllocation")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Allocation successfully deleted"),
         @ApiResponse(code = 403, message = "Missing permission to delete the allocation"),

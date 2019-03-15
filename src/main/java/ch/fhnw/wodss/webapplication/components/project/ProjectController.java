@@ -79,9 +79,9 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete a specific project including all associated allocations", nickname = "deleteProject")
+    @ApiOperation(value = "Delete a specific project including all associated allocations (Note: Cascading delete)", nickname = "deleteProject")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Project successfully deleted"),
+        @ApiResponse(code = 200, message = "Project and allocations successfully deleted"),
         @ApiResponse(code = 403, message = "Missing permission to delete the project"),
         @ApiResponse(code = 404, message = "Project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
