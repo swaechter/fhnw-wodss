@@ -9,7 +9,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "employeeId", "projectId"})
+@JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "contractId", "projectId"})
 @ApiModel(value = "Allocation", description = "Represents the work unit an employee is doing for a project")
 public class Allocation {
 
@@ -36,8 +36,8 @@ public class Allocation {
     @NotNull
     @Min(1)
     @Max(Long.MAX_VALUE)
-    @ApiModelProperty(value = "Employee ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true, position = 5)
-    private Long employeeId;
+    @ApiModelProperty(value = "Contract ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true, position = 5)
+    private Long contractId;
 
     @NotNull
     @Min(1)
@@ -86,12 +86,12 @@ public class Allocation {
         this.pensumPercentage = pensumPercentage;
     }
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public Long getContractId() {
+        return contractId;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setContractId(Long contractId) {
+        this.contractId = contractId;
     }
 
     public Long getProjectId() {

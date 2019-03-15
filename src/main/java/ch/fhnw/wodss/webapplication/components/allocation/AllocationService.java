@@ -13,7 +13,7 @@ public class AllocationService {
         return allocation;
     }
 
-    public List<Allocation> getAllocations(Long employeeId, Long projectId) {
+    public List<Allocation> getAllocations(Long employeeId, Long contractId, Long projectId) {
         return new ArrayList<>();
     }
 

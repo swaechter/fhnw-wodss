@@ -24,7 +24,7 @@ public class AllocationController {
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "New allocation with the generated ID"),
         @ApiResponse(code = 403, message = "Missing permission to create a allocation"),
-        @ApiResponse(code = 404, message = "Employee or project not found"),
+        @ApiResponse(code = 404, message = "Contract or project not found"),
         @ApiResponse(code = 412, message = "Precondition for the allocation failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
@@ -38,15 +38,17 @@ public class AllocationController {
     @GetMapping("")
     @ApiOperation(value = "Get all allocations", nickname = "getAllocations")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "All allocations (Administrator) or only the own ones (Project Manager/Developer)"),
-        @ApiResponse(code = 404, message = "Employee or project not found"),
+        @ApiResponse(code = 200, message = "All (filtered) allocations (Administrator) or only the own ones (Project Manager/Developer)"),
+        @ApiResponse(code = 403, message = "Missing permission to get the allocations"),
+        @ApiResponse(code = 404, message = "Employee, contract or project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Allocation> getAllocations(
         @RequestParam(value = "employeeId", required = false) @ApiParam(value = "Filter the allocations by an employee (Multiple filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long employeeId,
+        @RequestParam(value = "contractId", required = false) @ApiParam(value = "Filter the allocations by a contract of an employee (Multiple filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long contractId,
         @RequestParam(value = "projectId", required = false) @ApiParam(value = "Filter the allocations by a project (Multiple filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectId
     ) {
-        return allocationService.getAllocations(employeeId, projectId);
+        return allocationService.getAllocations(employeeId, contractId, projectId);
     }
 
     @GetMapping("/{id}")
@@ -69,7 +71,7 @@ public class AllocationController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific updated allocation"),
         @ApiResponse(code = 403, message = "Missing permission to update the allocation"),
-        @ApiResponse(code = 404, message = "Allocation, employee or project not found"),
+        @ApiResponse(code = 404, message = "Allocation, contract or project not found"),
         @ApiResponse(code = 412, message = "Precondition for the allocation failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
