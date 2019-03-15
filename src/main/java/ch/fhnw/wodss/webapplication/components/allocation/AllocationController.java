@@ -44,9 +44,9 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Allocation> getAllocations(
-        @RequestParam(value = "employeeId", required = false) @ApiParam(value = "Filter the allocations by an employee (Multiple filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long employeeId,
-        @RequestParam(value = "contractId", required = false) @ApiParam(value = "Filter the allocations by a contract of an employee (Multiple filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long contractId,
-        @RequestParam(value = "projectId", required = false) @ApiParam(value = "Filter the allocations by a project (Multiple filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectId
+        @RequestParam(value = "employeeId", required = false) @ApiParam(value = "Filter the allocations by an employee (Each filter is exclusive, so filters do not stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long employeeId,
+        @RequestParam(value = "contractId", required = false) @ApiParam(value = "Filter the allocations by a contract of an employee (Each filter is exclusive, so filters do not stack))", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long contractId,
+        @RequestParam(value = "projectId", required = false) @ApiParam(value = "Filter the allocations by a project (Each filter is exclusive, so filters do not stack))", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectId
     ) {
         return allocationService.getAllocations(employeeId, contractId, projectId);
     }
