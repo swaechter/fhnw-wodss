@@ -35,10 +35,6 @@ public class Project {
     private LocalDate endDate;
 
     @NotNull
-    @ApiModelProperty(value = "Project status", allowableValues = "true, false", example = "true", required = true, position = 6)
-    private Boolean isActive;
-
-    @NotNull
     @Min(1)
     @Max(Long.MAX_VALUE)
     @ApiModelProperty(value = "Project manager employee ID", allowableValues = "range[1, 9223372036854775807]", example = "5", required = true, position = 7)
@@ -47,12 +43,11 @@ public class Project {
     public Project() {
     }
 
-    public Project(String name, Long ftePercentage, LocalDate startDate, LocalDate endDate, Boolean isActive) {
+    public Project(String name, Long ftePercentage, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.ftePercentage = ftePercentage;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.isActive = isActive;
     }
 
     public Long getId() {
@@ -93,14 +88,6 @@ public class Project {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
-    }
-
-    public Boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
     }
 
     public Long getProjectManagerId() {
