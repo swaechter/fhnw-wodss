@@ -2,6 +2,7 @@ package ch.fhnw.wodss.webapplication.components.project;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class ProjectService {
         return project;
     }
 
-    public List<Project> getProjects(boolean includePast) {
+    public List<Project> getProjects(LocalDate fromDate, LocalDate toDate) {
         return new ArrayList<>();
     }
 

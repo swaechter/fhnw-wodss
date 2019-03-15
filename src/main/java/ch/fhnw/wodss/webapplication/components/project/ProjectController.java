@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -41,9 +42,10 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Project> getProjects(
-        @RequestParam(value = "includePast", required = false) @ApiParam(value = "Flag to include previous, already finished/ended projects", allowableValues = "true, false", example = "true", required = false) boolean includePast
+        @RequestParam(value = "fromDate", required = false) @ApiParam(value = "Start date to create a time range with a lower boundary (Projects with a start date before, but an end date after this date will match the criteria)", example = "2019-01-01", required = false) LocalDate fromDate,
+        @RequestParam(value = "toDate", required = false) @ApiParam(value = "End date to create a time range with an upper boundary (Projects with a start date before, but an end date after this date will match the criteria)", example = "2019-03-13", required = false) LocalDate toDate
     ) {
-        return projectService.getProjects(includePast);
+        return projectService.getProjects(fromDate, toDate);
     }
 
     @GetMapping("/{id}")
