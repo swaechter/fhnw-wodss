@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,10 +27,11 @@ public class EmployeeController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Employee> createEmployee(
-        @Valid @RequestBody @ApiParam(value = "Employee to create (The ID/Active flag in the body will be ignored)", required = true) Employee employee,
-        @RequestParam(value = "password") @ApiParam(value = "Password of the new employee", required = true) String password
+        @RequestBody @ApiParam(value = "Employee to create (The active flag in the body will be ignored)", required = true) Employee employee,
+        @RequestParam(value = "password") @ApiParam(value = "Password of the new employee", required = true) String password,
+        @RequestParam(value = "role") @ApiParam(value = "Role of the new employee", required = true) Role role
     ) {
-        employee = employeeService.createEmployee(employee, password);
+        employee = employeeService.createEmployee(employee, password, role);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
@@ -73,7 +73,7 @@ public class EmployeeController {
     })
     public ResponseEntity<Employee> updateEmployee(
         @PathVariable("id") @ApiParam(value = "ID of the employee to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
-        @Valid @RequestBody @ApiParam(value = "Updated employee (The ID in the body will be ignored)", required = true) Employee employee
+        @RequestBody @ApiParam(value = "Updated employee (The ID in the body will be ignored)", required = true) Employee employee
     ) {
         employeeService.updateEmployee(id, employee);
         return new ResponseEntity<>(employee, HttpStatus.OK);

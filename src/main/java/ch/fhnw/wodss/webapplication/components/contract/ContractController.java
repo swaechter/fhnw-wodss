@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,7 +30,7 @@ public class ContractController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Contract> createContract(
-        @Valid @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) Contract contract
+        @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) Contract contract
     ) {
         contract = contractService.createContract(contract);
         return new ResponseEntity<>(contract, HttpStatus.CREATED);
@@ -76,7 +75,7 @@ public class ContractController {
     })
     public ResponseEntity<Contract> updateContract(
         @PathVariable("id") @ApiParam(value = "ID of the contract to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
-        @Valid @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) Contract contract
+        @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) Contract contract
     ) {
         contractService.updateContract(id, contract);
         return new ResponseEntity<>(contract, HttpStatus.OK);
