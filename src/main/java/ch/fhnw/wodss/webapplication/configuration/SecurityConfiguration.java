@@ -24,8 +24,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             // Send a 401 and not a 403 for unauthenticated users
             .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
 
-            // Allow the /, /login and /error entry point but enforce an authentication for the rest
-            .and().authorizeRequests().antMatchers("/", "/login", "/error").permitAll()
+            // Allow the /, /api/token and /error entry point but enforce an authentication for the rest
+            .and().authorizeRequests().antMatchers("/", "/api/token", "/error").permitAll()
             .anyRequest().authenticated()
 
             // Add a filter to check the the JWT token and authenticate based on the token
