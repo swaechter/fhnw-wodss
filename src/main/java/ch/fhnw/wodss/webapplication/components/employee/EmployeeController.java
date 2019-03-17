@@ -83,16 +83,17 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Anonymize an employee (Note: No entities will be deleted)", nickname = "anonymizeEmployee")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Employee successfully anonymized"),
+        @ApiResponse(code = 204, message = "Employee successfully anonymized"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to anonymize the employee"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> anonymizeEmployee(
         @PathVariable("id") @ApiParam(value = "ID of the employee to be anonymized", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         employeeService.anonymizeEmployee(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

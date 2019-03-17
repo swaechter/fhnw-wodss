@@ -85,16 +85,17 @@ public class ContractController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete a specific contract including all associated allocations (Note: Cascading delete)", nickname = "deleteContract")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Contract and allocations successfully deleted"),
+        @ApiResponse(code = 204, message = "Contract and allocations successfully deleted"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to delete the contract"),
         @ApiResponse(code = 404, message = "Contract not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> anonymizeContract(
         @PathVariable("id") @ApiParam(value = "ID of the contract to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         contractService.deleteContract(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

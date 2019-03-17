@@ -91,16 +91,17 @@ public class AllocationController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete a specific allocation", nickname = "deleteAllocation")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Allocation successfully deleted"),
+        @ApiResponse(code = 204, message = "Allocation successfully deleted"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to delete the allocation"),
         @ApiResponse(code = 404, message = "Allocation not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteAllocation(
         @PathVariable("id") @ApiParam(value = "ID of the allocation to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
         allocationService.deleteAllocation(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
