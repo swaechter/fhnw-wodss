@@ -23,11 +23,13 @@ public class AllocationController {
     @ApiOperation(value = "Create a new allocation", nickname = "createAllocation")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "New allocation with the generated ID"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to create a allocation"),
         @ApiResponse(code = 404, message = "Contract or project not found"),
         @ApiResponse(code = 412, message = "Precondition for the allocation failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Allocation> createAllocation(
         @Valid @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) Allocation allocation
     ) {
@@ -39,6 +41,7 @@ public class AllocationController {
     @ApiOperation(value = "Get all allocations", nickname = "getAllocations")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "All (filtered) allocations (Administrator) or only the own ones (Project Manager/Developer)"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to get the allocations"),
         @ApiResponse(code = 404, message = "Employee, contract or project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -55,6 +58,7 @@ public class AllocationController {
     @ApiOperation(value = "Get a specific allocation", nickname = "getAllocation")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific allocation"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to get the allocation"),
         @ApiResponse(code = 404, message = "Allocation not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -70,6 +74,7 @@ public class AllocationController {
     @ApiOperation(value = "Update a specific allocation", nickname = "updateAllocation")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific updated allocation"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to update the allocation"),
         @ApiResponse(code = 404, message = "Allocation, contract or project not found"),
         @ApiResponse(code = 412, message = "Precondition for the allocation failed"),
@@ -87,6 +92,7 @@ public class AllocationController {
     @ApiOperation(value = "Delete a specific allocation", nickname = "deleteAllocation")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Allocation successfully deleted"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to delete the allocation"),
         @ApiResponse(code = 404, message = "Allocation not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")

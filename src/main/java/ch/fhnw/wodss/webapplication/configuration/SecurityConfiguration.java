@@ -21,16 +21,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             // Disable CSRF protection because we don't rely on session/cookies (We just completely disabled them)
             .and().csrf().disable()
 
-            // Send a 401 for unauthenticated users
+            // Send a 401 and not a 403 for unauthenticated users
             .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
 
             // Allow the /, /login and /error entry point but enforce an authentication for the rest
-            .and().antMatcher("/**")
-            .authorizeRequests()
-            .antMatchers("/", "/login**", "/error**")
-            .permitAll()
-            .anyRequest()
-            .authenticated()
+            .and().authorizeRequests().antMatchers("/", "/login", "/error").permitAll()
+            .anyRequest().authenticated()
 
             // Add a filter to check the the JWT token and authenticate based on the token
             .and().addFilterBefore(new AuthenticationFilter(), BasicAuthenticationFilter.class);
@@ -38,6 +34,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
+        // Make Swagger accessible without a token
         web.ignoring().antMatchers(
             "/",
             "/csrf",

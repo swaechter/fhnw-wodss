@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public class EmployeeService {
 
-    public Employee createEmployee(Employee employee) {
+    public Employee createEmployee(Employee employee, String password) {
         employee.setId(42L);
         return employee;
     }

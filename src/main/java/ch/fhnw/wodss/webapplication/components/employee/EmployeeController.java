@@ -23,14 +23,15 @@ public class EmployeeController {
     @ApiOperation(value = "Create a new employee", nickname = "createEmployee")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "New employee with the generated ID"),
-        @ApiResponse(code = 403, message = "Missing permission to create an employee"),
         @ApiResponse(code = 412, message = "Precondition for the employee failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Employee> createEmployee(
-        @Valid @RequestBody @ApiParam(value = "Employee to create (The ID in the body will be ignored)", required = true) Employee employee
+        @Valid @RequestBody @ApiParam(value = "Employee to create (The ID/Active flag in the body will be ignored)", required = true) Employee employee,
+        @RequestParam(value = "password") @ApiParam(value = "Password of the new employee", required = true) String password
     ) {
-        employee = employeeService.createEmployee(employee);
+        employee = employeeService.createEmployee(employee, password);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
@@ -38,6 +39,7 @@ public class EmployeeController {
     @ApiOperation(value = "Get all employees", nickname = "getEmployees")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "All employees (Administrator/Project Manager/Developer)"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Employee> getEmployees() {
@@ -48,6 +50,7 @@ public class EmployeeController {
     @ApiOperation(value = "Get a specific employee", nickname = "getEmployee")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific employee"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to get the employee"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -63,6 +66,7 @@ public class EmployeeController {
     @ApiOperation(value = "Update a specific employee", nickname = "updateEmployee")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific updated employee"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to update the employee"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 412, message = "Precondition for the employee failed"),
@@ -80,6 +84,7 @@ public class EmployeeController {
     @ApiOperation(value = "Anonymize an employee (Note: No entities will be deleted)", nickname = "anonymizeEmployee")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Employee successfully anonymized"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to anonymize the employee"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")

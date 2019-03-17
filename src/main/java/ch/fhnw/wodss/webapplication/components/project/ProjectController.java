@@ -24,10 +24,12 @@ public class ProjectController {
     @ApiOperation(value = "Create a new project", nickname = "createProject")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "New project with the generated ID"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to create a project"),
         @ApiResponse(code = 412, message = "Precondition for the project failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Project> createProject(
         @Valid @RequestBody @ApiParam(value = "Project to create (The ID in the body will be ignored)", required = true) Project project
     ) {
@@ -39,6 +41,7 @@ public class ProjectController {
     @ApiOperation(value = "Get all projects", nickname = "getProjects")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "All projects (Administrator) or only the assigned/involved ones (Project Manager/Developer)"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Project> getProjects(
@@ -52,6 +55,7 @@ public class ProjectController {
     @ApiOperation(value = "Get a specific project", nickname = "getProject")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific project"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to get the project"),
         @ApiResponse(code = 404, message = "Project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -67,6 +71,7 @@ public class ProjectController {
     @ApiOperation(value = "Update a specific project", nickname = "updateProject")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific updated project"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to update the project"),
         @ApiResponse(code = 404, message = "Project not found"),
         @ApiResponse(code = 412, message = "Precondition for the project failed"),
@@ -84,6 +89,7 @@ public class ProjectController {
     @ApiOperation(value = "Delete a specific project including all associated allocations (Note: Cascading delete)", nickname = "deleteProject")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Project and allocations successfully deleted"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to delete the project"),
         @ApiResponse(code = 404, message = "Project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")

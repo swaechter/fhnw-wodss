@@ -23,11 +23,13 @@ public class ContractController {
     @ApiOperation(value = "Create a new contract", nickname = "createContract")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "New contract with the generated ID"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to create a contract"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 412, message = "Precondition for the contract failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Contract> createContract(
         @Valid @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) Contract contract
     ) {
@@ -39,6 +41,7 @@ public class ContractController {
     @ApiOperation(value = "Get all contracts", nickname = "getContracts")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "All contracts (Administrator/Project Manager) or only own ones (Developer)"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Contract> getContracts() {
@@ -49,6 +52,7 @@ public class ContractController {
     @ApiOperation(value = "Get a specific contract", nickname = "getContract")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific contract"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to get the contract"),
         @ApiResponse(code = 404, message = "Contract not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -64,6 +68,7 @@ public class ContractController {
     @ApiOperation(value = "Update a specific contract", nickname = "updateContract")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific updated contract"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to update the contract"),
         @ApiResponse(code = 404, message = "Contract or employee not found"),
         @ApiResponse(code = 412, message = "Precondition for the contract failed"),
@@ -81,6 +86,7 @@ public class ContractController {
     @ApiOperation(value = "Delete a specific contract including all associated allocations (Note: Cascading delete)", nickname = "deleteContract")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Contract and allocations successfully deleted"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to delete the contract"),
         @ApiResponse(code = 404, message = "Contract not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")

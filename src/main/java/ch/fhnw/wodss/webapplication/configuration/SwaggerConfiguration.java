@@ -22,6 +22,7 @@ public class SwaggerConfiguration {
             .select()
             .apis(RequestHandlerSelectors.basePackage("ch.fhnw.wodss.webapplication.components"))
             .build()
+            .useDefaultResponseMessages(false)
             .securitySchemes(Collections.singletonList(new ApiKey("Bearer", "Authorization", "header")))
             .securityContexts(Collections.singletonList(SecurityContext.builder().securityReferences(
                 Collections.singletonList(SecurityReference.builder()

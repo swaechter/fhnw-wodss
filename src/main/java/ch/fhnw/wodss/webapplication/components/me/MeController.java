@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/", produces = "application/json")
+@RequestMapping(value = "/")
 @Api(tags = "Me", description = "Endpoint to get to know yourself & manage your JWT tokens")
 public class MeController {
 
@@ -18,10 +18,11 @@ public class MeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/api/me")
+    @GetMapping(value = "/api/me", produces = "application/json")
     @ApiOperation(value = "Get to know yourself as employee", nickname = "getYourself")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "You, the employee"),
+        @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Employee> getYourself() {
@@ -29,7 +30,7 @@ public class MeController {
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login", produces = "plain/text")
     @ApiOperation(value = "Request a JWT token by an initial login process. The JWT token is returned in the body", nickname = "requestToken")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "JWT token after a successful login"),
@@ -37,6 +38,7 @@ public class MeController {
         @ApiResponse(code = 412, message = "Precondition for the username/password failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> requestToken(
         @RequestParam("email") @ApiParam(value = "Email address of the employee", required = true) String email,
         @RequestParam("password") @ApiParam(value = "Raw password of the employee", required = true) String password
@@ -48,7 +50,7 @@ public class MeController {
         }
     }
 
-    @PostMapping("/refresh")
+    @PostMapping(value = "/refresh", produces = "plain/text")
     @ApiOperation(value = "Request an updated/refreshed JWT token by providing the current valid one (Maybe soon expired?). The token is returned in the body", nickname = "refreshToken")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "New, updated JWT token after a successful refresh"),
@@ -56,9 +58,14 @@ public class MeController {
         @ApiResponse(code = 412, message = "Precondition for the token failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> refreshToken(
         @RequestParam("token") @ApiParam(value = "Valid token", required = true) String token
     ) {
-        return new ResponseEntity<>("JWT Token - WIP: " + token, HttpStatus.OK);
+        if (token.equals("XXX")) {
+            return new ResponseEntity<>("XXX", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
