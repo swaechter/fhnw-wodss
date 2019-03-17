@@ -51,7 +51,6 @@ public class EmployeeController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Specific employee"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to get the employee"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
