@@ -2,13 +2,14 @@ package ch.fhnw.wodss.webapplication.components.employee;
 
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/employee", produces = "application/json")
+@RequestMapping(value = "/api/employee", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Employee", description = "Endpoint for managing all employees")
 public class EmployeeController {
 

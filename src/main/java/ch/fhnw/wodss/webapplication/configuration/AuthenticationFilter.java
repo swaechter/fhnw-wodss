@@ -1,6 +1,7 @@
 package ch.fhnw.wodss.webapplication.configuration;
 
 import ch.fhnw.wodss.webapplication.components.employee.Employee;
+import ch.fhnw.wodss.webapplication.components.token.Token;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,7 +25,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String token = httpServletRequest.getHeader(HEADER_NAME);
         if (token != null && token.startsWith(KEY_BEGINNING)) {
             token = token.replace(KEY_BEGINNING, "");
-            Optional<Employee> employee = TokenUtils.getEmployeeFromToken(token);
+            Optional<Employee> employee = TokenUtils.getEmployeeFromToken(new Token(token));
             if (employee.isPresent()) {
                 Employee realEmployee = employee.get();
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(realEmployee.getEmailAddress(), token, new ArrayList<>()));

@@ -2,13 +2,14 @@ package ch.fhnw.wodss.webapplication.components.allocation;
 
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/allocation", produces = "application/json")
+@RequestMapping(value = "/api/allocation", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Allocation", description = "Endpoint for managing all allocations")
 public class AllocationController {
 

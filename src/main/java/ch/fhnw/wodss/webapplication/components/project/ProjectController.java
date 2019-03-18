@@ -2,6 +2,7 @@ package ch.fhnw.wodss.webapplication.components.project;
 
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/project", produces = "application/json")
+@RequestMapping(value = "/api/project", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Project", description = "Endpoint for managing all projects")
 public class ProjectController {
 

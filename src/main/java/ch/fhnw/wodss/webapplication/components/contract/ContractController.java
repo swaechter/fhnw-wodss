@@ -2,13 +2,15 @@ package ch.fhnw.wodss.webapplication.components.contract;
 
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/contract", produces = "application/json")
+
+@RequestMapping(value = "/api/contract", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Contract", description = "Endpoint for managing all contracts")
 public class ContractController {
 

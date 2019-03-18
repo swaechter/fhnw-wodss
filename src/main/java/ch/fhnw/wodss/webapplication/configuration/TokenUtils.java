@@ -2,6 +2,7 @@ package ch.fhnw.wodss.webapplication.configuration;
 
 import ch.fhnw.wodss.webapplication.components.employee.Employee;
 import ch.fhnw.wodss.webapplication.components.employee.Role;
+import ch.fhnw.wodss.webapplication.components.token.Token;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,26 +18,26 @@ public class TokenUtils {
 
     private static final long VALIDATION_DURATION = 30 * 60 * 1000;
 
-    public static String createTokenForEmployee(Employee employee) {
+    public static Token createTokenForEmployee(Employee employee) {
         try {
             Date nowDate = new Date();
             Date expirationDate = new Date(nowDate.getTime() + VALIDATION_DURATION);
-            return Jwts.builder()
+            return new Token(Jwts.builder()
                 .setIssuer("FHNW wodss")
                 .setSubject("Login token")
                 .claim("employee", employee)
                 .setIssuedAt(nowDate)
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, Base64.getEncoder().encodeToString(SECRET_KEY.getBytes()))
-                .compact();
+                .compact());
         } catch (Exception exception) {
             throw new RuntimeException("Internal token error");
         }
     }
 
-    public static Optional<Employee> getEmployeeFromToken(String token) {
+    public static Optional<Employee> getEmployeeFromToken(Token token) {
         try {
-            Claims claims = Jwts.parser().setSigningKey(Base64.getEncoder().encodeToString(SECRET_KEY.getBytes())).parseClaimsJws(token).getBody();
+            Claims claims = Jwts.parser().setSigningKey(Base64.getEncoder().encodeToString(SECRET_KEY.getBytes())).parseClaimsJws(token.getToken()).getBody();
             HashMap<String, String> map = (HashMap<String, String>) claims.get("employee");
             Employee employee = new Employee(map.get("firstName"), map.get("lastName"), map.get("emailAddress"), true, Role.ADMINISTRATOR);
             //employee.setId(Long.parseLong(map.get("id")));
