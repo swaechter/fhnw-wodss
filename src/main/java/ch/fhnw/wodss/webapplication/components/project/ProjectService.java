@@ -14,7 +14,7 @@ public class ProjectService {
         return project;
     }
 
-    public List<Project> getProjects(LocalDate fromDate, LocalDate toDate) {
+    public List<Project> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId) {
         return new ArrayList<>();
     }
 

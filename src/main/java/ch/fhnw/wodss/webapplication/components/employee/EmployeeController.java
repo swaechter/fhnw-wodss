@@ -43,8 +43,10 @@ public class EmployeeController {
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public List<Employee> getEmployees() {
-        return employeeService.getEmployees();
+    public List<Employee> getEmployees(
+        @RequestParam(value = "role", required = false) @ApiParam(value = "Filter the employees by role)", allowableValues = "ADMINISTRATOR,PROJECTMANAGER,DEVELOPER", example = "ADMINISTRATOR", required = false) Role role
+    ) {
+        return employeeService.getEmployees(role);
     }
 
     @GetMapping("/{id}")

@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -45,8 +46,11 @@ public class ContractController {
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public List<Contract> getContracts() {
-        return contractService.getContracts();
+    public List<Contract> getContracts(
+        @RequestParam(value = "fromDate", required = false) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Contracts with a start date before, but an end date after this date will match the criteria). Can stack with filter", example = "2019-01-01", required = false) LocalDate fromDate,
+        @RequestParam(value = "toDate", required = false) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Contracts with a start date before, but an end date after this date will match the criteria). Can stack with filter", example = "2019-03-13", required = false) LocalDate toDate
+    ) {
+        return contractService.getContracts(fromDate, toDate);
     }
 
     @GetMapping("/{id}")

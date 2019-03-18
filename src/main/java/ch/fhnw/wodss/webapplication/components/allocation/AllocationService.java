@@ -2,6 +2,7 @@ package ch.fhnw.wodss.webapplication.components.allocation;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class AllocationService {
         return allocation;
     }
 
-    public List<Allocation> getAllocations(Long employeeId, Long contractId, Long projectId) {
+    public List<Allocation> getAllocations(Long employeeId, Long contractId, Long projectId, LocalDate fromDate, LocalDate toDate) {
         return new ArrayList<>();
     }
 

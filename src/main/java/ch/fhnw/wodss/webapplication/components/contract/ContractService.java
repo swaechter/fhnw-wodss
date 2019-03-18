@@ -2,6 +2,7 @@ package ch.fhnw.wodss.webapplication.components.contract;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class ContractService {
         return contract;
     }
 
-    public List<Contract> getContracts() {
+    public List<Contract> getContracts(LocalDate fromDate, LocalDate toDate) {
         return new ArrayList<>();
     }
 

@@ -14,7 +14,7 @@ public class EmployeeService {
         return employee;
     }
 
-    public List<Employee> getEmployees() {
+    public List<Employee> getEmployees(Role role) {
         return new ArrayList<>();
     }
 
