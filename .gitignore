@@ -1,5 +1,7 @@
 # Build system
-target/
+.gradle/
+build/
+out/
 
 # Test system
 tmp/
