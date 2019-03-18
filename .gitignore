@@ -9,3 +9,6 @@ tmp/
 # IDE: IntelliJ IDEA
 .idea/
 *.iml
+
+# Generated PKCS12 keystore file
+config/keystore.p12
