@@ -6,7 +6,8 @@ out/
 # Test system
 tmp/
 
-# Generated PKCS12 keystore file
+# Generated configuration PKCS12 keystore file
+config/application.properties
 config/keystore.p12
 
 # IDE: IntelliJ IDEA
