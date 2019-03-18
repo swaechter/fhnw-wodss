@@ -39,7 +39,7 @@ public class SwaggerConfiguration {
             .title("FHNW Projektplanung (Modul wodss)")
             .description("This documentation provides an overview of the FHNW wodss API.")
             .contact(new Contact("Wächter Simon", "https://github.com/swaechter/fhnw-wodss-spec", "simon.waechter@students.fhnw.ch"))
-            .version("1.2.0")
+            .version("1.0.0")
             .build();
     }
 }

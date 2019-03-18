@@ -30,7 +30,7 @@ public class Allocation {
     @NotNull
     @Min(0)
     @Max(100)
-    @ApiModelProperty(value = "Full time equivalent for the contract as percentage value (0.5 FTE = 50%)", allowableValues = "range[0, 100]", example = "50 (= 0.5 FTE)", required = true, position = 4)
+    @ApiModelProperty(value = "Full time equivalent for the contract as percentage value (0.5 FTE = 50)", allowableValues = "range[0, 100]", example = "50", required = true, position = 4)
     private Long pensumPercentage;
 
     @NotNull

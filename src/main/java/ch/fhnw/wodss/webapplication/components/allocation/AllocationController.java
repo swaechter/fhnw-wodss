@@ -21,11 +21,11 @@ public class AllocationController {
     }
 
     @PostMapping("")
-    @ApiOperation(value = "Create a new allocation", nickname = "createAllocation")
+    @ApiOperation(value = "Create a new allocation", notes = "ADMINISTRATORS can create allocations for every project, PROJECTMANAGER for their own projects and DEVELOPER for none", nickname = "createAllocation")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "New allocation with the generated ID"),
+        @ApiResponse(code = 201, message = "New allocation with the generated ID (ADMINISTRATOR: All, PROJECTMANAGER: Own projects)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to create a allocation"),
+        @ApiResponse(code = 403, message = "Missing permission to create an allocation (PROJECTMANAGER: Somebody's else's project, DEVELOPER: All)"),
         @ApiResponse(code = 404, message = "Contract or project not found"),
         @ApiResponse(code = 412, message = "Precondition for the allocation failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -41,10 +41,10 @@ public class AllocationController {
     @GetMapping("")
     @ApiOperation(value = "Get all allocations", nickname = "getAllocations")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "All (filtered) allocations (Administrator) or only the own ones (Project Manager/Developer)"),
+        @ApiResponse(code = 200, message = "All (filtered) allocations (ADMINISTRATOR, PROJECTMANAGER) or only the employee own ones (DEVELOPER)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to get the allocations"),
-        @ApiResponse(code = 404, message = "Employee, contract or project not found"),
+        @ApiResponse(code = 403, message = "Missing permission to get the allocation (DEVELOPER: Other uninvolved employee or project)"),
+        @ApiResponse(code = 404, message = "Employee or project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Allocation> getAllocations(
@@ -59,9 +59,9 @@ public class AllocationController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get a specific allocation", nickname = "getAllocation")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Specific allocation"),
+        @ApiResponse(code = 200, message = "Specific allocation (ADMINISTRATOR, PROJECTMANAGER: All, DEVELOPER: Assigned projects)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to get the allocation"),
+        @ApiResponse(code = 403, message = "Missing permission to get the allocation (DEVELOPER: Not assigned projects)"),
         @ApiResponse(code = 404, message = "Allocation not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
@@ -75,9 +75,9 @@ public class AllocationController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Update a specific allocation", nickname = "updateAllocation")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Specific updated allocation"),
+        @ApiResponse(code = 200, message = "Specific updated allocation (ADMINISTRATOR: All, PROJECTMANAGER: Own projects)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to update the allocation"),
+        @ApiResponse(code = 403, message = "Missing permission to update the allocation (PROJECTMANAGER: Somebody's else's project, DEVELOPER: ALL"),
         @ApiResponse(code = 404, message = "Allocation, contract or project not found"),
         @ApiResponse(code = 412, message = "Precondition for the allocation failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -93,9 +93,9 @@ public class AllocationController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete a specific allocation", nickname = "deleteAllocation")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Allocation successfully deleted"),
+        @ApiResponse(code = 204, message = "Allocation successfully deleted (ADMINISTRATOR: All, PROJECTMANAGER: Own projects)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to delete the allocation"),
+        @ApiResponse(code = 403, message = "Missing permission to delete the allocation (PROJECTMANAGER: Somebody's else's project, DEVELOPER: ALL"),
         @ApiResponse(code = 404, message = "Allocation not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })

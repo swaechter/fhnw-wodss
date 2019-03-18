@@ -25,7 +25,7 @@ public class Project {
     @NotNull
     @Min(0)
     @Max(Long.MAX_VALUE)
-    @ApiModelProperty(value = "Full time equivalent represented as a percentage value (1 FTE = 100% = 1 person working 1 day)", allowableValues = "range[0, 9223372036854775807]", example = "500 (= 5 FTE's)", required = true, position = 3)
+    @ApiModelProperty(value = "Full time equivalent represented as a percentage value (1 FTE = 100% = 1 person working 1 day)", allowableValues = "range[0, 9223372036854775807]", example = "1500", required = true, position = 3)
     private Long ftePercentage;
 
     @NotNull

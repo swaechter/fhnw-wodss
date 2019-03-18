@@ -24,9 +24,9 @@ public class ContractController {
     @PostMapping("")
     @ApiOperation(value = "Create a new contract", nickname = "createContract")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "New contract with the generated ID"),
+        @ApiResponse(code = 201, message = "New contract with the generated ID (ADMINISTRATOR)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to create a contract"),
+        @ApiResponse(code = 403, message = "Missing permission to create a contract (PROJECTMANAGER, DEVELOPER)"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 412, message = "Precondition for the contract failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -42,7 +42,7 @@ public class ContractController {
     @GetMapping("")
     @ApiOperation(value = "Get all contracts", nickname = "getContracts")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "All contracts (Administrator/Project Manager) or only own ones (Developer)"),
+        @ApiResponse(code = 200, message = "All contracts (ADMINISTRATOR, PROJECTMANAGER) or only own ones (DEVELOPER)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
@@ -56,9 +56,9 @@ public class ContractController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get a specific contract", nickname = "getContract")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Specific contract"),
+        @ApiResponse(code = 200, message = "Specific contract (ADMINISTRATOR, PROJECTMANAGER: All, DEVELOPER: Own contracts)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to get the contract"),
+        @ApiResponse(code = 403, message = "Missing permission to get the contract (DEVELOPER: Somebody's else's contract)"),
         @ApiResponse(code = 404, message = "Contract not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
@@ -72,9 +72,9 @@ public class ContractController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Update a specific contract", nickname = "updateContract")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Specific updated contract"),
+        @ApiResponse(code = 200, message = "Specific updated contract (ADMINISTRATOR)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to update the contract"),
+        @ApiResponse(code = 403, message = "Missing permission to update the contract (PROJECTMANAGER, DEVELOPER)"),
         @ApiResponse(code = 404, message = "Contract or employee not found"),
         @ApiResponse(code = 412, message = "Precondition for the contract failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -90,9 +90,9 @@ public class ContractController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete a specific contract (Note: The contract can only be deleted as long as he is not used for an allocation)", nickname = "deleteContract")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Contract successfully deleted"),
+        @ApiResponse(code = 204, message = "Contract successfully deleted (ADMINISTRATOR)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to delete the contract"),
+        @ApiResponse(code = 403, message = "Missing permission to delete the contract (PROJECTMANAGER, DEVELOPER)"),
         @ApiResponse(code = 404, message = "Contract not found"),
         @ApiResponse(code = 412, message = "Precondition for the contract failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")

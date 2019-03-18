@@ -23,9 +23,9 @@ public class ProjectController {
     @PostMapping("")
     @ApiOperation(value = "Create a new project", nickname = "createProject")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "New project with the generated ID"),
+        @ApiResponse(code = 201, message = "New project with the generated ID (ADMINISTRATOR)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to create a project"),
+        @ApiResponse(code = 403, message = "Missing permission to create a project (PROJECTMANAGER, DEVELOPER)"),
         @ApiResponse(code = 412, message = "Precondition for the project failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
@@ -40,8 +40,9 @@ public class ProjectController {
     @GetMapping("")
     @ApiOperation(value = "Get all projects", nickname = "getProjects")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "All projects (Administrator) or only the assigned/involved ones (Project Manager/Developer)"),
+        @ApiResponse(code = 200, message = "All projects (ADMINISTRATOR, PROJECTMANAGER) or only the involved ones (DEVELOPER)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
+        @ApiResponse(code = 404, message = "Project manager not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public List<Project> getProjects(
@@ -55,9 +56,9 @@ public class ProjectController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get a specific project", nickname = "getProject")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Specific project"),
+        @ApiResponse(code = 200, message = "Specific project (ADMINISTRATOR, PROJECTMANAGER: All, DEVELOPER: Assigned projects)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to get the project"),
+        @ApiResponse(code = 403, message = "Missing permission to get the project (DEVELOPER: Not assigned project)"),
         @ApiResponse(code = 404, message = "Project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
@@ -71,10 +72,10 @@ public class ProjectController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Update a specific project. If the end date is changed to an earlier date in the future (Before now/past is not possible), all future allocations will be deleted and the end of pending allocations will be set to the new project end (Represents a project end)", nickname = "updateProject")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Specific updated project and potentially updated/deleted project allocations in case of a project end date change"),
+        @ApiResponse(code = 200, message = "Specific updated project and potentially updated/deleted project allocations in case of a project end date change (ADMINISTRATOR: All, PROJECTMANAGER: Own projects)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to update the project"),
-        @ApiResponse(code = 404, message = "Project not found"),
+        @ApiResponse(code = 403, message = "Missing permission to update the project (PROJECTMANAGER: Somebody else's project, DEVELOPER: All"),
+        @ApiResponse(code = 404, message = "Project or project manager not found"),
         @ApiResponse(code = 412, message = "Precondition for the project failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
@@ -89,9 +90,9 @@ public class ProjectController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete a specific project including all associated allocations (Note: Cascading delete)", nickname = "deleteProject")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Project and allocations successfully deleted"),
+        @ApiResponse(code = 204, message = "Project and allocations successfully deleted (ADMINISTRATOR)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to delete the project"),
+        @ApiResponse(code = 403, message = "Missing permission to delete the project (PROJECTMANAGER, DEVELOPER)"),
         @ApiResponse(code = 404, message = "Project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })

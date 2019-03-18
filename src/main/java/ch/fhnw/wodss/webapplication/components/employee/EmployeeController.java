@@ -22,7 +22,7 @@ public class EmployeeController {
     @PostMapping("")
     @ApiOperation(value = "Create a new employee", nickname = "createEmployee")
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "New employee with the generated ID"),
+        @ApiResponse(code = 201, message = "New employee with the generated ID (EVERYONE - as a guest)"),
         @ApiResponse(code = 412, message = "Precondition for the employee failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
@@ -39,7 +39,7 @@ public class EmployeeController {
     @GetMapping("")
     @ApiOperation(value = "Get all employees", nickname = "getEmployees")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "All employees (Administrator/Project Manager/Developer)"),
+        @ApiResponse(code = 200, message = "All employees (ADMINISTRATOR, PROJECTMANAGER, DEVELOPER)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
@@ -52,7 +52,7 @@ public class EmployeeController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get a specific employee", nickname = "getEmployee")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Specific employee"),
+        @ApiResponse(code = 200, message = "Specific employee (ADMINISTRATOR, PROJECTMANAGER, DEVELOPER)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
@@ -67,16 +67,16 @@ public class EmployeeController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Update a specific employee", nickname = "updateEmployee")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Specific updated employee"),
+        @ApiResponse(code = 200, message = "Specific updated employee (ADMINISTRATOR)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to update the employee"),
+        @ApiResponse(code = 403, message = "Missing permission to update the employee (PROJECTMANAGER, DEVELOPER)"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 412, message = "Precondition for the employee failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<Employee> updateEmployee(
         @PathVariable("id") @ApiParam(value = "ID of the employee to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
-        @RequestBody @ApiParam(value = "Updated employee (The ID in the body will be ignored)", required = true) Employee employee
+        @RequestBody @ApiParam(value = "Updated employee (The ID and role in the body will be ignored)", required = true) Employee employee
     ) {
         employeeService.updateEmployee(id, employee);
         return new ResponseEntity<>(employee, HttpStatus.OK);
@@ -85,9 +85,9 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Anonymize an employee (Note: No entities will be deleted)", nickname = "anonymizeEmployee")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Employee successfully anonymized"),
+        @ApiResponse(code = 204, message = "Employee successfully anonymized (ADMINISTRATOR)"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
-        @ApiResponse(code = 403, message = "Missing permission to anonymize the employee"),
+        @ApiResponse(code = 403, message = "Missing permission to anonymize the employee (PROJECTMANAGER, DEVELOPER)"),
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
