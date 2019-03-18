@@ -14,7 +14,7 @@ public class AllocationService {
         return allocation;
     }
 
-    public List<Allocation> getAllocations(Long employeeId, Long contractId, Long projectId, LocalDate fromDate, LocalDate toDate) {
+    public List<Allocation> getAllocations(Long employeeId, Long projectId, LocalDate fromDate, LocalDate toDate) {
         return new ArrayList<>();
     }
 
