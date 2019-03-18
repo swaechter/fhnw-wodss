@@ -7,3 +7,9 @@ tmp/
 # IDE: IntelliJ IDEA
 .idea/
 *.iml
+
+# VS Code
+.classpath
+.project
+.settings/
+.vscode/
