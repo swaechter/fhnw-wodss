@@ -6,6 +6,9 @@ out/
 # Test system
 tmp/
 
+# Generated PKCS12 keystore file
+config/keystore.p12
+
 # IDE: IntelliJ IDEA
 .idea/
 *.iml
@@ -15,4 +18,3 @@ tmp/
 .project
 .settings/
 .vscode/
-# Generated PKCS12 keystore file
