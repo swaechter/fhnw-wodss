@@ -69,9 +69,9 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Update a specific project", nickname = "updateProject")
+    @ApiOperation(value = "Update a specific project. If the end date is changed to an earlier date in the future (Before now/past is not possible), all future allocations will be deleted and the end of pending allocations will be set to the new project end (Represents a project end)", nickname = "updateProject")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Specific updated project"),
+        @ApiResponse(code = 200, message = "Specific updated project and potentially updated/deleted project allocations in case of a project end date change"),
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 403, message = "Missing permission to update the project"),
         @ApiResponse(code = 404, message = "Project not found"),
