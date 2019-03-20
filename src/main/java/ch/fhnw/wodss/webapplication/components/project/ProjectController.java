@@ -1,6 +1,7 @@
 package ch.fhnw.wodss.webapplication.components.project;
 
 import io.swagger.annotations.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +48,8 @@ public class ProjectController {
     })
     public ResponseEntity<List<ProjectDto>> getProjects(
         @RequestParam(value = "projectManagerId", required = false) @ApiParam(value = "Filter the projects by a project manager ID", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectManagerId,
-        @RequestParam(value = "fromDate", required = false) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
-        @RequestParam(value = "toDate", required = false) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate
+        @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
+        @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate
     ) {
         List<ProjectDto> projects = projectService.getProjects(fromDate, toDate, projectManagerId);
         return new ResponseEntity<>(projects, HttpStatus.OK);

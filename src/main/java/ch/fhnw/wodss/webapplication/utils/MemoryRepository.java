@@ -33,6 +33,7 @@ public abstract class MemoryRepository<T> {
 
     public T updateEntry(Long id, T entry) {
         entries.put(id, entry);
+        setEntityId(entry, id);
         return entry;
     }
 

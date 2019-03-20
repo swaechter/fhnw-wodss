@@ -1,6 +1,7 @@
 package ch.fhnw.wodss.webapplication.components.allocation;
 
 import io.swagger.annotations.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -50,8 +51,8 @@ public class AllocationController {
     public ResponseEntity<List<AllocationDto>> getAllocations(
         @RequestParam(value = "employeeId", required = false) @ApiParam(value = "Filter the allocations by an employee (Filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long employeeId,
         @RequestParam(value = "projectId", required = false) @ApiParam(value = "Filter the allocations by a project (Filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectId,
-        @RequestParam(value = "fromDate", required = false) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
-        @RequestParam(value = "toDate", required = false) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate
+        @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
+        @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate
     ) {
         List<AllocationDto> allocations = allocationService.getAllocations(employeeId, projectId, fromDate, toDate);
         return new ResponseEntity<>(allocations, HttpStatus.OK);
