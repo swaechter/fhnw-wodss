@@ -14,19 +14,19 @@ public class AllocationService {
         this.allocationRepository = allocationRepository;
     }
 
-    public Allocation createAllocation(Allocation allocation) {
+    public AllocationDto createAllocation(AllocationDto allocation) {
         return allocationRepository.saveEntry(allocation);
     }
 
-    public List<Allocation> getAllocations(Long employeeId, Long projectId, LocalDate fromDate, LocalDate toDate) {
+    public List<AllocationDto> getAllocations(Long employeeId, Long projectId, LocalDate fromDate, LocalDate toDate) {
         return allocationRepository.getEntries();
     }
 
-    public Allocation getAllocation(Long id) {
+    public AllocationDto getAllocation(Long id) {
         return allocationRepository.getEntry(id);
     }
 
-    public void updateAllocation(Long id, Allocation allocation) {
+    public void updateAllocation(Long id, AllocationDto allocation) {
         allocationRepository.updateEntry(id, allocation);
     }
 

@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.employee;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,7 +9,7 @@ import javax.validation.constraints.*;
 
 @JsonPropertyOrder({"id", "firstName", "lastName", "emailAddress", "isActive", "role"})
 @ApiModel(value = "Employee", description = "Represents the employee of the FHNW. An employee can have several non-overlapping contracts. In addition he can work in multiple projects and act as project leader")
-public class Employee {
+public class EmployeeDto {
 
     @NotNull
     @Min(1)
@@ -39,10 +40,14 @@ public class Employee {
     @ApiModelProperty(value = "Single employee role", allowableValues = "ADMINISTRATOR, PROJECTMANAGER, DEVELOPER", example = "DEVELOPER", readOnly = true, position = 6)
     private Role role;
 
-    public Employee() {
+    // TODO: Kill this temporary password hash field, because we can't rely on the database at the moment + the employee DTO shouldn't have a password hash field
+    @JsonIgnore
+    private String temporaryPasswordHash;
+
+    public EmployeeDto() {
     }
 
-    public Employee(String firstName, String lastName, String emailAddress, Boolean isActive, Role role) {
+    public EmployeeDto(String firstName, String lastName, String emailAddress, Boolean isActive, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
@@ -96,5 +101,15 @@ public class Employee {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    // TODO: Delete this method as soon we rely on the database
+    public String getTemporaryPasswordHash() {
+        return temporaryPasswordHash;
+    }
+
+    // TODO: Delete this method as soon we rely on the database
+    public void setTemporaryPasswordHash(String temporaryPasswordHash) {
+        this.temporaryPasswordHash = temporaryPasswordHash;
     }
 }

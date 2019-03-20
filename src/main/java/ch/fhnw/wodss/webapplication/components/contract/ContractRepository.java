@@ -4,10 +4,10 @@ import ch.fhnw.wodss.webapplication.utils.MemoryRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ContractRepository extends MemoryRepository<Contract> {
+public class ContractRepository extends MemoryRepository<ContractDto> {
 
     @Override
-    public void setEntityId(Contract entry, Long value) {
+    public void setEntityId(ContractDto entry, Long value) {
         entry.setId(value);
     }
 }

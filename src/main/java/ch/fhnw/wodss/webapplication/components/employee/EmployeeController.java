@@ -27,8 +27,8 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Employee> createEmployee(
-        @RequestBody @ApiParam(value = "Employee to create (The active flag in the body will be ignored)", required = true) Employee employee,
+    public ResponseEntity<EmployeeDto> createEmployee(
+        @RequestBody @ApiParam(value = "Employee to create (The active flag in the body will be ignored)", required = true) EmployeeDto employee,
         @RequestParam(value = "password") @ApiParam(value = "Password of the new employee", required = true) String password,
         @RequestParam(value = "role") @ApiParam(value = "Role of the new employee", required = true) Role role
     ) {
@@ -43,10 +43,10 @@ public class EmployeeController {
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<List<Employee>> getEmployees(
+    public ResponseEntity<List<EmployeeDto>> getEmployees(
         @RequestParam(value = "role", required = false) @ApiParam(value = "Filter the employees by role)", allowableValues = "ADMINISTRATOR, PROJECTMANAGER, DEVELOPER", example = "ADMINISTRATOR", required = false) Role role
     ) {
-        List<Employee> employees = employeeService.getEmployees(role);
+        List<EmployeeDto> employees = employeeService.getEmployees(role);
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
@@ -58,10 +58,10 @@ public class EmployeeController {
         @ApiResponse(code = 404, message = "Employee not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<Employee> getEmployee(
+    public ResponseEntity<EmployeeDto> getEmployee(
         @PathVariable("id") @ApiParam(value = "ID of the employee", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
-        Employee employee = employeeService.getEmployee(id);
+        EmployeeDto employee = employeeService.getEmployee(id);
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
@@ -75,9 +75,9 @@ public class EmployeeController {
         @ApiResponse(code = 412, message = "Precondition for the employee failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<Employee> updateEmployee(
+    public ResponseEntity<EmployeeDto> updateEmployee(
         @PathVariable("id") @ApiParam(value = "ID of the employee to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
-        @RequestBody @ApiParam(value = "Updated employee (The ID and role in the body will be ignored)", required = true) Employee employee
+        @RequestBody @ApiParam(value = "Updated employee (The ID and role in the body will be ignored)", required = true) EmployeeDto employee
     ) {
         employeeService.updateEmployee(id, employee);
         return new ResponseEntity<>(employee, HttpStatus.OK);

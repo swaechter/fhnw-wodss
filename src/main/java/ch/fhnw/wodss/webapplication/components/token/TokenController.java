@@ -1,8 +1,7 @@
 package ch.fhnw.wodss.webapplication.components.token;
 
-import ch.fhnw.wodss.webapplication.components.employee.Employee;
+import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeService;
-import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.configuration.TokenUtils;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
@@ -36,11 +35,9 @@ public class TokenController {
     public ResponseEntity<Token> requestToken(
         @Valid @RequestBody @ApiParam(value = "Credentials of the employee", required = true) Credentials credentials
     ) {
-        if (credentials.getEmailAddress().equals("simon.waechter@students.fhnw.ch") && credentials.getRawPassword().equals("123456aA")) {
-            Employee employee = new Employee("Simon", "Wächter", "simon.waechter@students.fhnw.ch", true, Role.ADMINISTRATOR);
-            employee.setId(42L);
-
-            Token token = TokenUtils.createTokenForEmployee(employee);
+        Optional<EmployeeDto> employee = employeeService.getEmployeeFromLogon(credentials);
+        if (employee.isPresent()) {
+            Token token = TokenUtils.createTokenForEmployee(employee.get());
             return new ResponseEntity<>(token, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -59,7 +56,7 @@ public class TokenController {
     public ResponseEntity<Token> refreshToken(
         @RequestBody @ApiParam(value = "Valid token issued by our server", required = true) Token token
     ) {
-        Optional<Employee> employee = TokenUtils.getEmployeeFromToken(token);
+        Optional<EmployeeDto> employee = TokenUtils.getEmployeeFromToken(token);
         if (employee.isPresent()) {
             token = TokenUtils.createTokenForEmployee(employee.get());
             return new ResponseEntity<>(token, HttpStatus.OK);

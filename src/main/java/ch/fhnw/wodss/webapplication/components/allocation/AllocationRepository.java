@@ -4,10 +4,10 @@ import ch.fhnw.wodss.webapplication.utils.MemoryRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class AllocationRepository extends MemoryRepository<Allocation> {
+public class AllocationRepository extends MemoryRepository<AllocationDto> {
 
     @Override
-    public void setEntityId(Allocation entry, Long value) {
+    public void setEntityId(AllocationDto entry, Long value) {
         entry.setId(value);
     }
 }

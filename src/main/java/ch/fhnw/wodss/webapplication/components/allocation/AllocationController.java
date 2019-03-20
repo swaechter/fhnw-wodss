@@ -31,8 +31,8 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Allocation> createAllocation(
-        @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) Allocation allocation
+    public ResponseEntity<AllocationDto> createAllocation(
+        @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) AllocationDto allocation
     ) {
         allocation = allocationService.createAllocation(allocation);
         return new ResponseEntity<>(allocation, HttpStatus.CREATED);
@@ -47,13 +47,13 @@ public class AllocationController {
         @ApiResponse(code = 404, message = "Employee or project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<List<Allocation>> getAllocations(
+    public ResponseEntity<List<AllocationDto>> getAllocations(
         @RequestParam(value = "employeeId", required = false) @ApiParam(value = "Filter the allocations by an employee (Filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long employeeId,
         @RequestParam(value = "projectId", required = false) @ApiParam(value = "Filter the allocations by a project (Filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectId,
         @RequestParam(value = "fromDate", required = false) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
         @RequestParam(value = "toDate", required = false) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate
     ) {
-        List<Allocation> allocations = allocationService.getAllocations(employeeId, projectId, fromDate, toDate);
+        List<AllocationDto> allocations = allocationService.getAllocations(employeeId, projectId, fromDate, toDate);
         return new ResponseEntity<>(allocations, HttpStatus.OK);
     }
 
@@ -66,10 +66,10 @@ public class AllocationController {
         @ApiResponse(code = 404, message = "Allocation not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<Allocation> getAllocation(
+    public ResponseEntity<AllocationDto> getAllocation(
         @PathVariable("id") @ApiParam(value = "ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
-        Allocation allocation = allocationService.getAllocation(id);
+        AllocationDto allocation = allocationService.getAllocation(id);
         return new ResponseEntity<>(allocation, HttpStatus.OK);
     }
 
@@ -83,9 +83,9 @@ public class AllocationController {
         @ApiResponse(code = 412, message = "Precondition for the allocation failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<Allocation> updateAllocation(
+    public ResponseEntity<AllocationDto> updateAllocation(
         @PathVariable("id") @ApiParam(value = "ID of the allocation to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
-        @RequestBody @ApiParam(value = "Updated allocation (The ID in the body will be ignored)", required = true) Allocation allocation
+        @RequestBody @ApiParam(value = "Updated allocation (The ID in the body will be ignored)", required = true) AllocationDto allocation
     ) {
         allocationService.updateAllocation(id, allocation);
         return new ResponseEntity<>(allocation, HttpStatus.OK);

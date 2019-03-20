@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "employeeId"})
 @ApiModel(value = "Contract", description = "Represents the contract an employee can have (Multiple contracts are possible, but date overlapping is not allowed)")
-public class Contract {
+public class ContractDto {
 
     @NotNull
     @Min(1)
@@ -39,10 +39,10 @@ public class Contract {
     @ApiModelProperty(value = "Employee ID of the contract", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true, position = 5)
     private Long employeeId;
 
-    public Contract() {
+    public ContractDto() {
     }
 
-    public Contract(LocalDate startDate, LocalDate endDate, Integer pensumPercentage) {
+    public ContractDto(LocalDate startDate, LocalDate endDate, Integer pensumPercentage) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.pensumPercentage = pensumPercentage;

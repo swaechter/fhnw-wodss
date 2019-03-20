@@ -30,8 +30,8 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Project> createProject(
-        @RequestBody @ApiParam(value = "Project to create (The ID in the body will be ignored)", required = true) Project project
+    public ResponseEntity<ProjectDto> createProject(
+        @RequestBody @ApiParam(value = "Project to create (The ID in the body will be ignored)", required = true) ProjectDto project
     ) {
         project = projectService.createProject(project);
         return new ResponseEntity<>(project, HttpStatus.CREATED);
@@ -45,12 +45,12 @@ public class ProjectController {
         @ApiResponse(code = 404, message = "Project manager not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<List<Project>> getProjects(
+    public ResponseEntity<List<ProjectDto>> getProjects(
         @RequestParam(value = "projectManagerId", required = false) @ApiParam(value = "Filter the projects by a project manager ID", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectManagerId,
         @RequestParam(value = "fromDate", required = false) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
         @RequestParam(value = "toDate", required = false) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate
     ) {
-        List<Project> projects = projectService.getProjects(fromDate, toDate, projectManagerId);
+        List<ProjectDto> projects = projectService.getProjects(fromDate, toDate, projectManagerId);
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
@@ -63,10 +63,10 @@ public class ProjectController {
         @ApiResponse(code = 404, message = "Project not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<Project> getProject(
+    public ResponseEntity<ProjectDto> getProject(
         @PathVariable("id") @ApiParam(value = "ID of the project", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
-        Project project = projectService.getProject(id);
+        ProjectDto project = projectService.getProject(id);
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
@@ -80,9 +80,9 @@ public class ProjectController {
         @ApiResponse(code = 412, message = "Precondition for the project failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<Project> updateProject(
+    public ResponseEntity<ProjectDto> updateProject(
         @PathVariable("id") @ApiParam(value = "ID of the project to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
-        @RequestBody @ApiParam(value = "Updated project (The ID in the body will be ignored)", required = true) Project project
+        @RequestBody @ApiParam(value = "Updated project (The ID in the body will be ignored)", required = true) ProjectDto project
     ) {
         projectService.updateProject(id, project);
         return new ResponseEntity<>(project, HttpStatus.OK);

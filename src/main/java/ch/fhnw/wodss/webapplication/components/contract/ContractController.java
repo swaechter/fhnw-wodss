@@ -32,8 +32,8 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Contract> createContract(
-        @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) Contract contract
+    public ResponseEntity<ContractDto> createContract(
+        @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) ContractDto contract
     ) {
         contract = contractService.createContract(contract);
         return new ResponseEntity<>(contract, HttpStatus.CREATED);
@@ -46,11 +46,11 @@ public class ContractController {
         @ApiResponse(code = 401, message = "Unauthenticated or invalid token"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<List<Contract>> getContracts(
+    public ResponseEntity<List<ContractDto>> getContracts(
         @RequestParam(value = "fromDate", required = false) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Contracts with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
         @RequestParam(value = "toDate", required = false) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Contracts with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate
     ) {
-        List<Contract> contacts = contractService.getContracts(fromDate, toDate);
+        List<ContractDto> contacts = contractService.getContracts(fromDate, toDate);
         return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 
@@ -63,10 +63,10 @@ public class ContractController {
         @ApiResponse(code = 404, message = "Contract not found"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<Contract> getContract(
+    public ResponseEntity<ContractDto> getContract(
         @PathVariable("id") @ApiParam(value = "ID of the contract", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
     ) {
-        Contract contract = contractService.getContract(id);
+        ContractDto contract = contractService.getContract(id);
         return new ResponseEntity<>(contract, HttpStatus.OK);
     }
 
@@ -80,9 +80,9 @@ public class ContractController {
         @ApiResponse(code = 412, message = "Precondition for the contract failed"),
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
-    public ResponseEntity<Contract> updateContract(
+    public ResponseEntity<ContractDto> updateContract(
         @PathVariable("id") @ApiParam(value = "ID of the contract to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
-        @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) Contract contract
+        @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) ContractDto contract
     ) {
         contractService.updateContract(id, contract);
         return new ResponseEntity<>(contract, HttpStatus.OK);

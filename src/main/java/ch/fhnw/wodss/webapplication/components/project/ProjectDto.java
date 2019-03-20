@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @JsonPropertyOrder({"id", "name", "ftePercentage", "startDate", "endDate", "projectManagerId"})
 @ApiModel(value = "Project", description = "Represents a FHNW research project with a given full-time-equivalent (FTE) workload in percentages managed by a project manager employee")
-public class Project {
+public class ProjectDto {
 
     @NotNull
     @Min(1)
@@ -42,10 +42,10 @@ public class Project {
     @ApiModelProperty(value = "Project manager employee ID", allowableValues = "range[1, 9223372036854775807]", example = "5", required = true, position = 7)
     private Long projectManagerId;
 
-    public Project() {
+    public ProjectDto() {
     }
 
-    public Project(String name, Long ftePercentage, LocalDate startDate, LocalDate endDate) {
+    public ProjectDto(String name, Long ftePercentage, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.ftePercentage = ftePercentage;
         this.startDate = startDate;

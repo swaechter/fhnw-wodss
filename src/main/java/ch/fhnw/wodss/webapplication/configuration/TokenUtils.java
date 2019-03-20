@@ -1,6 +1,6 @@
 package ch.fhnw.wodss.webapplication.configuration;
 
-import ch.fhnw.wodss.webapplication.components.employee.Employee;
+import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.components.token.Token;
 import io.jsonwebtoken.Claims;
@@ -18,7 +18,7 @@ public class TokenUtils {
 
     private static final long VALIDATION_DURATION = 30 * 60 * 1000;
 
-    public static Token createTokenForEmployee(Employee employee) {
+    public static Token createTokenForEmployee(EmployeeDto employee) {
         try {
             Date nowDate = new Date();
             Date expirationDate = new Date(nowDate.getTime() + VALIDATION_DURATION);
@@ -35,11 +35,11 @@ public class TokenUtils {
         }
     }
 
-    public static Optional<Employee> getEmployeeFromToken(Token token) {
+    public static Optional<EmployeeDto> getEmployeeFromToken(Token token) {
         try {
             Claims claims = Jwts.parser().setSigningKey(Base64.getEncoder().encodeToString(SECRET_KEY.getBytes())).parseClaimsJws(token.getToken()).getBody();
             HashMap<String, String> map = (HashMap<String, String>) claims.get("employee");
-            Employee employee = new Employee(map.get("firstName"), map.get("lastName"), map.get("emailAddress"), true, Role.ADMINISTRATOR);
+            EmployeeDto employee = new EmployeeDto(map.get("firstName"), map.get("lastName"), map.get("emailAddress"), true, Role.ADMINISTRATOR);
             //employee.setId(Long.parseLong(map.get("id")));
             return Optional.of(employee);
         } catch (Exception exception) {

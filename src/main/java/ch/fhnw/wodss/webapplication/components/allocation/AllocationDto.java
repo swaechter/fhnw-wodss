@@ -10,21 +10,21 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "contractId", "projectId"})
-@ApiModel(value = "Allocation", description = "Represents the work unit an employee is doing for a project")
-public class Allocation {
+@ApiModel(value = "AllocationDto", description = "Represents the work unit an employee is doing for a project")
+public class AllocationDto {
 
     @NotNull
     @Min(1)
     @Max(Long.MAX_VALUE)
-    @ApiModelProperty(value = "Allocation ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
+    @ApiModelProperty(value = "AllocationDto ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
     private Long id;
 
     @NotNull
-    @ApiModelProperty(value = "Allocation start date (YYYY-MM-DD)", example = "2019-03-13", required = true, position = 2)
+    @ApiModelProperty(value = "AllocationDto start date (YYYY-MM-DD)", example = "2019-03-13", required = true, position = 2)
     private LocalDate startDate;
 
     @NotNull
-    @ApiModelProperty(value = "Allocation end date (YYYY-MM-DD)", example = "2019-06-13", required = true, position = 3)
+    @ApiModelProperty(value = "AllocationDto end date (YYYY-MM-DD)", example = "2019-06-13", required = true, position = 3)
     private LocalDate endDate;
 
     @NotNull
@@ -45,10 +45,10 @@ public class Allocation {
     @ApiModelProperty(value = "Project ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true, position = 6)
     private Long projectId;
 
-    public Allocation() {
+    public AllocationDto() {
     }
 
-    public Allocation(LocalDate startDate, LocalDate endDate, Long pensumPercentage) {
+    public AllocationDto(LocalDate startDate, LocalDate endDate, Long pensumPercentage) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.pensumPercentage = pensumPercentage;

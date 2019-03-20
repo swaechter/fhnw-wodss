@@ -14,19 +14,19 @@ public class ContractService {
         this.contractRepository = contractRepository;
     }
 
-    public Contract createContract(Contract contract) {
+    public ContractDto createContract(ContractDto contract) {
         return contractRepository.saveEntry(contract);
     }
 
-    public List<Contract> getContracts(LocalDate fromDate, LocalDate toDate) {
+    public List<ContractDto> getContracts(LocalDate fromDate, LocalDate toDate) {
         return contractRepository.getEntries();
     }
 
-    public Contract getContract(Long id) {
+    public ContractDto getContract(Long id) {
         return contractRepository.getEntry(id);
     }
 
-    public void updateContract(Long id, Contract contract) {
+    public void updateContract(Long id, ContractDto contract) {
         contractRepository.updateEntry(id, contract);
     }
 

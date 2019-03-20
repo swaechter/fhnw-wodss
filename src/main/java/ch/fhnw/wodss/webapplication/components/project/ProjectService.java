@@ -14,19 +14,19 @@ public class ProjectService {
         this.projectRepository = projectRepository;
     }
 
-    public Project createProject(Project project) {
+    public ProjectDto createProject(ProjectDto project) {
         return projectRepository.saveEntry(project);
     }
 
-    public List<Project> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId) {
+    public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId) {
         return projectRepository.getEntries();
     }
 
-    public Project getProject(Long id) {
+    public ProjectDto getProject(Long id) {
         return projectRepository.getEntry(id);
     }
 
-    public void updateProject(Long id, Project newProject) {
+    public void updateProject(Long id, ProjectDto newProject) {
         projectRepository.updateEntry(id, newProject);
     }
 
