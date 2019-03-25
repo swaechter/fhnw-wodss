@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.configuration;
 
+import ch.fhnw.wodss.webapplication.components.token.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,10 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    private final TokenService tokenService;
+
+    public SecurityConfiguration(TokenService tokenService) {
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated()
 
             // Add a filter to check the the JWT token and authenticate based on the token
-            .and().addFilterBefore(new AuthenticationFilter(), BasicAuthenticationFilter.class);
+            .and().addFilterBefore(new AuthenticationFilter(tokenService), BasicAuthenticationFilter.class);
     }
 
     @Override
@@ -57,5 +59,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/configuration/security",
             "/swagger-ui.html",
             "/webjars/**");
+    }
+
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
