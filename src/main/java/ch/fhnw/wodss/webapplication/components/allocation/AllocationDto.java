@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "contractId", "projectId"})
-@ApiModel(value = "AllocationDto", description = "Represents the work unit an employee is doing for a project")
+@ApiModel(value = "Allocation", description = "Represents the work unit an employee is doing for a project")
 public class AllocationDto {
 
     @NotNull
