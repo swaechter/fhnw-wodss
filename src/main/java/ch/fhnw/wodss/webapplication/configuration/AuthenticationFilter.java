@@ -2,6 +2,7 @@ package ch.fhnw.wodss.webapplication.configuration;
 
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.token.Token;
+import ch.fhnw.wodss.webapplication.components.token.TokenService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,12 +21,18 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private static final String KEY_BEGINNING = "Bearer ";
 
+    private final TokenService tokenService;
+
+    public AuthenticationFilter(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         String token = httpServletRequest.getHeader(HEADER_NAME);
         if (token != null && token.startsWith(KEY_BEGINNING)) {
             token = token.replace(KEY_BEGINNING, "");
-            Optional<EmployeeDto> employee = TokenUtils.getEmployeeFromToken(new Token(token));
+            Optional<EmployeeDto> employee = tokenService.getEmployeeFromToken(new Token(token));
             if (employee.isPresent()) {
                 EmployeeDto realEmployee = employee.get();
                 SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(realEmployee.getEmailAddress(), token, new ArrayList<>()));

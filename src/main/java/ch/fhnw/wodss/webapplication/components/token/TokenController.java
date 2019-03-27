@@ -2,7 +2,6 @@ package ch.fhnw.wodss.webapplication.components.token;
 
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeService;
-import ch.fhnw.wodss.webapplication.configuration.TokenUtils;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,9 +16,12 @@ import java.util.Optional;
 @Api(tags = "Token", description = "Endpoint to manage your JWT token")
 public class TokenController {
 
+    private final TokenService tokenService;
+
     private final EmployeeService employeeService;
 
-    public TokenController(EmployeeService employeeService) {
+    public TokenController(TokenService tokenService, EmployeeService employeeService) {
+        this.tokenService = tokenService;
         this.employeeService = employeeService;
     }
 
@@ -37,7 +39,7 @@ public class TokenController {
     ) {
         Optional<EmployeeDto> employee = employeeService.getEmployeeFromLogon(credentials);
         if (employee.isPresent()) {
-            Token token = TokenUtils.createTokenForEmployee(employee.get());
+            Token token = tokenService.createTokenForEmployee(employee.get());
             return new ResponseEntity<>(token, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -56,9 +58,9 @@ public class TokenController {
     public ResponseEntity<Token> refreshToken(
         @RequestBody @ApiParam(value = "Valid token issued by our server", required = true) Token token
     ) {
-        Optional<EmployeeDto> employee = TokenUtils.getEmployeeFromToken(token);
+        Optional<EmployeeDto> employee = tokenService.getEmployeeFromToken(token);
         if (employee.isPresent()) {
-            token = TokenUtils.createTokenForEmployee(employee.get());
+            token = tokenService.createTokenForEmployee(employee.get());
             return new ResponseEntity<>(token, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
