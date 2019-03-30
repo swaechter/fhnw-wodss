@@ -23,8 +23,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jooq'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.h2database:h2'
+    jooqRuntime 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
     jooqRuntime 'org.postgresql:postgresql'
+    jooqRuntime group: 'org.jooq', name: 'jooq-meta-extensions'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     compile 'io.springfox:springfox-swagger2:2.9.2'
     compile 'io.springfox:springfox-swagger-ui:2.9.2'
@@ -34,23 +36,22 @@ dependencies {
 }
 
 jooq {
-    version = '3.11.9'
+    version = '3.11.10'
     edition = 'OSS'
     application(sourceSets.main) {
-        jdbc {
-            driver = 'org.postgresql.Driver'
-            url = 'jdbc:postgresql://localhost:5432/fhnwwodss'
-            user = 'fhnwwodss'
-            password = '123456aA'
-        }
         generator {
-            name = 'org.jooq.codegen.DefaultGenerator'
-            strategy {
-                name = 'org.jooq.codegen.DefaultGeneratorStrategy'
-            }
             database {
-                name = 'org.jooq.meta.postgres.PostgresDatabase'
-                inputSchema = 'public'
+                name = 'org.jooq.meta.extensions.ddl.DDLDatabase'
+                properties {
+                    property {
+                        key = 'scripts'
+                        value = '../database/001_SetupTables.sql'
+                    }
+                    property {
+                        key = 'sort'
+                        value = 'semantic'
+                    }
+                }
             }
             generate {
                 relations = true
@@ -60,9 +61,6 @@ jooq {
                 immutablePojos = true
                 fluentSetters = true
             }
-/*            target {
-                packageName = 'ch.fhnw.wodss.generated'
-            }*/
         }
     }
 }
