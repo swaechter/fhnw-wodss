@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "projekt-planung-wodss",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
@@ -11,13 +11,7 @@
     "lint": "eslint src"
   },
   "eslintConfig": {
-    "extends": "eslint-config-synacor",
-    "rules": {
-      "no-unused-vars": "warn",
-      "react/sort-comp": "off",
-      "lines-around-comment": "off",
-      "react/prefer-stateless-function": "off"
-    }
+    "extends": "eslint-config-synacor"
   },
   "eslintIgnore": [
     "build/*"
@@ -30,10 +24,10 @@
   },
   "dependencies": {
     "preact": "^8.2.1",
-    "preact-material-components": "^1.4.3",
     "preact-redux": "^2.0.3",
     "preact-router": "^2.5.5",
     "redux": "^3.6.0",
+    "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0"
   }
 }
