@@ -4,7 +4,6 @@ import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -30,7 +29,7 @@ public class EmployeeController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<EmployeeDto> createEmployee(
-        @Valid @RequestBody @ApiParam(value = "Employee to create (The active flag in the body will be ignored)", required = true) EmployeeDto employee, BindingResult bindingResult,
+        @Valid @RequestBody @ApiParam(value = "Employee to create (The active flag in the body will be ignored)", required = true) EmployeeDto employee,
         @RequestParam(value = "password") @ApiParam(value = "Password of the new employee", required = true) String password,
         @RequestParam(value = "role") @ApiParam(value = "Role of the new employee", required = true) Role role
     ) {
