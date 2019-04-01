@@ -5,14 +5,17 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 
+@Validated
 @RestController
-
 @RequestMapping(value = "/api/contract", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Contract", description = "Endpoint for managing all contracts")
 public class ContractController {
@@ -66,7 +69,7 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<ContractDto> getContract(
-        @PathVariable("id") @ApiParam(value = "ID of the contract", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the contract", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
     ) {
         ContractDto contract = contractService.getContract(id);
         return new ResponseEntity<>(contract, HttpStatus.OK);
@@ -83,7 +86,7 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<ContractDto> updateContract(
-        @Valid @PathVariable("id") @ApiParam(value = "ID of the contract to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
+        @Valid @PathVariable("id") @ApiParam(value = "ID of the contract to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
         @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) ContractDto contract
     ) {
         contractService.updateContract(id, contract);
@@ -102,7 +105,7 @@ public class ContractController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> anonymizeContract(
-        @PathVariable("id") @ApiParam(value = "ID of the contract to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the contract to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
     ) {
         contractService.deleteContract(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

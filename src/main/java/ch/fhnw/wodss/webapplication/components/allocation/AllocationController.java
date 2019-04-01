@@ -5,12 +5,16 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(value = "/api/allocation", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Allocation", description = "Endpoint for managing all allocations")
@@ -34,7 +38,7 @@ public class AllocationController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AllocationDto> createAllocation(
-        @Valid @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) AllocationDto allocation
+        @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) AllocationDto allocation
     ) {
         allocation = allocationService.createAllocation(allocation);
         return new ResponseEntity<>(allocation, HttpStatus.CREATED);
@@ -69,7 +73,7 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<AllocationDto> getAllocation(
-        @PathVariable("id") @ApiParam(value = "ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
     ) {
         AllocationDto allocation = allocationService.getAllocation(id);
         return new ResponseEntity<>(allocation, HttpStatus.OK);
@@ -86,7 +90,7 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<AllocationDto> updateAllocation(
-        @PathVariable("id") @ApiParam(value = "ID of the allocation to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the allocation to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
         @Valid @RequestBody @ApiParam(value = "Updated allocation (The ID in the body will be ignored)", required = true) AllocationDto allocation
     ) {
         allocationService.updateAllocation(id, allocation);
@@ -104,7 +108,7 @@ public class AllocationController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteAllocation(
-        @PathVariable("id") @ApiParam(value = "ID of the allocation to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the allocation to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
     ) {
         allocationService.deleteAllocation(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

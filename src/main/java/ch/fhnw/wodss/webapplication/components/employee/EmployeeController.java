@@ -4,11 +4,15 @@ import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(value = "/api/employee", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Employee", description = "Endpoint for managing all employees")
@@ -60,7 +64,7 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<EmployeeDto> getEmployee(
-        @PathVariable("id") @ApiParam(value = "ID of the employee", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the employee", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
     ) {
         EmployeeDto employee = employeeService.getEmployee(id);
         return new ResponseEntity<>(employee, HttpStatus.OK);
@@ -77,7 +81,7 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<EmployeeDto> updateEmployee(
-        @PathVariable("id") @ApiParam(value = "ID of the employee to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the employee to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
         @Valid @RequestBody @ApiParam(value = "Updated employee (The ID and role in the body will be ignored)", required = true) EmployeeDto employee
     ) {
         employeeService.updateEmployee(id, employee);
@@ -96,7 +100,7 @@ public class EmployeeController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> anonymizeEmployee(
-        @PathVariable("id") @ApiParam(value = "ID of the employee to be anonymized", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the employee to be anonymized", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
     ) {
         employeeService.anonymizeEmployee(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
