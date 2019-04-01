@@ -1,9 +1,12 @@
-external.server.port=8000
+EXTERNAL_SERVER_PORT=8000
 
-external.database.jdbc=jdbc:h2:file:./tmp/database.h2;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE
-external.database.driver=org.h2.Driver
+EXTERNAL_DATABASE_HOSTNAME=localhost
+EXTERNAL_DATABASE_PORT=3306
+EXTERNAL_DATABASE_NAME=wodss
+EXTERNAL_DATABASE_USERNAME=root
+EXTERNAL_DATABASE_PASSWORD=123456aA
 
-external.ssl.keystore=config/keystore.p12
-external.ssl.keystore-password=123456aA
-external.ssl.keystore-type=PKCS12
-external.ssl.keystore-alias=keystore
+EXTERNAL_SSL_KEYSTORE_PATH=config/keystore.p12
+EXTERNAL_SSL_KEYSTORE_PASSWORD=123456aA
+EXTERNAL_SSL_KEYSTORE_TYPE=PKCS12
+EXTERNAL_SSL_KEYSTORE_ALIAS=keystore

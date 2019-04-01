@@ -17,12 +17,12 @@ services:
             # Unten kann man jetzt die Werte aus config/application.properties angeben und sie werden der Applikation als Environment Variablen übergeben
             # Ich muss noch schauen, wie die genauen Konventionen mit der Namensumformung sind
             - EXTERNAL_SERVER_PORT=8000
-            - EXTERNAL_DATABASE_HOST=wodss-database
-            - EXTERNAL_DATABASE_USER=wodss
-            - EXTERNAL_DATABASE_PASSWORD=123456aA
+            - EXTERNAL_DATABASE_HOSTNAME=wodss-database
+            - EXTERNAL_DATABASE_PORT=3306
             - EXTERNAL_DATABASE_NAME=wodss
-            - EXTERNAL_DATABASE_PORT=5432
-            - EXTERNAL_KEYSTORE=config/keystore.p12
+            - EXTERNAL_DATABASE_USERNAME=wodss
+            - EXTERNAL_DATABASE_PASSWORD=123456aA
+            - EXTERNAL_KEYSTORE_PATH=config/keystore.p12
             - EXTERNAL_KEYSTORE_PASSWORD=123456aA
             - EXTERNAL_KEYSTORE_TYPE=PKCS12
             - EXTERNAL_KEYSTORE_ALIAS=keystore
