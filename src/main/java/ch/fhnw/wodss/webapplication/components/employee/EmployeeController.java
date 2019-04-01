@@ -34,12 +34,8 @@ public class EmployeeController {
         @RequestParam(value = "password") @ApiParam(value = "Password of the new employee", required = true) String password,
         @RequestParam(value = "role") @ApiParam(value = "Role of the new employee", required = true) Role role
     ) {
-        //if ((bindingResult.getErrorCount()) == 0 || (bindingResult.getErrorCount() == 1 && bindingResult.hasFieldErrors("role"))) {
-            employee = employeeService.createEmployee(employee, password, role);
-            return new ResponseEntity<>(employee, HttpStatus.CREATED);
-        /*}* else {
-            return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
-        }*/
+        employee = employeeService.createEmployee(employee, password, role);
+        return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
     @GetMapping("")
