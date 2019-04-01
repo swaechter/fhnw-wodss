@@ -11,9 +11,6 @@ import javax.validation.constraints.*;
 @ApiModel(value = "Employee", description = "Represents the employee of the FHNW. An employee can have several non-overlapping contracts. In addition he can work in multiple projects and act as project leader")
 public class EmployeeDto {
 
-    @NotNull
-    @Min(1)
-    @Max(Long.MAX_VALUE)
     @ApiModelProperty(value = "Employee ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
     private Long id;
 
@@ -36,7 +33,6 @@ public class EmployeeDto {
     @ApiModelProperty(value = "Employee registration status (Enabled by admin or not)", allowableValues = "true, false", example = "true", required = true, position = 5)
     private Boolean isActive;
 
-    @NotNull
     @ApiModelProperty(value = "Single employee role", allowableValues = "ADMINISTRATOR, PROJECTMANAGER, DEVELOPER", example = "DEVELOPER", readOnly = true, position = 6)
     private Role role;
 

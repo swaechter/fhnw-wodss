@@ -11,9 +11,6 @@ import java.time.LocalDate;
 @ApiModel(value = "Project", description = "Represents a FHNW research project with a given full-time-equivalent (FTE) workload in percentages managed by a project manager employee")
 public class ProjectDto {
 
-    @NotNull
-    @Min(1)
-    @Max(Long.MAX_VALUE)
     @ApiModelProperty(value = "Project ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
     private Long id;
 

@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class ProjectController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ProjectDto> createProject(
-        @RequestBody @ApiParam(value = "Project to create (The ID in the body will be ignored)", required = true) ProjectDto project
+        @Valid @RequestBody @ApiParam(value = "Project to create (The ID in the body will be ignored)", required = true) ProjectDto project
     ) {
         project = projectService.createProject(project);
         return new ResponseEntity<>(project, HttpStatus.CREATED);
@@ -83,7 +84,7 @@ public class ProjectController {
     })
     public ResponseEntity<ProjectDto> updateProject(
         @PathVariable("id") @ApiParam(value = "ID of the project to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
-        @RequestBody @ApiParam(value = "Updated project (The ID in the body will be ignored)", required = true) ProjectDto project
+        @Valid @RequestBody @ApiParam(value = "Updated project (The ID in the body will be ignored)", required = true) ProjectDto project
     ) {
         projectService.updateProject(id, project);
         return new ResponseEntity<>(project, HttpStatus.OK);

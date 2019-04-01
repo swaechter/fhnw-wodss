@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class ContractController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ContractDto> createContract(
-        @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) ContractDto contract
+        @Valid @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) ContractDto contract
     ) {
         contract = contractService.createContract(contract);
         return new ResponseEntity<>(contract, HttpStatus.CREATED);
@@ -82,7 +83,7 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<ContractDto> updateContract(
-        @PathVariable("id") @ApiParam(value = "ID of the contract to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
+        @Valid @PathVariable("id") @ApiParam(value = "ID of the contract to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
         @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) ContractDto contract
     ) {
         contractService.updateContract(id, contract);

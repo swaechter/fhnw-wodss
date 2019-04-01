@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class AllocationController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AllocationDto> createAllocation(
-        @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) AllocationDto allocation
+        @Valid @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) AllocationDto allocation
     ) {
         allocation = allocationService.createAllocation(allocation);
         return new ResponseEntity<>(allocation, HttpStatus.CREATED);
@@ -86,7 +87,7 @@ public class AllocationController {
     })
     public ResponseEntity<AllocationDto> updateAllocation(
         @PathVariable("id") @ApiParam(value = "ID of the allocation to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
-        @RequestBody @ApiParam(value = "Updated allocation (The ID in the body will be ignored)", required = true) AllocationDto allocation
+        @Valid @RequestBody @ApiParam(value = "Updated allocation (The ID in the body will be ignored)", required = true) AllocationDto allocation
     ) {
         allocationService.updateAllocation(id, allocation);
         return new ResponseEntity<>(allocation, HttpStatus.OK);

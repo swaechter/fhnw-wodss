@@ -13,9 +13,6 @@ import java.time.LocalDate;
 @ApiModel(value = "Contract", description = "Represents the contract an employee can have (Multiple contracts are possible, but date overlapping is not allowed)")
 public class ContractDto {
 
-    @NotNull
-    @Min(1)
-    @Max(Long.MAX_VALUE)
     @ApiModelProperty(value = "Contract ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
     private Long id;
 

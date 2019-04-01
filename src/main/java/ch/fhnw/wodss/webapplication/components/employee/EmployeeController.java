@@ -4,8 +4,10 @@ import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,12 +30,16 @@ public class EmployeeController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<EmployeeDto> createEmployee(
-        @RequestBody @ApiParam(value = "Employee to create (The active flag in the body will be ignored)", required = true) EmployeeDto employee,
+        @Valid @RequestBody @ApiParam(value = "Employee to create (The active flag in the body will be ignored)", required = true) EmployeeDto employee, BindingResult bindingResult,
         @RequestParam(value = "password") @ApiParam(value = "Password of the new employee", required = true) String password,
         @RequestParam(value = "role") @ApiParam(value = "Role of the new employee", required = true) Role role
     ) {
-        employee = employeeService.createEmployee(employee, password, role);
-        return new ResponseEntity<>(employee, HttpStatus.CREATED);
+        //if ((bindingResult.getErrorCount()) == 0 || (bindingResult.getErrorCount() == 1 && bindingResult.hasFieldErrors("role"))) {
+            employee = employeeService.createEmployee(employee, password, role);
+            return new ResponseEntity<>(employee, HttpStatus.CREATED);
+        /*}* else {
+            return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
+        }*/
     }
 
     @GetMapping("")
@@ -77,10 +83,11 @@ public class EmployeeController {
     })
     public ResponseEntity<EmployeeDto> updateEmployee(
         @PathVariable("id") @ApiParam(value = "ID of the employee to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) Long id,
-        @RequestBody @ApiParam(value = "Updated employee (The ID and role in the body will be ignored)", required = true) EmployeeDto employee
+        @Valid @RequestBody @ApiParam(value = "Updated employee (The ID and role in the body will be ignored)", required = true) EmployeeDto employee
     ) {
         employeeService.updateEmployee(id, employee);
         return new ResponseEntity<>(employee, HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{id}")
