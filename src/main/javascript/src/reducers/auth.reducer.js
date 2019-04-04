@@ -16,7 +16,7 @@ export function auth(state = initialState, action) {
 		case USER_LOGIN_BEGINN:
 			return Object.assign(status,{loginStatus : loginStatus.FETCHING_JWT});
 		case USER_LOGIN_SUCCESS:
-			let jwt = action.payload;
+			let jwt = action.payload.token;
 			let user = {username: "dummyUser"}
 			return (
 				{

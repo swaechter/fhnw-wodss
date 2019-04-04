@@ -53,9 +53,9 @@ export function loginUserAsync(credentials) {
 	return (dispatch) => {
 	dispatch(loginUserBegin);
 	return authService.login(credentials)
-	.then(res => res.json)
-	.then(json => dispatch(loginUserSuccess(payload)))
-	.catch(err => dispatch(loginUserFail(payload)))	
+	.then(res => res.json())
+	.then(json => dispatch(loginUserSuccess(json)))
+	.catch(err => dispatch(loginUserFail(err)))	
 	}
 }
 

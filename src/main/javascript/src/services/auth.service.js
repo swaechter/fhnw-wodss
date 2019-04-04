@@ -1,12 +1,12 @@
-const _serverUrl = 'http://localhost:9000'
+const _serverUrl = 'https://localhost:8000'
 
 class AuthService {
 
     login(credentials) {
-        var request = new Request(this._serverUrl+ '/api/token', {
+        var request = new Request(_serverUrl+ '/api/token', {
             method: 'POST',
             headers: new Headers({
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             }),
             body: JSON.stringify(credentials)
         });
