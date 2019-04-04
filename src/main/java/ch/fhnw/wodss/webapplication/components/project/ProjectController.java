@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.project;
 
+import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import io.swagger.annotations.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -36,9 +37,10 @@ public class ProjectController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ProjectDto> createProject(
-        @Valid @RequestBody @ApiParam(value = "Project to create (The ID in the body will be ignored)", required = true) ProjectDto project
+        @Valid @RequestBody @ApiParam(value = "Project to create (The ID in the body will be ignored)", required = true) ProjectDto project,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        project = projectService.createProject(project);
+        project = projectService.createProject(project, authenticatedEmployee);
         return new ResponseEntity<>(project, HttpStatus.CREATED);
     }
 
@@ -53,9 +55,10 @@ public class ProjectController {
     public ResponseEntity<List<ProjectDto>> getProjects(
         @RequestParam(value = "projectManagerId", required = false) @ApiParam(value = "Filter the projects by a project manager ID", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectManagerId,
         @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
-        @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate
+        @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        List<ProjectDto> projects = projectService.getProjects(fromDate, toDate, projectManagerId);
+        List<ProjectDto> projects = projectService.getProjects(fromDate, toDate, projectManagerId, authenticatedEmployee);
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
@@ -69,9 +72,10 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<ProjectDto> getProject(
-        @PathVariable("id") @ApiParam(value = "ID of the project", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the project", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        ProjectDto project = projectService.getProject(id);
+        ProjectDto project = projectService.getProject(id, authenticatedEmployee);
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
@@ -87,9 +91,10 @@ public class ProjectController {
     })
     public ResponseEntity<ProjectDto> updateProject(
         @PathVariable("id") @ApiParam(value = "ID of the project to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
-        @Valid @RequestBody @ApiParam(value = "Updated project (The ID in the body will be ignored)", required = true) ProjectDto project
+        @Valid @RequestBody @ApiParam(value = "Updated project (The ID in the body will be ignored)", required = true) ProjectDto project,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        projectService.updateProject(id, project);
+        projectService.updateProject(id, project, authenticatedEmployee);
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
@@ -104,9 +109,10 @@ public class ProjectController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteProject(
-        @PathVariable("id") @ApiParam(value = "ID of the project to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the project to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        projectService.deleteProject(id);
+        projectService.deleteProject(id, authenticatedEmployee);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

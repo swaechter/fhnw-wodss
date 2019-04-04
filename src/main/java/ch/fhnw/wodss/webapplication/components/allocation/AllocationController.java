@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.allocation;
 
+import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import io.swagger.annotations.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -39,9 +40,10 @@ public class AllocationController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AllocationDto> createAllocation(
-        @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) AllocationDto allocation
+        @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) AllocationDto allocation,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        allocation = allocationService.createAllocation(allocation);
+        allocation = allocationService.createAllocation(allocation, authenticatedEmployee);
         return new ResponseEntity<>(allocation, HttpStatus.CREATED);
     }
 
@@ -58,9 +60,10 @@ public class AllocationController {
         @RequestParam(value = "employeeId", required = false) @ApiParam(value = "Filter the allocations by an employee (Filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long employeeId,
         @RequestParam(value = "projectId", required = false) @ApiParam(value = "Filter the allocations by a project (Filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectId,
         @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
-        @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate
+        @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        List<AllocationDto> allocations = allocationService.getAllocations(employeeId, projectId, fromDate, toDate);
+        List<AllocationDto> allocations = allocationService.getAllocations(employeeId, projectId, fromDate, toDate, authenticatedEmployee);
         return new ResponseEntity<>(allocations, HttpStatus.OK);
     }
 
@@ -74,9 +77,10 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<AllocationDto> getAllocation(
-        @PathVariable("id") @ApiParam(value = "ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        AllocationDto allocation = allocationService.getAllocation(id);
+        AllocationDto allocation = allocationService.getAllocation(id, authenticatedEmployee);
         return new ResponseEntity<>(allocation, HttpStatus.OK);
     }
 
@@ -92,9 +96,10 @@ public class AllocationController {
     })
     public ResponseEntity<AllocationDto> updateAllocation(
         @PathVariable("id") @ApiParam(value = "ID of the allocation to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
-        @Valid @RequestBody @ApiParam(value = "Updated allocation (The ID in the body will be ignored)", required = true) AllocationDto allocation
+        @Valid @RequestBody @ApiParam(value = "Updated allocation (The ID in the body will be ignored)", required = true) AllocationDto allocation,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        allocationService.updateAllocation(id, allocation);
+        allocationService.updateAllocation(id, allocation, authenticatedEmployee);
         return new ResponseEntity<>(allocation, HttpStatus.OK);
     }
 
@@ -109,9 +114,10 @@ public class AllocationController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteAllocation(
-        @PathVariable("id") @ApiParam(value = "ID of the allocation to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the allocation to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        allocationService.deleteAllocation(id);
+        allocationService.deleteAllocation(id, authenticatedEmployee);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

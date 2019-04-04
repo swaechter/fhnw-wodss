@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.contract;
 
+import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import io.swagger.annotations.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -39,9 +40,10 @@ public class ContractController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ContractDto> createContract(
-        @Valid @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) ContractDto contract
+        @Valid @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) ContractDto contract,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        contract = contractService.createContract(contract);
+        contract = contractService.createContract(contract, authenticatedEmployee);
         return new ResponseEntity<>(contract, HttpStatus.CREATED);
     }
 
@@ -54,9 +56,10 @@ public class ContractController {
     })
     public ResponseEntity<List<ContractDto>> getContracts(
         @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Contracts with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
-        @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Contracts with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate
+        @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Contracts with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        List<ContractDto> contacts = contractService.getContracts(fromDate, toDate);
+        List<ContractDto> contacts = contractService.getContracts(fromDate, toDate, authenticatedEmployee);
         return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 
@@ -70,9 +73,10 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<ContractDto> getContract(
-        @PathVariable("id") @ApiParam(value = "ID of the contract", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the contract", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        ContractDto contract = contractService.getContract(id);
+        ContractDto contract = contractService.getContract(id, authenticatedEmployee);
         return new ResponseEntity<>(contract, HttpStatus.OK);
     }
 
@@ -88,9 +92,10 @@ public class ContractController {
     })
     public ResponseEntity<ContractDto> updateContract(
         @Valid @PathVariable("id") @ApiParam(value = "ID of the contract to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
-        @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) ContractDto contract
+        @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) ContractDto contract,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        contractService.updateContract(id, contract);
+        contractService.updateContract(id, contract, authenticatedEmployee);
         return new ResponseEntity<>(contract, HttpStatus.OK);
     }
 
@@ -106,9 +111,10 @@ public class ContractController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> anonymizeContract(
-        @PathVariable("id") @ApiParam(value = "ID of the contract to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the contract to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        contractService.deleteContract(id);
+        contractService.deleteContract(id, authenticatedEmployee);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

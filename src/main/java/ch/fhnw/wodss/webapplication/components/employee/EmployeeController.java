@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.employee;
 
+import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,9 +37,10 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> createEmployee(
         @Valid @RequestBody @ApiParam(value = "Employee to create (The active flag in the body will be ignored)", required = true) EmployeeDto employee,
         @RequestParam(value = "password") @ApiParam(value = "Password of the new employee", required = true) String password,
-        @RequestParam(value = "role") @ApiParam(value = "Role of the new employee", required = true) Role role
+        @RequestParam(value = "role") @ApiParam(value = "Role of the new employee", required = true) Role role,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        employee = employeeService.createEmployee(employee, password, role);
+        employee = employeeService.createEmployee(employee, password, role, authenticatedEmployee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
@@ -50,9 +52,10 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<List<EmployeeDto>> getEmployees(
-        @RequestParam(value = "role", required = false) @ApiParam(value = "Filter the employees by role)", allowableValues = "ADMINISTRATOR, PROJECTMANAGER, DEVELOPER", example = "ADMINISTRATOR", required = false) Role role
+        @RequestParam(value = "role", required = false) @ApiParam(value = "Filter the employees by role)", allowableValues = "ADMINISTRATOR, PROJECTMANAGER, DEVELOPER", example = "ADMINISTRATOR", required = false) Role role,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        List<EmployeeDto> employees = employeeService.getEmployees(role);
+        List<EmployeeDto> employees = employeeService.getEmployees(role, authenticatedEmployee);
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
@@ -65,9 +68,10 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<EmployeeDto> getEmployee(
-        @PathVariable("id") @ApiParam(value = "ID of the employee", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the employee", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        EmployeeDto employee = employeeService.getEmployee(id);
+        EmployeeDto employee = employeeService.getEmployee(id, authenticatedEmployee);
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
@@ -83,9 +87,10 @@ public class EmployeeController {
     })
     public ResponseEntity<EmployeeDto> updateEmployee(
         @PathVariable("id") @ApiParam(value = "ID of the employee to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
-        @Valid @RequestBody @ApiParam(value = "Updated employee (The ID and role in the body will be ignored)", required = true) EmployeeDto employee
+        @Valid @RequestBody @ApiParam(value = "Updated employee (The ID and role in the body will be ignored)", required = true) EmployeeDto employee,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        employeeService.updateEmployee(id, employee);
+        employeeService.updateEmployee(id, employee, authenticatedEmployee);
         return new ResponseEntity<>(employee, HttpStatus.OK);
 
     }
@@ -101,9 +106,10 @@ public class EmployeeController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> anonymizeEmployee(
-        @PathVariable("id") @ApiParam(value = "ID of the employee to be anonymized", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id
+        @PathVariable("id") @ApiParam(value = "ID of the employee to be anonymized", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        AuthenticatedEmployee authenticatedEmployee
     ) {
-        employeeService.anonymizeEmployee(id);
+        employeeService.anonymizeEmployee(id, authenticatedEmployee);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

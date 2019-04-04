@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @JsonPropertyOrder({"id", "firstName", "lastName", "emailAddress", "isActive", "role"})
 @ApiModel(value = "Employee", description = "Represents the employee of the FHNW. An employee can have several non-overlapping contracts. In addition he can work in multiple projects and act as project leader")
@@ -41,6 +43,16 @@ public class EmployeeDto {
     private String temporaryPasswordHash;
 
     public EmployeeDto() {
+    }
+
+    public EmployeeDto(EmployeeDto employee) {
+        this.id = employee.id;
+        this.firstName = employee.firstName;
+        this.lastName = employee.lastName;
+        this.emailAddress = employee.emailAddress;
+        this.isActive = employee.isActive;
+        this.role = employee.role;
+        this.temporaryPasswordHash = employee.temporaryPasswordHash;
     }
 
     public EmployeeDto(String firstName, String lastName, String emailAddress, Boolean isActive, Role role) {

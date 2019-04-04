@@ -1,6 +1,7 @@
 package ch.fhnw.wodss.webapplication.components.employee;
 
 import ch.fhnw.wodss.webapplication.components.token.Credentials;
+import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class EmployeeService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public EmployeeDto createEmployee(EmployeeDto employee, String password, Role role) {
+    public EmployeeDto createEmployee(EmployeeDto employee, String password, Role role, AuthenticatedEmployee authenticatedEmployee) {
         employee.setRole(role);
         employee.setTemporaryPasswordHash(passwordEncoder.encode(password)); // TODO: Remove this call - the password hash should be stored in the Jooq entity/database
         return employeeRepository.saveEntry(employee);
@@ -34,25 +35,22 @@ public class EmployeeService {
         }
 
         return passwordEncoder.matches(credentials.getRawPassword(), employee.get().getTemporaryPasswordHash()) ? employee : Optional.empty();
-        //        return employee.get().getTemporaryPasswordHash().m
-        //String hashedPassword = passwordEncoder.m(credentials.getRawPassword());
-        //return employee.get().getTemporaryPasswordHash().equals(hashedPassword) ? employee : Optional.empty();
     }
 
-    public List<EmployeeDto> getEmployees(Role role) {
+    public List<EmployeeDto> getEmployees(Role role, AuthenticatedEmployee authenticatedEmployee) {
         return employeeRepository.getEntries();
     }
 
-    public EmployeeDto getEmployee(long id) {
+    public EmployeeDto getEmployee(Long id, AuthenticatedEmployee authenticatedEmployee) {
         return employeeRepository.getEntry(id);
     }
 
-    public void updateEmployee(long id, EmployeeDto employee) {
+    public void updateEmployee(Long id, EmployeeDto employee, AuthenticatedEmployee authenticatedEmployee) {
         employeeRepository.updateEntry(id, employee);
     }
 
-    public void anonymizeEmployee(long id) {
-        EmployeeDto employee = getEmployee(id);
+    public void anonymizeEmployee(Long id, AuthenticatedEmployee authenticatedEmployee) {
+        EmployeeDto employee = employeeRepository.getEntry(id);
         employee.setFirstName("NONE");
         employee.setLastName("NONE");
         employee.setEmailAddress("NONE@NONE.NONE");
