@@ -39,6 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .and().authorizeRequests()
             .antMatchers(HttpMethod.GET, "/", "/error").permitAll()
             .antMatchers(HttpMethod.POST, "/api/employee**", "/api/token**").permitAll()
+            .antMatchers(HttpMethod.OPTIONS, "**").permitAll()
             .anyRequest().authenticated()
 
             // Add a filter to check the the JWT token and authenticate based on the token
