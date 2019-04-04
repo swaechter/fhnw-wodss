@@ -20,7 +20,7 @@ import { loginStatus } from '../actions';
 export default class App extends Component {
 
 	isAuthenticated = () => {
-		this.props.auth.loginStatus == loginStatus.LOGGED_IN
+		return this.props.auth.loginStatus == loginStatus.LOGGED_IN
 	}
 
 	handleRoute = async e =>{
@@ -38,6 +38,7 @@ export default class App extends Component {
 	}
 
 	render() {
+		let authed = this.isAuthenticated();
 		return (
 			<div>
 				<Navbar>
@@ -56,8 +57,7 @@ export default class App extends Component {
 					</SideMenu>
 				)
 				:(<div/>)
-				}
-					
+				}					
 					<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 						<h2>Section title</h2>
 						<Router onChange={this.handleRoute}>
