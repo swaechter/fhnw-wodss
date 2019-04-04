@@ -2,6 +2,12 @@ package ch.fhnw.wodss.webapplication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 @SpringBootApplication
 public class WebapplicationApplication {
@@ -10,25 +16,19 @@ public class WebapplicationApplication {
         SpringApplication.run(WebapplicationApplication.class, args);
     }
 
-/*    @Service
-    public class AccountRunner implements CommandLineRunner {
+    @Controller
+    @RequestMapping("/")
+    public class IndexController {
 
-        private final RoleService roleService;
-
-        private final AccountService accountService;
-
-        public AccountRunner(RoleService roleService, AccountService accountService) {
-            this.roleService = roleService;
-            this.accountService = accountService;
+        @GetMapping
+        public String redirectToSwagger() {
+            return "redirect:/swagger-ui.html";
         }
 
-        @Override
-        public void run(String[] args) {
-            Role userRole = roleService.createRole("ROLE_USER");
-            Role adminRole = roleService.createRole("ROLE_ADMIN");
-
-            accountService.createAccount("user", "user", userRole);
-            accountService.createAccount("admin", "admin", adminRole);
+        @RequestMapping("/env")
+        public @ResponseBody
+        Map<String, String> getEnvironment() {
+            return System.getenv();
         }
-    }*/
+    }
 }

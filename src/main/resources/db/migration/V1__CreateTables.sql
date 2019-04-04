@@ -1,14 +1,16 @@
+CREATE TYPE role AS ENUM ('ADMINISTRATOR', 'PROJECTMANAGER', 'DEVELOPER');
+
 CREATE TABLE employee (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    email_address VARCHAR(120) NOT NULL,
+    email_address VARCHAR(120) UNIQUE NOT NULL,
     is_active BOOLEAN NOT NULL,
-    role ENUM ('ADMINISTRATOR', 'PROJECTMANAGER', 'DEVELOPER')
+    role role NOT NULL
 );
 
 CREATE TABLE project (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     fte_percentage BIGINT NOT NULL,
     start_date DATE NOT NULL,
@@ -17,7 +19,7 @@ CREATE TABLE project (
 );
 
 CREATE TABLE contract (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     pensum_percentage SMALLINT NOT NULL,
@@ -25,7 +27,7 @@ CREATE TABLE contract (
 );
 
 CREATE TABLE allocation (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     pensum_percentage SMALLINT NOT NULL,
