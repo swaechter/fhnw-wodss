@@ -33,7 +33,7 @@ export default class App extends Component {
 		let credentials = {
 			"emailAddress": "simon.waechter@students.fhnw.ch",
 			"rawPassword": "123456aA"
-		  }
+		}
 		this.props.loginUserAsync(credentials)
 	}
 

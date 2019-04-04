@@ -17,7 +17,7 @@ export const USER_LOGOUT_FAIL = 'USER_LOGOUT_FAIL';
  * other constants
  */
 
- export const loginStatus = {
+export const loginStatus = {
 	LOGGED_OUT: 'LOGGED_OUT',
 	FETCHING_JWT: 'FETCHING_JWT',
 	LOGGED_IN: 'LOGGED_IN'
@@ -27,18 +27,18 @@ export const USER_LOGOUT_FAIL = 'USER_LOGOUT_FAIL';
  * action creators
  */
 export const loginUserBegin = () => ({
-  type: USER_LOGIN_BEGINN
+	type: USER_LOGIN_BEGINN
 })
 
 
 export const loginUserSuccess = (payload) => ({
-  type: USER_LOGIN_SUCCESS,
-  payload
+	type: USER_LOGIN_SUCCESS,
+	payload
 })
 
 export const loginUserFail = (error) => ({
-  type: USER_LOGIN_FAIL,
-  error
+	type: USER_LOGIN_FAIL,
+	error
 })
 
 
@@ -51,11 +51,11 @@ export function logoutUser(index) {
  */
 export function loginUserAsync(credentials) {
 	return (dispatch) => {
-	dispatch(loginUserBegin);
-	return authService.login(credentials)
-	.then(res => res.json())
-	.then(json => dispatch(loginUserSuccess(json)))
-	.catch(err => dispatch(loginUserFail(err)))	
+		dispatch(loginUserBegin());
+		return authService.login(credentials)
+			.then(res => res.json())
+			.then(json => dispatch(loginUserSuccess(json)))
+			.catch(err => dispatch(loginUserFail(err)));
 	}
 }
 
