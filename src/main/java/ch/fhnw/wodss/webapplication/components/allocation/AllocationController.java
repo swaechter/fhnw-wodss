@@ -16,6 +16,7 @@ import java.util.List;
 
 @Validated
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/api/allocation", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Allocation", description = "Endpoint for managing all allocations")
 public class AllocationController {

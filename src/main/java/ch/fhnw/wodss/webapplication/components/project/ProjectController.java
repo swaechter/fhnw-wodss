@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/api/project", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Project", description = "Endpoint for managing all projects")
 public class ProjectController {

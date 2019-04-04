@@ -16,6 +16,7 @@ import java.util.List;
 
 @Validated
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/api/contract", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Contract", description = "Endpoint for managing all contracts")
 public class ContractController {

@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/api/token", produces = MediaType.APPLICATION_JSON_VALUE)
 @Api(tags = "Token", description = "Endpoint to manage your JWT token")
 public class TokenController {
