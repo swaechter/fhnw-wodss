@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Map;
 
 @SpringBootApplication
-public class WebapplicationApplication {
+public class WebApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(WebapplicationApplication.class, args);
+        SpringApplication.run(WebApplication.class, args);
     }
 
     @Controller
