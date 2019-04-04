@@ -13,15 +13,15 @@ import java.time.LocalDate;
 @ApiModel(value = "Allocation", description = "Represents the work unit an employee is doing for a project")
 public class AllocationDto {
 
-    @ApiModelProperty(value = "AllocationDto ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
+    @ApiModelProperty(value = "Allocation ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
     private Long id;
 
     @NotNull
-    @ApiModelProperty(value = "AllocationDto start date (YYYY-MM-DD)", example = "2019-03-13", required = true, position = 2)
+    @ApiModelProperty(value = "Allocation start date (YYYY-MM-DD)", example = "2019-03-13", required = true, position = 2)
     private LocalDate startDate;
 
     @NotNull
-    @ApiModelProperty(value = "AllocationDto end date (YYYY-MM-DD)", example = "2019-06-13", required = true, position = 3)
+    @ApiModelProperty(value = "Allocation end date (YYYY-MM-DD)", example = "2019-06-13", required = true, position = 3)
     private LocalDate endDate;
 
     @NotNull
