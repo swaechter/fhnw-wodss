@@ -25,4 +25,4 @@ FROM openjdk:11-jre-slim
 COPY --from=development-environment /workspace/build/libs/fhnwwodss.jar /opt/app/app.jar
 
 # Start the application
-CMD ["java", "-XX:+UseContainerSupport", "-Xmx300m", "-jar", "/opt/app/app.jar"]
+CMD ["java", "-XX:+UseContainerSupport", "-Xmx300m", "-Xss512k", "-XX:CICompilerCount=2", "-jar", "/opt/app/app.jar"]
