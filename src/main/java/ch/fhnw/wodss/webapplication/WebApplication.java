@@ -12,6 +12,10 @@ import java.util.Map;
 @SpringBootApplication
 public class WebApplication {
 
+    static {
+        System.getProperties().setProperty("org.jooq.no-logo", "true");
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(WebApplication.class, args);
     }
