@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class EmployeeService {
@@ -76,7 +77,7 @@ public class EmployeeService {
         EmployeeDto employee = selectedEmployee.get();
         employee.setFirstName("NONE");
         employee.setLastName("NONE");
-        employee.setEmailAddress("NONE@NONE.NONE");
+        employee.setEmailAddress(UUID.randomUUID() + "@NONE.NONE");
         employeeRepository.updateEmployee(id, employee);
     }
 }

@@ -5,8 +5,6 @@ import org.jooq.DSLContext;
 import org.jooq.UpdatableRecord;
 import org.jooq.impl.TableImpl;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -53,7 +51,7 @@ public abstract class GenericCrudRepository<DTO, Record extends UpdatableRecord<
     protected Optional<DTO> updateOne(DTO dto) {
         try {
             Record record = mapDtoToRecord(dto, dslContext.newRecord(table));
-            record.store();
+            record.update();
             return Optional.of(mapRecordToDto(record));
         } catch (Exception exception) {
             return Optional.empty();
