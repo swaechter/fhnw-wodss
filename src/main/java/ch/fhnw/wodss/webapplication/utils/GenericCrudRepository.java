@@ -16,16 +16,19 @@ public abstract class GenericCrudRepository<DTO, Record extends UpdatableRecord<
 
     private final DSLContext dslContext;
 
+    private final Converter converter;
+
     private final Table table;
 
-    public GenericCrudRepository(DSLContext dslContext, Table table) {
+    public GenericCrudRepository(DSLContext dslContext, Converter converter, Table table) {
         this.dslContext = dslContext;
+        this.converter = converter;
         this.table = table;
     }
 
     protected Optional<DTO> createOne(DTO dto) {
         try {
-            Record record = mapDtoToRecord(dto);
+            Record record = mapDtoToRecord(dto, dslContext.newRecord(table));
             record.store();
             return Optional.of(mapRecordToDto(record));
         } catch (Exception exception) {
@@ -49,7 +52,7 @@ public abstract class GenericCrudRepository<DTO, Record extends UpdatableRecord<
 
     protected Optional<DTO> updateOne(DTO dto) {
         try {
-            Record record = mapDtoToRecord(dto);
+            Record record = mapDtoToRecord(dto, dslContext.newRecord(table));
             record.store();
             return Optional.of(mapRecordToDto(record));
         } catch (Exception exception) {
@@ -61,19 +64,11 @@ public abstract class GenericCrudRepository<DTO, Record extends UpdatableRecord<
         dslContext.delete(table).where(function.apply(table));
     }
 
-    protected Record buildNewRecord() {
-        return dslContext.newRecord(table);
+    protected Converter getConverter() {
+        return converter;
     }
 
-    protected Date localDateToSqlDate(LocalDate localDate) {
-        return Date.valueOf(localDate);
-    }
-
-    protected LocalDate sqlDateToLocalDate(Date date) {
-        return date.toLocalDate();
-    }
-
-    protected abstract Record mapDtoToRecord(DTO dto);
+    protected abstract Record mapDtoToRecord(DTO dto, Record record);
 
     protected abstract DTO mapRecordToDto(Record record);
 }
