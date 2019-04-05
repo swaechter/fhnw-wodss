@@ -38,9 +38,8 @@ public class EmployeeDto {
     @ApiModelProperty(value = "Single employee role", allowableValues = "ADMINISTRATOR, PROJECTMANAGER, DEVELOPER", example = "DEVELOPER", readOnly = true, position = 6)
     private Role role;
 
-    // TODO: Kill this temporary password hash field, because we can't rely on the database at the moment + the employee DTO shouldn't have a password hash field
     @JsonIgnore
-    private String temporaryPasswordHash;
+    private String passwordHash;
 
     public EmployeeDto() {
     }
@@ -52,13 +51,15 @@ public class EmployeeDto {
         this.emailAddress = employee.emailAddress;
         this.isActive = employee.isActive;
         this.role = employee.role;
-        this.temporaryPasswordHash = employee.temporaryPasswordHash;
+        this.passwordHash = employee.passwordHash;
     }
 
-    public EmployeeDto(String firstName, String lastName, String emailAddress, Boolean isActive, Role role) {
+    public EmployeeDto(Long id, String firstName, String lastName, String emailAddress, String passwordHash, Boolean isActive, Role role) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
+        this.passwordHash = passwordHash;
         this.isActive = isActive;
         this.role = role;
     }
@@ -95,6 +96,14 @@ public class EmployeeDto {
         this.emailAddress = emailAddress;
     }
 
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
     public Boolean isActive() {
         return isActive;
     }
@@ -109,15 +118,5 @@ public class EmployeeDto {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    // TODO: Delete this method as soon we rely on the database
-    public String getTemporaryPasswordHash() {
-        return temporaryPasswordHash;
-    }
-
-    // TODO: Delete this method as soon we rely on the database
-    public void setTemporaryPasswordHash(String temporaryPasswordHash) {
-        this.temporaryPasswordHash = temporaryPasswordHash;
     }
 }
