@@ -28,7 +28,7 @@ public class ContractDto {
     @Min(0)
     @Max(100)
     @ApiModelProperty(value = "Full time equivalent for the contract as percentage value (0.5 FTE = 50)", allowableValues = "range[0, 100]", example = "50", required = true, position = 4)
-    private Integer pensumPercentage;
+    private Short pensumPercentage;
 
     @NotNull
     @Min(1)
@@ -39,7 +39,7 @@ public class ContractDto {
     public ContractDto() {
     }
 
-    public ContractDto(LocalDate startDate, LocalDate endDate, Integer pensumPercentage) {
+    public ContractDto(LocalDate startDate, LocalDate endDate, Short pensumPercentage) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.pensumPercentage = pensumPercentage;
@@ -69,11 +69,11 @@ public class ContractDto {
         this.endDate = endDate;
     }
 
-    public Integer getPensumPercentage() {
+    public Short getPensumPercentage() {
         return pensumPercentage;
     }
 
-    public void setPensumPercentage(Integer pensumPercentage) {
+    public void setPensumPercentage(Short pensumPercentage) {
         this.pensumPercentage = pensumPercentage;
     }
 

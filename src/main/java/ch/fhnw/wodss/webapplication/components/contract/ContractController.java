@@ -95,7 +95,7 @@ public class ContractController {
         @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) ContractDto contract,
         AuthenticatedEmployee authenticatedEmployee
     ) {
-        contractService.updateContract(id, contract, authenticatedEmployee);
+        contract = contractService.updateContract(id, contract, authenticatedEmployee);
         return new ResponseEntity<>(contract, HttpStatus.OK);
     }
 

@@ -1,27 +1,58 @@
 package ch.fhnw.wodss.webapplication.components.contract;
 
-import ch.fhnw.wodss.webapplication.utils.MemoryRepository;
+import ch.fhnw.wodss.webapplication.utils.Converter;
+import ch.fhnw.wodss.webapplication.utils.GenericCrudRepository;
 import org.jooq.DSLContext;
+import org.jooq.generated.tables.Contract;
+import org.jooq.generated.tables.records.ContractRecord;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class ContractRepository extends MemoryRepository<ContractDto> {
+public class ContractRepository extends GenericCrudRepository<ContractDto, ContractRecord, Contract> {
 
-    private final DSLContext dslContext;
-
-    public ContractRepository(DSLContext dslContext) {
-        this.dslContext = dslContext;
+    public ContractRepository(DSLContext dslContext, Converter converter) {
+        super(dslContext, converter, Contract.CONTRACT);
     }
 
-    public List<ContractDto> getContracts() {
-        return new ArrayList<>();
+    public Optional<ContractDto> saveContract(ContractDto contract) {
+        return createOne(contract);
+    }
+
+    public List<ContractDto> getContracts(LocalDate fromDate, LocalDate toDate) {
+        return readMany(table -> table.ID.isNotNull());
+    }
+
+    public Optional<ContractDto> getContractById(Long id) {
+        return readOne(table -> table.ID.eq(id));
+    }
+
+    public Optional<ContractDto> updateContract(Long id, ContractDto contract) {
+        contract.setId(id);
+        return updateOne(contract);
+    }
+
+    public void deleteContract(Long id) {
+        deleteOne(table -> table.ID.eq(id));
     }
 
     @Override
-    public void setEntityId(ContractDto entry, Long value) {
-        entry.setId(value);
+    protected ContractRecord mapDtoToRecord(ContractDto contract, ContractRecord contractRecord) {
+        if (contract.getId() != null) {
+            contractRecord.setId(contract.getId());
+        }
+        contractRecord.setStartDate(getConverter().localDateToSqlDate(contract.getStartDate()));
+        contractRecord.setEndDate(getConverter().localDateToSqlDate(contract.getEndDate()));
+        contractRecord.setPensumPercentage(contract.getPensumPercentage());
+        contractRecord.setEmployeeId(contract.getEmployeeId());
+        return contractRecord;
+    }
+
+    @Override
+    protected ContractDto mapRecordToDto(ContractRecord contractRecord) {
+        return getConverter().contractRecordToContractDto(contractRecord);
     }
 }

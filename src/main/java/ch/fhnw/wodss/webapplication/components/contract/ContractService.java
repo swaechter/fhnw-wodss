@@ -1,10 +1,13 @@
 package ch.fhnw.wodss.webapplication.components.contract;
 
 import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
+import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
+import ch.fhnw.wodss.webapplication.exceptions.InternalException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ContractService {
@@ -16,22 +19,37 @@ public class ContractService {
     }
 
     public ContractDto createContract(ContractDto contract, AuthenticatedEmployee authenticatedEmployee) {
-        return contractRepository.saveEntry(contract);
+        Optional<ContractDto> createdContract = contractRepository.saveContract(contract);
+        if (createdContract.isEmpty()) {
+            throw new InternalException("Unable to create the contract");
+        }
+
+        return createdContract.get();
     }
 
     public List<ContractDto> getContracts(LocalDate fromDate, LocalDate toDate, AuthenticatedEmployee authenticatedEmployee) {
-        return contractRepository.getEntries();
+        return contractRepository.getContracts(fromDate, toDate);
     }
 
     public ContractDto getContract(Long id, AuthenticatedEmployee authenticatedEmployee) {
-        return contractRepository.getEntry(id);
+        Optional<ContractDto> selectedContract = contractRepository.getContractById(id);
+        if (selectedContract.isEmpty()) {
+            throw new EntityNotFoundException("contract", id);
+        }
+
+        return selectedContract.get();
     }
 
-    public void updateContract(Long id, ContractDto contract, AuthenticatedEmployee authenticatedEmployee) {
-        contractRepository.updateEntry(id, contract);
+    public ContractDto updateContract(Long id, ContractDto contract, AuthenticatedEmployee authenticatedEmployee) {
+        Optional<ContractDto> updatedContract = contractRepository.updateContract(id, contract);
+        if (updatedContract.isEmpty()) {
+            throw new EntityNotFoundException("contract", id);
+        }
+
+        return updatedContract.get();
     }
 
     public void deleteContract(Long id, AuthenticatedEmployee authenticatedEmployee) {
-        contractRepository.deleteEntry(id);
+        contractRepository.deleteContract(id);
     }
 }

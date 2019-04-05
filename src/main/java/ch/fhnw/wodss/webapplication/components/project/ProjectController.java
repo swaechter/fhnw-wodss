@@ -94,7 +94,7 @@ public class ProjectController {
         @Valid @RequestBody @ApiParam(value = "Updated project (The ID in the body will be ignored)", required = true) ProjectDto project,
         AuthenticatedEmployee authenticatedEmployee
     ) {
-        projectService.updateProject(id, project, authenticatedEmployee);
+        project = projectService.updateProject(id, project, authenticatedEmployee);
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 

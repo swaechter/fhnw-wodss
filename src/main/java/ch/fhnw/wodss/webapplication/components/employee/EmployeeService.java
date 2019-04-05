@@ -2,6 +2,8 @@ package ch.fhnw.wodss.webapplication.components.employee;
 
 import ch.fhnw.wodss.webapplication.components.token.Credentials;
 import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
+import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
+import ch.fhnw.wodss.webapplication.exceptions.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,36 +26,57 @@ public class EmployeeService {
 
     public EmployeeDto createEmployee(EmployeeDto employee, String password, Role role, AuthenticatedEmployee authenticatedEmployee) {
         employee.setRole(role);
-        employee.setTemporaryPasswordHash(passwordEncoder.encode(password)); // TODO: Remove this call - the password hash should be stored in the Jooq entity/database
-        return employeeRepository.saveEntry(employee);
+        employee.setPasswordHash(passwordEncoder.encode(password));
+
+        Optional<EmployeeDto> createdEmployee = employeeRepository.saveEmployee(employee);
+        if (createdEmployee.isEmpty()) {
+            throw new InternalException("Unable to create the employee");
+        }
+
+        return createdEmployee.get();
     }
 
     public Optional<EmployeeDto> getEmployeeFromLogon(Credentials credentials) {
-        Optional<EmployeeDto> employee = employeeRepository.getEntries().stream().filter(employeeDto -> employeeDto.getEmailAddress().equals(credentials.getEmailAddress())).findFirst();
-        if (employee.isEmpty()) {
+        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeByEmailAddress(credentials.getEmailAddress());
+        if (selectedEmployee.isEmpty()) {
             return Optional.empty();
         }
 
-        return passwordEncoder.matches(credentials.getRawPassword(), employee.get().getTemporaryPasswordHash()) ? employee : Optional.empty();
+        return passwordEncoder.matches(credentials.getRawPassword(), selectedEmployee.get().getPasswordHash()) ? selectedEmployee : Optional.empty();
     }
 
     public List<EmployeeDto> getEmployees(Role role, AuthenticatedEmployee authenticatedEmployee) {
-        return employeeRepository.getEntries();
+        return employeeRepository.getEmployees(role);
     }
 
     public EmployeeDto getEmployee(Long id, AuthenticatedEmployee authenticatedEmployee) {
-        return employeeRepository.getEntry(id);
+        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(id);
+        if (selectedEmployee.isEmpty()) {
+            throw new EntityNotFoundException("employee", id);
+        }
+
+        return selectedEmployee.get();
     }
 
-    public void updateEmployee(Long id, EmployeeDto employee, AuthenticatedEmployee authenticatedEmployee) {
-        employeeRepository.updateEntry(id, employee);
+    public EmployeeDto updateEmployee(Long id, EmployeeDto employee, AuthenticatedEmployee authenticatedEmployee) {
+        Optional<EmployeeDto> updatedEmployee = employeeRepository.updateEmployee(id, employee);
+        if (updatedEmployee.isEmpty()) {
+            throw new EntityNotFoundException("employee", id);
+        }
+
+        return updatedEmployee.get();
     }
 
     public void anonymizeEmployee(Long id, AuthenticatedEmployee authenticatedEmployee) {
-        EmployeeDto employee = employeeRepository.getEntry(id);
+        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(id);
+        if (selectedEmployee.isEmpty()) {
+            throw new EntityNotFoundException("employee", id);
+        }
+
+        EmployeeDto employee = selectedEmployee.get();
         employee.setFirstName("NONE");
         employee.setLastName("NONE");
         employee.setEmailAddress("NONE@NONE.NONE");
-        employeeRepository.updateEntry(id, employee);
+        employeeRepository.updateEmployee(id, employee);
     }
 }
