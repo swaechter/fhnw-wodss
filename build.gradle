@@ -1,8 +1,8 @@
 buildscript {
     ext {
-        databaseUrl = 'jdbc:postgresql://ec2-184-72-238-22.compute-1.amazonaws.com:5432/deohc5gtins4g'
-        databaseUser = 'wsbkgwawpdjiuj'
-        databasePassword = 'a9778c25cd3a2fb38622db081353197c64db442bfc043645dc470780547bf775'
+        databaseUrl = 'READTHEDOCS'
+        databaseUser = 'READTHEDOCS'
+        databasePassword = 'READTHEDOCS'
     }
     repositories {
         mavenCentral()
