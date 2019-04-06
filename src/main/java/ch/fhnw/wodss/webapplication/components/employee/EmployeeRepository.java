@@ -38,10 +38,6 @@ public class EmployeeRepository extends GenericCrudRepository<EmployeeDto, Emplo
         return updateOne(employee);
     }
 
-    public void deleteEmployee(Long id) {
-        deleteOne(table -> table.ID.eq(id));
-    }
-
     @Override
     protected EmployeeRecord mapDtoToRecord(EmployeeDto employee, EmployeeRecord employeeRecord) {
         if (employee.getId() != null) {

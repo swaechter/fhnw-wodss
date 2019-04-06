@@ -60,9 +60,14 @@ public class EmployeeService {
     }
 
     public EmployeeDto updateEmployee(Long id, EmployeeDto employee, AuthenticatedEmployee authenticatedEmployee) {
+        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(id);
+        if (selectedEmployee.isEmpty()) {
+            throw new EntityNotFoundException("employee", id);
+        }
+
         Optional<EmployeeDto> updatedEmployee = employeeRepository.updateEmployee(id, employee);
         if (updatedEmployee.isEmpty()) {
-            throw new EntityNotFoundException("employee", id);
+            throw new InternalException("Unable to update the employee");
         }
 
         return updatedEmployee.get();

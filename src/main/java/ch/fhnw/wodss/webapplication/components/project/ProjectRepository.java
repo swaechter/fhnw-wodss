@@ -1,8 +1,10 @@
 package ch.fhnw.wodss.webapplication.components.project;
 
+import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.utils.Converter;
 import ch.fhnw.wodss.webapplication.utils.GenericCrudRepository;
 import org.jooq.DSLContext;
+import org.jooq.generated.tables.Employee;
 import org.jooq.generated.tables.Project;
 import org.jooq.generated.tables.records.ProjectRecord;
 import org.springframework.stereotype.Repository;

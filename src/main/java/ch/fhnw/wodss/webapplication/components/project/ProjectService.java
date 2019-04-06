@@ -1,5 +1,7 @@
 package ch.fhnw.wodss.webapplication.components.project;
 
+import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
+import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
 import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
@@ -14,11 +16,19 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
 
-    public ProjectService(ProjectRepository projectRepository) {
+    private final EmployeeRepository employeeRepository;
+
+    public ProjectService(ProjectRepository projectRepository, EmployeeRepository employeeRepository) {
         this.projectRepository = projectRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     public ProjectDto createProject(ProjectDto project, AuthenticatedEmployee authenticatedEmployee) {
+        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(project.getProjectManagerId());
+        if (selectedEmployee.isEmpty()) {
+            throw new EntityNotFoundException("employee", project.getProjectManagerId());
+        }
+
         Optional<ProjectDto> createdProject = projectRepository.saveProject(project);
         if (createdProject.isEmpty()) {
             throw new InternalException("Unable to create the project");
@@ -41,15 +51,30 @@ public class ProjectService {
     }
 
     public ProjectDto updateProject(Long id, ProjectDto project, AuthenticatedEmployee authenticatedEmployee) {
+        Optional<ProjectDto> selectedProject = projectRepository.getProjectById(id);
+        if (selectedProject.isEmpty()) {
+            throw new EntityNotFoundException("project", id);
+        }
+
+        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(project.getProjectManagerId());
+        if (selectedEmployee.isEmpty()) {
+            throw new EntityNotFoundException("employee", project.getProjectManagerId());
+        }
+
         Optional<ProjectDto> updatedProject = projectRepository.updateProject(id, project);
         if (updatedProject.isEmpty()) {
-            throw new EntityNotFoundException("project", id);
+            throw new InternalException("Unable to update the project");
         }
 
         return updatedProject.get();
     }
 
     public void deleteProject(Long id, AuthenticatedEmployee authenticatedEmployee) {
+        Optional<ProjectDto> selectedProject = projectRepository.getProjectById(id);
+        if (selectedProject.isEmpty()) {
+            throw new EntityNotFoundException("project", id);
+        }
+
         projectRepository.deleteProject(id);
     }
 }
