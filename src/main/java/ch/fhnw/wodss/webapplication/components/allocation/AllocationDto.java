@@ -28,7 +28,7 @@ public class AllocationDto {
     @Min(0)
     @Max(100)
     @ApiModelProperty(value = "Full time equivalent for the contract as percentage value (0.5 FTE = 50)", allowableValues = "range[0, 100]", example = "50", required = true, position = 4)
-    private Long pensumPercentage;
+    private Short pensumPercentage;
 
     @NotNull
     @Min(1)
@@ -45,10 +45,13 @@ public class AllocationDto {
     public AllocationDto() {
     }
 
-    public AllocationDto(LocalDate startDate, LocalDate endDate, Long pensumPercentage) {
+    public AllocationDto(Long id, LocalDate startDate, LocalDate endDate, Short pensumPercentage, Long contractId, Long projectId) {
+        this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
         this.pensumPercentage = pensumPercentage;
+        this.contractId = contractId;
+        this.projectId = projectId;
     }
 
     public Long getId() {
@@ -75,11 +78,11 @@ public class AllocationDto {
         this.endDate = endDate;
     }
 
-    public Long getPensumPercentage() {
+    public Short getPensumPercentage() {
         return pensumPercentage;
     }
 
-    public void setPensumPercentage(Long pensumPercentage) {
+    public void setPensumPercentage(Short pensumPercentage) {
         this.pensumPercentage = pensumPercentage;
     }
 

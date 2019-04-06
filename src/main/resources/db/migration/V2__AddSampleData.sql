@@ -1,4 +1,4 @@
-/*INSERT INTO employee (first_name, last_name, email_address, password_hash, is_active, role) VALUES ('Simon', 'Wächter', 'simon.waechter@students.fhnw.ch', 'TODO', true, 'ADMINISTRATOR');
+INSERT INTO employee (first_name, last_name, email_address, password_hash, is_active, role) VALUES ('Simon', 'Wächter', 'simon.waechter@students.fhnw.ch', 'TODO', true, 'ADMINISTRATOR');
 INSERT INTO employee (first_name, last_name, email_address, password_hash, is_active, role) VALUES ('Philipp', 'Lüthi', 'philipp.luethi@students.fhnw.ch', 'TODO', true, 'ADMINISTRATOR');
 INSERT INTO employee (first_name, last_name, email_address, password_hash, is_active, role) VALUES ('Thibault', 'Gagnaux', 'thibault.gagnaux@students.fhnw.ch', 'TODO', true, 'ADMINISTRATOR');
 
@@ -15,4 +15,4 @@ INSERT INTO allocation (start_date, end_date, pensum_percentage, contract_id, pr
 INSERT INTO allocation (start_date, end_date, pensum_percentage, contract_id, project_id) VALUES (now(), now(), 0.4, 3, 2);
 INSERT INTO allocation (start_date, end_date, pensum_percentage, contract_id, project_id) VALUES (now(), now(), 0.2, 1, 3);
 INSERT INTO allocation (start_date, end_date, pensum_percentage, contract_id, project_id) VALUES (now(), now(), 0.2, 2, 3);
-INSERT INTO allocation (start_date, end_date, pensum_percentage, contract_id, project_id) VALUES (now(), now(), 0.2, 3, 3);*/
+INSERT INTO allocation (start_date, end_date, pensum_percentage, contract_id, project_id) VALUES (now(), now(), 0.2, 3, 3);
