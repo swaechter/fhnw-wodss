@@ -1,4 +1,4 @@
-import authService from "../services/auth.service";
+import { login } from "../services/auth.service";
 
 /*
  * action types
@@ -17,7 +17,7 @@ export const USER_LOGOUT_FAIL = 'USER_LOGOUT_FAIL';
  * other constants
  */
 
-export const loginStatus = {
+export const loginState = {
 	LOGGED_OUT: 'LOGGED_OUT',
 	FETCHING_JWT: 'FETCHING_JWT',
 	LOGGED_IN: 'LOGGED_IN'
@@ -52,8 +52,7 @@ export function logoutUser(index) {
 export function loginUserAsync(credentials) {
 	return (dispatch) => {
 		dispatch(loginUserBegin());
-		return authService.login(credentials)
-			.then(res => res.json())
+		return login(credentials)
 			.then(json => dispatch(loginUserSuccess(json)))
 			.catch(err => dispatch(loginUserFail(err)));
 	}

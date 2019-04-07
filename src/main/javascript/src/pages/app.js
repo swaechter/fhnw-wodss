@@ -13,28 +13,28 @@ import TodoPage from './todo/todo-page';
 import { connect } from 'preact-redux';
 import reducers from '../reducers';
 import * as actions from '../actions';
-import { loginStatus } from '../actions';
+import { loginState } from '../actions';
 
 
 @connect(reducers, actions)
 export default class App extends Component {
 
 	isAuthenticated = () => {
-		return this.props.auth.loginStatus == loginStatus.LOGGED_IN
+		return this.props.auth.loginState == loginState.LOGGED_IN
 	}
 
 	handleRoute = async e =>{
-		if (!this.isAuthenticated){
+		if (!this.isAuthenticated()){
 			route('/login', true);
 		}
 	}
 
 	componentDidMount(){
 		let credentials = {
-			"emailAddress": "simon.waechter@students.fhnw.ch",
+			"emailAddress": "simone.waechter@students.fhnw.ch",
 			"rawPassword": "123456aA"
-		}
-		this.props.loginUserAsync(credentials)
+		};
+		this.props.loginUserAsync(credentials);
 	}
 
 	render() {

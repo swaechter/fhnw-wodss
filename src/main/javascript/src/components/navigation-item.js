@@ -1,5 +1,5 @@
 import { h, Component } from 'preact';
-import { Match, Link } from 'preact-router/match';
+import { Link } from 'preact-router/match';
 
 export default class NavigationItem extends Component {
     
