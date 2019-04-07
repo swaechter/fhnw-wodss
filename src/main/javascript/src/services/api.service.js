@@ -15,7 +15,7 @@ getHeader = (token) => {
 doGet(url) = async (dispatch, getState) => {
     let token = await getJWT(dispatch, getState);
     let headers = getHeader(token)
-    let json = fetch(apiServerUrl + url, {
+    let json = fetch(new URL(url, apiServerUrl), {
         method: 'GET',
         headers: headers,
     }).then(res => res.json())
@@ -25,7 +25,7 @@ doGet(url) = async (dispatch, getState) => {
 doPost(url, payload) = async (dispatch, getState) => {
     let token = await getJWT(dispatch, getState);
     let headers = getHeader(token)
-    let json = fetch(apiServerUrl + url, {
+    let json = fetch(new URL(url, apiServerUrl), {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(payload)
@@ -36,7 +36,7 @@ doPost(url, payload) = async (dispatch, getState) => {
 doPut(url, payload) = async (dispatch, getState) => {
     let token = await getJWT(dispatch, getState);
     let headers = getHeader(token)
-    let json = fetch(apiServerUrl + url, {
+    let json = fetch(new URL(url, apiServerUrl), {
         method: 'PUT',
         headers: headers,
         body: JSON.stringify(payload)
@@ -47,7 +47,7 @@ doPut(url, payload) = async (dispatch, getState) => {
 doDelete(url) = async (dispatch, getState) => {
     let token = await getJWT(dispatch, getState);
     let headers = getHeader(token)
-    let json = fetch(apiServerUrl + url, {
+    let json = fetch(new URL(url, apiServerUrl), {
         method: 'DELETE',
         headers: headers,
     }).then(res => res.json())

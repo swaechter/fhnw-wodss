@@ -2,7 +2,7 @@ import { loginState, loginUserSuccess, loginUserFail } from "../actions";
 import { apiServerUrl } from "./config";
 
     export function login(credentials) {
-        return fetch(apiServerUrl + '/api/token', {
+        return fetch(new URL('/api/token', apiServerUrl), {
             method: 'POST',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -14,7 +14,7 @@ import { apiServerUrl } from "./config";
     }
 
     export function renewToken(oldToken) {
-        return fetch(apiServerUrl + '/api/token', {
+        return fetch(new URL('/api/token', apiServerUrl), {
             method: 'PUT',
             headers: new Headers({
                 'Content-Type': 'application/json',
