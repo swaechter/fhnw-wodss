@@ -14,6 +14,7 @@ import { connect } from 'preact-redux';
 import reducers from '../reducers';
 import * as actions from '../actions';
 import { loginState } from '../actions';
+import ProjectPage from './projects/projects';
 
 
 @connect(reducers, actions)
@@ -43,7 +44,7 @@ export default class App extends Component {
 			<div>
 				<Navbar>
 					<li class="nav-item text-nowrap">
-						<a class="nav-link" href="#">Sign out</a>
+						<a onClick={this.props.logoutUser} class="nav-link" href="#">Sign out</a>
 					</li>
 				</Navbar>
 
@@ -54,6 +55,7 @@ export default class App extends Component {
 						<NavigationItem href='/dashboard' title='Dashboard'/>
 						<NavigationItem href='/todo' title='Todo`s'/>
 						<NavigationItem href='/login' title='Login'/>
+						<NavigationItem href='/projects' title='Projekte'/>
 					</SideMenu>
 				)
 				:(<div/>)
@@ -68,6 +70,7 @@ export default class App extends Component {
 								<p>Irgendwas mit Login: {JSON.stringify(this.state.auth)}</p>
 							</div>
 							<TodoPage path='/todo' />
+							<ProjectPage path='/projects'/>
 						</Router>
 					</main>
 				</div>
