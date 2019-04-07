@@ -2,11 +2,11 @@ import {
 	USER_LOGIN_BEGINN,
 	USER_LOGIN_SUCCESS,
 	USER_LOGOUT_FAIL,
-	loginStatus
+	loginState
 } from '../actions';
 
 const initialState = {
-	loginStatus : loginStatus.LOGGED_OUT,
+	loginState : loginState.LOGGED_OUT,
 	token : "",
 	user : {} 
 }
@@ -14,13 +14,13 @@ const initialState = {
 export function auth(state = initialState, action) {
 	switch (action.type) {
 		case USER_LOGIN_BEGINN:
-			return Object.assign(status,{loginStatus : loginStatus.FETCHING_JWT});
+			return Object.assign(state ,{loginState : loginState.FETCHING_JWT});
 		case USER_LOGIN_SUCCESS:
 			let jwt = action.payload.token;
 			let user = {username: "dummyUser"}
 			return (
 				{
-					loginStatus: loginStatus.LOGGED_IN,
+					loginState: loginState.LOGGED_IN,
 					token: jwt,
 					user
 				}
