@@ -1,9 +1,9 @@
-import { loginState, loginUserSuccess, loginUserFail } from "../actions";
+import { loginUserSuccess, loginUserFail } from "../actions";
 import { apiServerUrl } from "./config";
 var jwtDecode = require('jwt-decode');
 
-export function login(credentials) {
-    return fetch(new URL('/api/token', apiServerUrl), {
+export async function fetchToken(credentials) {
+    let token = await fetch(new URL('/api/token', apiServerUrl), {
         method: 'POST',
         headers: new Headers({
             'Content-Type': 'application/json',
@@ -12,53 +12,34 @@ export function login(credentials) {
         }),
         body: JSON.stringify(credentials)
     })
-    .then(res => res.json())
-    .then(json => setStoredToken(json));
+        .then(res => res.json())
+        .then(json => json.token)
+
+    setStoredToken(token);
+    return token;
 }
 
-export async function logout(){
-    return localStorage.removeItem('token');
+export async function logout() {
+    localStorage.removeItem('token');
+    return;
 }
 
-export async function getStoredToken(){
-    let token = localStorage.getItem('token');
-    var expiry = token && jwtDecode(token).exp;
-    const now = new Date();
-    if(expiry && now.getTime() < (expiry * 1000)){
-        return {token};
-    }
-    throw new Error('No valid token found')  
-}
-
-
-
-export async function getJWT(dispatch, getState) {
-    let authState = getState().auth
-    let currentToken = authState.token
-    if (authState.loginState != loginState.LOGGED_IN) {
-        throw new Error('Failed to get Token')
-    }
-    if (tokenRenewNeeded(currentToken)) {
-        try {
-            response = await renewToken(currentToken)
-            dispatch(loginUserSuccess(response))
-            currentToken = res.token;
+export async function getCurrentToken(dispatch) {
+    let currentToken = await getStoredToken()
+    try {
+        if (shouldRenewToken(currentToken)) {
+            currentToken = await renewToken(currentToken)
+            dispatch(loginUserSuccess(currentToken))
         }
-        catch (e) {
-            dispatch(loginUserFail(e))
-        }
+    }
+    catch (e) {
+        dispatch(loginUserFail(e))
     }
     return currentToken;
 }
 
-
-async function setStoredToken(json){
-    localStorage.setItem('token', json.token)
-    return json
-}
-
-function renewToken(oldToken) {
-    return fetch(new URL('/api/token', apiServerUrl), {
+async function renewToken(oldToken) {
+    let token = await fetch(new URL('/api/token', apiServerUrl), {
         method: 'PUT',
         headers: new Headers({
             'Content-Type': 'application/json',
@@ -68,11 +49,26 @@ function renewToken(oldToken) {
         body: JSON.stringify({
             "token": oldToken
         })
-    })
-        .then(res => res.json());
+    }).then(res => res.json())
+        .then(json => json.token);
+    return token;
 }
 
-function tokenRenewNeeded(token) {
+export async function getStoredToken() {
+    let token = localStorage.getItem('token');
+    var expiry = token && jwtDecode(token).exp;
+    const now = new Date();
+    if (expiry && now.getTime() < (expiry * 1000)) {
+        return token;
+    }
+    throw new Error('No valid token found')
+}
+
+function setStoredToken(token) {
+    localStorage.setItem('token', token)
+}
+
+function shouldRenewToken(token) {
     var expiry = jwtDecode(token).exp;
     //5 minutes before now
     const renewDate = new Date();

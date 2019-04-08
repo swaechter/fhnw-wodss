@@ -1,5 +1,4 @@
 import { apiServerUrl } from "./config";
-import { getJWT } from './auth.service'
 
 function getHeader(token) {
     let header = new Headers({
@@ -20,8 +19,7 @@ function handleErrors(response) {
     return response;
 }
 
-export async function doGet(url, dispatch, getState) {
-    let token = await getJWT(dispatch, getState);
+export async function doGet(url, token=null) {
     let headers = getHeader(token)
     let json = fetch(new URL(url, apiServerUrl), {
         method: 'GET',
@@ -32,8 +30,7 @@ export async function doGet(url, dispatch, getState) {
 }
 
 
-export async function doPost(url, payload, dispatch, getState) {
-    let token = await getJWT(dispatch, getState);
+export async function doPost(url, payload, token=null) {
     let headers = getHeader(token)
     let json = fetch(new URL(url, apiServerUrl), {
         method: 'POST',
@@ -45,8 +42,7 @@ export async function doPost(url, payload, dispatch, getState) {
 }
 
 
-export async function doPut(url, payload, dispatch, getState) {
-    let token = await getJWT(dispatch, getState);
+export async function doPut(url, payload, token=null) {
     let headers = getHeader(token)
     let json = fetch(new URL(url, apiServerUrl), {
         method: 'PUT',
@@ -58,8 +54,7 @@ export async function doPut(url, payload, dispatch, getState) {
 }
 
 
-export async function doDelete(url, dispatch, getState) {
-    let token = await getJWT(dispatch, getState);
+export async function doDelete(url, token=null) {
     let headers = getHeader(token)
     let json = fetch(new URL(url, apiServerUrl), {
         method: 'DELETE',

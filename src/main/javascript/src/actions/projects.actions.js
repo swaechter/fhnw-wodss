@@ -1,4 +1,5 @@
 import { doGet } from "../services/api.service";
+import { getCurrentToken } from "../services/auth.service";
 
 /*
  * action types
@@ -37,11 +38,15 @@ export const fetchProjectsFail = (error) => ({
  * async function calls
  */
 export function fetchProjectsAsync() {
-	return (dispatch, getState) => {
+	return async (dispatch) => {
 		dispatch(fetchProjectsBegin());
-		doGet('/api/project', dispatch, getState)
-			.then((json) => dispatch(fetchProjectsSuccess(json)))
-			.catch((err) => dispatch(fetchProjectsFail(err)))
+		try {
+			let token = await getCurrentToken(dispatch);
+			let json = await doGet('/api/project', token)
+			dispatch(fetchProjectsSuccess(json))
+		} catch (error) {
+			dispatch(fetchProjectsFail(error))
+		}
 	}
 }
 

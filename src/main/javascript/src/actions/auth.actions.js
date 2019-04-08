@@ -1,4 +1,4 @@
-import { login, getStoredToken, logout } from "../services/auth.service";
+import { fetchToken, logout, getStoredToken } from "../services/auth.service";
 
 /*
  * action types
@@ -29,9 +29,9 @@ const loginUserBegin = () => ({
 })
 
 
-export const loginUserSuccess = (payload) => ({
+export const loginUserSuccess = (token) => ({
 	type: USER_LOGIN_SUCCESS,
-	payload
+	token
 })
 
 export const loginUserFail = (error) => ({
@@ -50,20 +50,22 @@ function logoutUser() {
 export function loginUserAsync(credentials) {
 	return (dispatch) => {
 		dispatch(loginUserBegin());
-		login(credentials)
-			.then(json => dispatch(loginUserSuccess(json)))
+		fetchToken(credentials)
+			.then(token => dispatch(loginUserSuccess(token)))
 			.catch(err => dispatch(loginUserFail(err)));
 	}
 }
 
 export function restoreLoginAsync() {
-	return (dispatch) => getStoredToken()
-		.then(json => dispatch(loginUserSuccess(json)))
-		.catch(err => {err})
+	return (dispatch) => 
+	getStoredToken()
+		.then(token => dispatch(loginUserSuccess(token)))
+		.catch(err => {})
 }
 
 export function logoutUserAsync() {
-	return (dispatch) => logout()
+	return (dispatch) => 
+	logout()
 		.then(() => dispatch(logoutUser()))
 }
 
