@@ -4,7 +4,7 @@ import { login, getStoredToken, logout } from "../services/auth.service";
  * action types
  */
 
-export const USER_LOGIN_BEGINN = 'USER_LOGIN_BEGINN';
+export const USER_LOGIN_BEGIN = 'USER_LOGIN_BEGIN';
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 export const USER_LOGIN_FAIL = 'USER_LOGIN_FAIL';
 
@@ -25,7 +25,7 @@ export const loginState = {
  * action creators
  */
 const loginUserBegin = () => ({
-	type: USER_LOGIN_BEGINN
+	type: USER_LOGIN_BEGIN
 })
 
 

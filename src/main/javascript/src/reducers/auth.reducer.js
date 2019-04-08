@@ -1,5 +1,5 @@
 import {
-	USER_LOGIN_BEGINN,
+	USER_LOGIN_BEGIN,
 	USER_LOGIN_SUCCESS,
 	USER_LOGIN_FAIL,
 	USER_LOGOUT,
@@ -21,7 +21,7 @@ const initialState = () => {
 
 export function auth(state = initialState(), action) {
 	switch (action.type) {
-		case USER_LOGIN_BEGINN:
+		case USER_LOGIN_BEGIN:
 			return Object.assign(state, { loginState: loginState.FETCHING_JWT });
 		case USER_LOGIN_SUCCESS:
 			let token = action.payload.token;
