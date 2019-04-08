@@ -1,4 +1,4 @@
-import { login } from "../services/auth.service";
+import { login, getStoredToken, logout } from "../services/auth.service";
 
 /*
  * action types
@@ -24,7 +24,7 @@ export const loginState = {
 /*
  * action creators
  */
-export const loginUserBegin = () => ({
+const loginUserBegin = () => ({
 	type: USER_LOGIN_BEGINN
 })
 
@@ -40,7 +40,7 @@ export const loginUserFail = (error) => ({
 })
 
 
-export function logoutUser() {
+function logoutUser() {
 	return { type: USER_LOGOUT };
 }
 
@@ -56,5 +56,15 @@ export function loginUserAsync(credentials) {
 	}
 }
 
+export function restoreLoginAsync() {
+	return (dispatch) => getStoredToken()
+		.then(json => dispatch(loginUserSuccess(json)))
+		.catch(err => {err})
+}
+
+export function logoutUserAsync() {
+	return (dispatch) => logout()
+		.then(() => dispatch(logoutUser()))
+}
 
 

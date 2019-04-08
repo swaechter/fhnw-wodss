@@ -11,23 +11,25 @@ export function login(credentials) {
             'Access-Control-Allow-Origin': '*'
         }),
         body: JSON.stringify(credentials)
-    }).then(res => res.json());
+    })
+    .then(res => res.json())
+    .then(json => setStoredToken(json));
 }
 
-function renewToken(oldToken) {
-    return fetch(new URL('/api/token', apiServerUrl), {
-        method: 'PUT',
-        headers: new Headers({
-            'Content-Type': 'application/json',
-            "Accept": "application/json",
-            'Access-Control-Allow-Origin': '*'
-        }),
-        body: JSON.stringify({
-            "token": oldToken
-        })
-    })
-        .then(res => res.json());
+export async function logout(){
+    return localStorage.removeItem('token');
 }
+
+export async function getStoredToken(){
+    let token = localStorage.getItem('token');
+    var expiry = token && jwtDecode(token).exp;
+    const now = new Date();
+    if(expiry && now.getTime() < (expiry * 1000)){
+        return {token};
+    }
+    throw new Error('No valid token found')  
+}
+
 
 
 export async function getJWT(dispatch, getState) {
@@ -47,6 +49,27 @@ export async function getJWT(dispatch, getState) {
         }
     }
     return currentToken;
+}
+
+
+async function setStoredToken(json){
+    localStorage.setItem('token', json.token)
+    return json
+}
+
+function renewToken(oldToken) {
+    return fetch(new URL('/api/token', apiServerUrl), {
+        method: 'PUT',
+        headers: new Headers({
+            'Content-Type': 'application/json',
+            "Accept": "application/json",
+            'Access-Control-Allow-Origin': '*'
+        }),
+        body: JSON.stringify({
+            "token": oldToken
+        })
+    })
+        .then(res => res.json());
 }
 
 function tokenRenewNeeded(token) {

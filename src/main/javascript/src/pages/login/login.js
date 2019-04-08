@@ -34,12 +34,8 @@ export default class LoginPage extends Component {
         event.preventDefault();
     }
 
-    isAuthenticated = () => {
-        return this.props.auth.loginState == loginState.LOGGED_IN
-    }
-
     render() {
-
+        this.props.restoreLoginAsync()
         return (
             <div>
                 <Navbar />

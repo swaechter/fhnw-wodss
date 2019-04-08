@@ -34,7 +34,7 @@ export default class App extends Component {
 			<div>
 				<Navbar>
 					<li class="nav-item text-nowrap">
-						<a onClick={this.props.logoutUser} class="nav-link" href="#">Sign out</a>
+						<a onClick={this.props.logoutUserAsync} class="nav-link" href="#">Sign out</a>
 					</li>
 				</Navbar>
 				<div class="container-fluid">
