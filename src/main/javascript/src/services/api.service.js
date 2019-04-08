@@ -13,13 +13,21 @@ function getHeader(token) {
     return header;
 }
 
+function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+    return response;
+}
+
 export async function doGet(url, dispatch, getState) {
     let token = await getJWT(dispatch, getState);
     let headers = getHeader(token)
     let json = fetch(new URL(url, apiServerUrl), {
         method: 'GET',
         headers: headers,
-    }).then(res => res.json())
+    }).then(handleErrors)
+    .then(res => res.json())
     return json;
 }
 
@@ -31,7 +39,8 @@ export async function doPost(url, payload, dispatch, getState) {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(payload)
-    }).then(res => res.json())
+    }).then(handleErrors)
+    .then(res => res.json())
     return json;
 }
 
@@ -43,7 +52,8 @@ export async function doPut(url, payload, dispatch, getState) {
         method: 'PUT',
         headers: headers,
         body: JSON.stringify(payload)
-    }).then(res => res.json())
+    }).then(handleErrors)
+    .then(res => res.json())
     return json;
 }
 
@@ -54,6 +64,7 @@ export async function doDelete(url, dispatch, getState) {
     let json = fetch(new URL(url, apiServerUrl), {
         method: 'DELETE',
         headers: headers,
-    }).then(res => res.json())
+    }).then(handleErrors)
+    .then(res => res.json())
     return json;
 }

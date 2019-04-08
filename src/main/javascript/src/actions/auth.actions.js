@@ -1,4 +1,5 @@
 import { login } from "../services/auth.service";
+import { route } from "preact-router";
 
 /*
  * action types
@@ -52,6 +53,7 @@ export function loginUserAsync(credentials) {
 		dispatch(loginUserBegin());
 		login(credentials)
 			.then(json => dispatch(loginUserSuccess(json)))
+			.then(() => route('/dashboard'))
 			.catch(err => dispatch(loginUserFail(err)));
 	}
 }

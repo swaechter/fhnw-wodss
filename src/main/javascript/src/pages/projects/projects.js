@@ -8,7 +8,8 @@ import { connect } from 'preact-redux';
 @connect(reducers, actions)
 export default class ProjectPage extends Component {
 
-    render({ todos }, { text }) {
+
+    render() {
         return (
             <div class="jumbotron" id="app">
                 <button onClick={this.props.fetchProjectsAsync}>Lade Projekte</button>

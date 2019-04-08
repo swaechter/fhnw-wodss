@@ -15,6 +15,7 @@ import reducers from '../reducers';
 import * as actions from '../actions';
 import { loginState } from '../actions';
 import ProjectPage from './projects/projects';
+import LoginPage from './login/login';
 
 
 @connect(reducers, actions)
@@ -27,19 +28,13 @@ export default class App extends Component {
 	handleRoute = async e =>{
 		if (!this.isAuthenticated()){
 			route('/login', true);
+		}else if(e.url == '/login'){
+			route('/dashboard');
 		}
 	}
 
-	componentDidMount(){
-		let credentials = {
-			"emailAddress": "simone.waechter@students.fhnw.ch",
-			"rawPassword": "123456aA"
-		};
-		this.props.loginUserAsync(credentials);
-	}
 
 	render() {
-		let authed = this.isAuthenticated();
 		return (
 			<div>
 				<Navbar>
@@ -54,8 +49,7 @@ export default class App extends Component {
 					<SideMenu>
 						<NavigationItem href='/dashboard' title='Dashboard'/>
 						<NavigationItem href='/todo' title='Todo`s'/>
-						<NavigationItem href='/login' title='Login'/>
-						<NavigationItem href='/projects' title='Projekte'/>
+						<NavigationItem href='/project' title='Projekte'/>
 					</SideMenu>
 				)
 				:(<div/>)
@@ -66,11 +60,9 @@ export default class App extends Component {
 							<div path='/dashboard'>
 								<p>Irgendwas mit dashboard</p>
 							</div>
-							<div path='/login'>
-								<p>Irgendwas mit Login: {JSON.stringify(this.state.auth)}</p>
-							</div>
+							<LoginPage path='/login'/>
 							<TodoPage path='/todo' />
-							<ProjectPage path='/projects'/>
+							<ProjectPage path='/project'/>
 						</Router>
 					</main>
 				</div>

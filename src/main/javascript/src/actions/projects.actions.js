@@ -39,7 +39,7 @@ export const fetchProjectsFail = (error) => ({
 export function fetchProjectsAsync() {
 	return (dispatch, getState) => {
 		dispatch(fetchProjectsBeginn());
-		doGet('/api/projects', dispatch, getState)
+		doGet('/api/project', dispatch, getState)
 			.then((json) => dispatch(fetchProjectsSuccess(json)))
 			.catch((err) => dispatch(fetchProjectsFail(err)))
 	}
