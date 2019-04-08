@@ -5,7 +5,7 @@ import {
 	USER_LOGOUT,
 	loginState
 } from '../actions';
-
+import { route } from "preact-router";
 var jwtDecode = require('jwt-decode');
 
 
@@ -25,7 +25,6 @@ export function auth(state = initialState(), action) {
 			return Object.assign(state, { loginState: loginState.FETCHING_JWT });
 		case USER_LOGIN_SUCCESS:
 			let token = action.payload.token;
-			console.log(token)
 			let decoded = jwtDecode(token);
 			let tokenExpiry = decoded.exp;
 			let employee = decoded.employee;

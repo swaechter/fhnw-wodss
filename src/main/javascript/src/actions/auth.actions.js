@@ -1,5 +1,4 @@
 import { login } from "../services/auth.service";
-import { route } from "preact-router";
 
 /*
  * action types
@@ -42,7 +41,6 @@ export const loginUserFail = (error) => ({
 
 
 export function logoutUser() {
-	route('/login');
 	return { type: USER_LOGOUT };
 }
 
@@ -54,7 +52,6 @@ export function loginUserAsync(credentials) {
 		dispatch(loginUserBegin());
 		login(credentials)
 			.then(json => dispatch(loginUserSuccess(json)))
-			.then(() => route('/dashboard'))
 			.catch(err => dispatch(loginUserFail(err)));
 	}
 }
