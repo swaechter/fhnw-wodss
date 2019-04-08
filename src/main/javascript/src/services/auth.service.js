@@ -1,5 +1,6 @@
 import { loginState, loginUserSuccess, loginUserFail } from "../actions";
 import { apiServerUrl } from "./config";
+var jwtDecode = require('jwt-decode');
 
 export function login(credentials) {
     return fetch(new URL('/api/token', apiServerUrl), {
@@ -13,7 +14,7 @@ export function login(credentials) {
     }).then(res => res.json());
 }
 
-export function renewToken(oldToken) {
+function renewToken(oldToken) {
     return fetch(new URL('/api/token', apiServerUrl), {
         method: 'PUT',
         headers: new Headers({
@@ -48,13 +49,12 @@ export async function getJWT(dispatch, getState) {
     return currentToken;
 }
 
-export function tokenRenewNeeded(token) {
-    return false; //TODO jwt does throw process undefined error
-    let jwt = require('jsonwebtoken');
-    const expiry = jwt.decode(token).exp;
-    const now = new Date();
+function tokenRenewNeeded(token) {
+    var expiry = jwtDecode(token).exp;
     //5 minutes before now
-    const renewDate = now.setTime(now.getTime() - 300000)
+    const renewDate = new Date();
+    renewDate.setTime(renewDate.getTime() - 300000)
+
     return renewDate.getTime() > (expiry * 1000);
 }
 

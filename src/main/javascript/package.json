@@ -25,7 +25,7 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "jquery": "^3.3.1",
-    "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^2.2.0",
     "popper.js": "^1.14.7",
     "preact": "^8.2.1",
     "preact-redux": "^2.0.3",
