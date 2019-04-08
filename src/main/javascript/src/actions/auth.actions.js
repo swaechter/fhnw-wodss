@@ -8,9 +8,7 @@ export const USER_LOGIN_BEGINN = 'USER_LOGIN_BEGINN';
 export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
 export const USER_LOGIN_FAIL = 'USER_LOGIN_FAIL';
 
-export const USER_LOGOUT_BEGINN = 'USER_LOGOUT_BEGINN';
-export const USER_LOGOUT_SUCCESS = 'USER_LOGOUT_SUCCESS';
-export const USER_LOGOUT_FAIL = 'USER_LOGOUT_FAIL';
+export const USER_LOGOUT = 'USER_LOGOUT';
 
 
 /*
@@ -42,7 +40,7 @@ export const loginUserFail = (error) => ({
 })
 
 
-export function logoutUser(index) {
+export function logoutUser() {
 	return { type: USER_LOGOUT };
 }
 
@@ -52,7 +50,7 @@ export function logoutUser(index) {
 export function loginUserAsync(credentials) {
 	return (dispatch) => {
 		dispatch(loginUserBegin());
-		return login(credentials)
+		login(credentials)
 			.then(json => dispatch(loginUserSuccess(json)))
 			.catch(err => dispatch(loginUserFail(err)));
 	}

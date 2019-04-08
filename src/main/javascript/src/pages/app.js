@@ -14,6 +14,8 @@ import { connect } from 'preact-redux';
 import reducers from '../reducers';
 import * as actions from '../actions';
 import { loginState } from '../actions';
+import ProjectPage from './projects/projects';
+import LoginPage from './login/login';
 
 
 @connect(reducers, actions)
@@ -23,51 +25,32 @@ export default class App extends Component {
 		return this.props.auth.loginState == loginState.LOGGED_IN
 	}
 
-	handleRoute = async e =>{
-		if (!this.isAuthenticated()){
-			route('/login', true);
-		}
-	}
-
-	componentDidMount(){
-		let credentials = {
-			"emailAddress": "simone.waechter@students.fhnw.ch",
-			"rawPassword": "123456aA"
-		};
-		this.props.loginUserAsync(credentials);
+	handleRoute = async e => {
 	}
 
 	render() {
-		let authed = this.isAuthenticated();
+		if (!this.isAuthenticated()) return (<LoginPage />)
 		return (
 			<div>
 				<Navbar>
 					<li class="nav-item text-nowrap">
-						<a class="nav-link" href="#">Sign out</a>
+						<a onClick={this.props.logoutUser} class="nav-link" href="#">Sign out</a>
 					</li>
 				</Navbar>
-
 				<div class="container-fluid">
-				{this.isAuthenticated()?	
-				(
 					<SideMenu>
-						<NavigationItem href='/dashboard' title='Dashboard'/>
-						<NavigationItem href='/todo' title='Todo`s'/>
-						<NavigationItem href='/login' title='Login'/>
+						<NavigationItem href='/dashboard' title='Dashboard' />
+						<NavigationItem href='/todo' title='Todo`s' />
+						<NavigationItem href='/project' title='Projekte' />
 					</SideMenu>
-				)
-				:(<div/>)
-				}					
 					<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 						<h2>Section title</h2>
 						<Router onChange={this.handleRoute}>
-							<div path='/dashboard'>
+							<div default path='/dashboard'>
 								<p>Irgendwas mit dashboard</p>
 							</div>
-							<div path='/login'>
-								<p>Irgendwas mit Login: {JSON.stringify(this.state.auth)}</p>
-							</div>
 							<TodoPage path='/todo' />
+							<ProjectPage path='/project' />
 						</Router>
 					</main>
 				</div>
