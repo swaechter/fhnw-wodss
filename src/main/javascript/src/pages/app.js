@@ -25,10 +25,10 @@ export default class App extends Component {
 		return this.props.auth.loginState == loginState.LOGGED_IN
 	}
 
-	handleRoute = async e =>{
-		if (!this.isAuthenticated()){
+	handleRoute = async e => {
+		if (!this.isAuthenticated()) {
 			route('/login', true);
-		}else if(e.url == '/login'){
+		} else if (e.url == '/login') {
 			route('/dashboard');
 		}
 	}
@@ -38,31 +38,35 @@ export default class App extends Component {
 		return (
 			<div>
 				<Navbar>
-					<li class="nav-item text-nowrap">
-						<a onClick={this.props.logoutUser} class="nav-link" href="#">Sign out</a>
-					</li>
+					{this.isAuthenticated() ?
+						(
+							<li class="nav-item text-nowrap">
+								<a onClick={this.props.logoutUser} class="nav-link" href="#">Sign out</a>
+							</li>
+						)
+						: (<div />)
+					}
 				</Navbar>
-
 				<div class="container-fluid">
-				{this.isAuthenticated()?	
-				(
-					<SideMenu>
-						<NavigationItem href='/dashboard' title='Dashboard'/>
-						<NavigationItem href='/todo' title='Todo`s'/>
-						<NavigationItem href='/project' title='Projekte'/>
-					</SideMenu>
-				)
-				:(<div/>)
-				}					
+					{this.isAuthenticated() ?
+						(
+							<SideMenu>
+								<NavigationItem href='/dashboard' title='Dashboard' />
+								<NavigationItem href='/todo' title='Todo`s' />
+								<NavigationItem href='/project' title='Projekte' />
+							</SideMenu>
+						)
+						: (<div />)
+					}
 					<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 						<h2>Section title</h2>
 						<Router onChange={this.handleRoute}>
-							<div path='/dashboard'>
+							<div path='/:dashboard?'>
 								<p>Irgendwas mit dashboard</p>
 							</div>
-							<LoginPage path='/login'/>
+							<LoginPage path='/login' />
 							<TodoPage path='/todo' />
-							<ProjectPage path='/project'/>
+							<ProjectPage path='/project'  />
 						</Router>
 					</main>
 				</div>

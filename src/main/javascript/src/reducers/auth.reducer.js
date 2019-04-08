@@ -6,11 +6,16 @@ import {
 	loginState
 } from '../actions';
 
+var jwtDecode = require('jwt-decode');
+
+
 const initialState = () => {
+	let tokenExpiry = new Date().getTime();
 	return {
 		loginState: loginState.LOGGED_OUT,
 		token: "",
-		user: {}
+		tokenExpiry,
+		employee: {}
 	}
 }
 
@@ -19,13 +24,17 @@ export function auth(state = initialState(), action) {
 		case USER_LOGIN_BEGINN:
 			return Object.assign(state, { loginState: loginState.FETCHING_JWT });
 		case USER_LOGIN_SUCCESS:
-			let jwt = action.payload.token;
-			let user = { username: "dummyUser" }
+			let token = action.payload.token;
+			console.log(token)
+			let decoded = jwtDecode(token);
+			let tokenExpiry = decoded.exp;
+			let employee = decoded.employee;
 			return (
 				{
 					loginState: loginState.LOGGED_IN,
-					token: jwt,
-					user
+					token,
+					tokenExpiry,
+					employee
 				}
 			);
 		case USER_LOGIN_FAIL:

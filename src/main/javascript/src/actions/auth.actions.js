@@ -42,6 +42,7 @@ export const loginUserFail = (error) => ({
 
 
 export function logoutUser() {
+	route('/login');
 	return { type: USER_LOGOUT };
 }
 
