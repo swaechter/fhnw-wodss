@@ -3,7 +3,7 @@ import { h, Component } from 'preact';
 import { Router, route } from 'preact-router';
 
 
-require('Bootstrap')
+//require('Bootstrap')
 import 'bootstrap/dist/css/bootstrap.css';
 import './style.css';
 import Redirect from '../components/redirect';

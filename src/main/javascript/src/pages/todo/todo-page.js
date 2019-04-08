@@ -25,8 +25,8 @@ export default class TodoPage extends Component {
 
     render({ todos }, { text }) {
         return (
-            <RoleLock allowedRoles={['Administrato']}>
-                <Layout>
+            <Layout>
+                <RoleLock allowedRoles={['Administrato']}>
                     <h2>ToDo Page</h2>
                     <div class="jumbotron" id="app">
                         <form onSubmit={this.addTodos} action="javascript:">
@@ -38,8 +38,8 @@ export default class TodoPage extends Component {
                             ))}
                         </ul>
                     </div>
-                </Layout>
-            </RoleLock>
+                </RoleLock>
+            </Layout>
         );
     }
 }

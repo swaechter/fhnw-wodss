@@ -10,12 +10,17 @@ import * as actions from '../actions';
 @connect(reducers, actions)
 export default class Layout extends Component {
 
+	logout = e => {
+		this.props.logoutUserAsync();
+		e.preventDefault()
+	}
+
     render({ children }) {
         return (
             <div>
 				<Navbar>
 					<li class="nav-item text-nowrap">
-						<a onClick={this.props.logoutUserAsync} class="nav-link" href="">Sign out</a>
+						<a onClick={this.logout} class="nav-link" href="">Sign out</a>
 					</li>
 				</Navbar>
 				<div class="container-fluid">
