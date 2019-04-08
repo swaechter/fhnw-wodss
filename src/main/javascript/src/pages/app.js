@@ -9,6 +9,7 @@ import './style.css';
 import NavigationItem from '../components/navigation-item';
 import Navbar from '../components/navbar';
 import SideMenu from '../components/menu';
+import Redirect from '../components/redirect';
 import TodoPage from './todo/todo-page';
 import { connect } from 'preact-redux';
 import reducers from '../reducers';
@@ -34,23 +35,20 @@ export default class App extends Component {
 			<div>
 				<Navbar>
 					<li class="nav-item text-nowrap">
-						<a onClick={this.props.logoutUserAsync} class="nav-link" href="#">Sign out</a>
+						<a onClick={this.props.logoutUserAsync} class="nav-link" href="">Sign out</a>
 					</li>
 				</Navbar>
 				<div class="container-fluid">
 					<SideMenu>
-						<NavigationItem href='/dashboard' title='Dashboard' />
 						<NavigationItem href='/todo' title='Todo`s' />
 						<NavigationItem href='/project' title='Projekte' />
 					</SideMenu>
 					<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
 						<h2>Section title</h2>
 						<Router onChange={this.handleRoute}>
-							<div default path='/dashboard'>
-								<p>Irgendwas mit dashboard</p>
-							</div>
 							<TodoPage path='/todo' />
 							<ProjectPage path='/project' />
+							<Redirect default to="/project" />
 						</Router>
 					</main>
 				</div>

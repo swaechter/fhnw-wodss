@@ -41,6 +41,7 @@ export default class LoginPage extends Component {
                 <Navbar />
                 <div class="container-fluid">
                     <main role="main" class="col-md-9 ml-sm-auto">
+                    <h2>Login</h2>
                         <form onSubmit={this.handleSubmit}>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label>
