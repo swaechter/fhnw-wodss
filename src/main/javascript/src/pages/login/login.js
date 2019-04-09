@@ -40,7 +40,7 @@ export default class LoginPage extends Component {
             <div>
                 <Navbar />
                 <div class="container-fluid">
-                    <main role="main" class="col-md-9 ml-sm-auto">
+                    <main role="main" class="col-md-5 col-lg-4 ml-md-auto mr-md-auto">
                     <h2>Login</h2>
                         <form onSubmit={this.handleSubmit}>
                             <div class="form-group">
