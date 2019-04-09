@@ -1,4 +1,4 @@
-import { fetchToken, logout, getStoredToken } from "../services/auth.service";
+import { fetchToken, logout, getStoredTokenIfValid } from "../services/auth.service";
 
 /*
  * action types
@@ -58,7 +58,7 @@ export function loginUserAsync(credentials) {
 
 export function restoreLoginAsync() {
 	return (dispatch) => 
-	getStoredToken()
+	getStoredTokenIfValid()
 		.then(token => dispatch(loginUserSuccess(token)))
 		.catch(err => {})
 }

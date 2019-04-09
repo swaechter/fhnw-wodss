@@ -25,7 +25,7 @@ export async function logout() {
 }
 
 export async function getCurrentToken(dispatch) {
-    let currentToken = await getStoredToken()
+    let currentToken = await getStoredTokenIfValid()
     try {
         if (shouldRenewToken(currentToken)) {
             currentToken = await renewToken(currentToken)
@@ -54,7 +54,7 @@ async function renewToken(oldToken) {
     return token;
 }
 
-export async function getStoredToken() {
+export async function getStoredTokenIfValid() {
     let token = localStorage.getItem('token');
     var expiry = token && jwtDecode(token).exp;
     const now = new Date();
