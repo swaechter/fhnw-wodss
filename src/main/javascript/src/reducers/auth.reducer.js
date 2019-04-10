@@ -19,7 +19,7 @@ const initialState = () => {
 export function auth(state = initialState(), action) {
 	switch (action.type) {
 		case USER_LOGIN_BEGIN:
-			return Object.assign(state, { loginState: loginState.FETCHING_JWT });
+			return {...state, loginState: loginState.FETCHING_JWT };
 		case USER_LOGIN_SUCCESS:
 			let token = action.token;
 			let decoded = jwtDecode(token);

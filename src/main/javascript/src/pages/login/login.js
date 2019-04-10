@@ -41,7 +41,7 @@ export default class LoginPage extends Component {
                 <Navbar />
                 <div class="container-fluid">
                     <main role="main" class="col-md-5 col-lg-4 ml-md-auto mr-md-auto">
-                    <h2>Login</h2>
+                        <h2>Login</h2>
                         <form onSubmit={this.handleSubmit}>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label>
@@ -55,15 +55,19 @@ export default class LoginPage extends Component {
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" 
+                                <input type="password" class="form-control" id="exampleInputPassword1"
                                     placeholder="Password"
                                     autocomplete="current-password"
                                     name="rawPassword"
                                     value={this.state.rawPassword}
                                     onChange={this.handleInputChange} />
-
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            {(this.props.auth.loginState == loginState.LOGGED_OUT) ?
+                                (<button type="submit" class="btn btn-primary">Submit</button>) :
+                                (<button class="btn btn-primary" type="button" disabled>
+                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                    Loggin in
+                          </button>)}
                         </form>
                     </main>
                 </div>

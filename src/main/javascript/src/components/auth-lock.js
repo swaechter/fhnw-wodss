@@ -11,11 +11,10 @@ export default class AuthLock extends Component {
 	render({children}) {
         switch(this.props.auth.loginState){
             case loginState.LOGGED_IN:
-                return ({children});
+                return ({children})
+            case loginState.FETCHING_JWT:
             case loginState.LOGGED_OUT:
                 return (<LoginPage/>)
-            case loginState.FETCHING_JWT:
-                return (<p>Loggin in...</p>)
         }
 	}
 }

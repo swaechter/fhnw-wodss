@@ -18,17 +18,17 @@ export const FETCH_PROJECTS_FAIL = 'FETCH_PROJECTS_FAIL';
 /*
  * action creators
  */
-export const fetchProjectsBegin = () => ({
+const fetchProjectsBegin = () => ({
 	type: FETCH_PROJECTS_BEGIN
 })
 
 
-export const fetchProjectsSuccess = (payload) => ({
+const fetchProjectsSuccess = (payload) => ({
 	type: FETCH_PROJECTS_SUCCESS,
 	payload
 })
 
-export const fetchProjectsFail = (error) => ({
+const fetchProjectsFail = (error) => ({
 	type: FETCH_PROJECTS_FAIL,
 	error
 })
