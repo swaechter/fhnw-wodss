@@ -22,22 +22,30 @@ public class ProjectService {
         this.projectRepository = projectRepository;
         this.employeeRepository = employeeRepository;
     }
-
+    
     public ProjectDto createProject(ProjectDto project, AuthenticatedEmployee authenticatedEmployee) {
+        if (project == null || authenticatedEmployee == null) {
+            throw new IllegalArgumentException(
+                "Project or Employee must not be null");
+        }
+
+        if (project.getProjectManagerId() != authenticatedEmployee.getId()) {
+            throw new IllegalStateException("Not authorized to create project");
+        }
+        Optional<ProjectDto> createdProject = projectRepository.saveProject(project);
+        if (createdProject.isEmpty()) {
+            throw new InternalException("Unable to create the project");
+        }
         Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(project.getProjectManagerId());
         if (selectedEmployee.isEmpty()) {
             throw new EntityNotFoundException("employee", project.getProjectManagerId());
         }
 
-        Optional<ProjectDto> createdProject = projectRepository.saveProject(project);
-        if (createdProject.isEmpty()) {
-            throw new InternalException("Unable to create the project");
-        }
-
         return createdProject.get();
     }
 
-    public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId, AuthenticatedEmployee authenticatedEmployee) {
+    public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId,
+            AuthenticatedEmployee authenticatedEmployee) {
         return projectRepository.getProjects(fromDate, toDate, projectManagerId);
     }
 
