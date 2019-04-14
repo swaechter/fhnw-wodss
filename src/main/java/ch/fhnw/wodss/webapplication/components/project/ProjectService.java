@@ -28,7 +28,7 @@ public class ProjectService {
             throw new IllegalArgumentException(
                 "Project or Employee must not be null");
         }
-
+        
         if (project.getProjectManagerId() != authenticatedEmployee.getId()) {
             throw new IllegalStateException("Not authorized to create project");
         }

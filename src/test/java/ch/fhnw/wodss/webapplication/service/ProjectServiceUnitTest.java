@@ -1,16 +1,22 @@
 package ch.fhnw.wodss.webapplication.service;
 
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
 import ch.fhnw.wodss.webapplication.components.project.ProjectDto;
 import ch.fhnw.wodss.webapplication.components.project.ProjectRepository;
 import ch.fhnw.wodss.webapplication.components.project.ProjectService;
 import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
+import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
+import ch.fhnw.wodss.webapplication.exceptions.InternalException;
+import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectServiceUnitTest {
@@ -46,11 +52,31 @@ public class ProjectServiceUnitTest {
 
     @Test(expected = IllegalStateException.class)
     public void whenNotAuthorized_thenCannotCreateProject() {
-        ProjectDto project = new ProjectDto();
-        project.setProjectManagerId(1l);
-        mockEmployee.setId(2l);
-        projectService.createProject(project, mockEmployee);
-    }  
+        given(mockProject.getProjectManagerId()).willReturn(1l);
+        given(mockEmployee.getId()).willReturn(2l);
+        projectService.createProject(mockProject, mockEmployee);
+    }
+
+    @Test(expected = InternalException.class)
+    public void whenProjectCannotBeMapped_thenThrowException() {
+        given(mockProject.getProjectManagerId()).willReturn(1l);
+        given(mockEmployee.getId()).willReturn(1l);
+        given(projectRepo.saveProject(mockProject)).willReturn(Optional.empty());
+        projectService.createProject(mockProject, mockEmployee);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void whenEmployeeNotFound_thenThrowException() {
+        given(mockProject.getProjectManagerId()).willReturn(1l);
+        given(mockEmployee.getId()).willReturn(1l);
+        given(projectRepo.saveProject(mockProject))
+        .willReturn(Optional.of(mockProject));
+        given(employeeRepo.getEmployeeById(mockProject.getProjectManagerId()))
+        .willReturn(Optional.empty());
+        projectService.createProject(mockProject, mockEmployee);
+    }
+
+
 
 
 
