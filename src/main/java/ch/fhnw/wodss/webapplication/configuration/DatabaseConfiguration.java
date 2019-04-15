@@ -18,10 +18,21 @@ public class DatabaseConfiguration {
     }
 
     /**
-     * Heroku uses a single URL to identify a database connection - sadly this URL is not really JDBC compliant, so we
-     * have to reparse the URL manually
+     * Heroku uses a single URL to identify a database connection including the username and password - sadly this
+     * URL is not really JDBC compliant (or many JDBC connection pools can't handle it), so we have to rebuild the URL
+     * manually
+     * <p>
+     * Required proper JDBC URL for Jooq:
+     * <p>
+     * DATABASE_URL=jdbc:postgresql://REPLACEHOSTNAME:5432/REPLACEDATABASE
+     * DATABASE_USERNAME=REPLACEUSER
+     * DATABASE_PASSWORD=REPLACEPASSWORD
+     * <p>
+     * Given URL by Heroku (We have to parse it to provide a proper JDBC connection):
+     * <p>
+     * DATABASE_URL=postgres://REPLACEUSER:REPLACEPASSWORD@REPLACEHOSTNAME:5432/REPLACEDATABASE
      *
-     * @return Proper data source based on the Heroku URL input
+     * @return Proper data source based on the Heroku URL input for Jooq
      */
     @Bean
     public DataSource getDataSource() {
