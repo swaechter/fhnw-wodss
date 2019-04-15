@@ -6,7 +6,7 @@ import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
-import ch.fhnw.wodss.webapplication.exceptions.NotAuthorizedException;
+import ch.fhnw.wodss.webapplication.exceptions.InvalidActionException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,7 +31,7 @@ public class ProjectService {
         }
 
         if (!authenticatedEmployee.getRole().equals(Role.ADMINISTRATOR)) {
-            throw new NotAuthorizedException("Not authorized to create project");
+            throw new InvalidActionException("Not authorized to create project");
         }
 
         Optional<ProjectDto> createdProject = projectRepository.saveProject(project);

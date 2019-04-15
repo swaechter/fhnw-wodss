@@ -9,7 +9,7 @@ import ch.fhnw.wodss.webapplication.components.project.ProjectService;
 import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
-import ch.fhnw.wodss.webapplication.exceptions.NotAuthorizedException;
+import ch.fhnw.wodss.webapplication.exceptions.InvalidActionException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -51,13 +51,13 @@ public class ProjectServiceUnitTest {
     @Test
     public void whenDeveloper_thenCannotCreateProject() {
         given(mockEmployee.getRole()).willReturn(Role.DEVELOPER);
-        assertException(NotAuthorizedException.class, mockProject, mockEmployee);
+        assertException(InvalidActionException.class, mockProject, mockEmployee);
     }
 
     @Test
     public void whenProjectManager_thenCannotCreateProject() {
         given(mockEmployee.getRole()).willReturn(Role.PROJECTMANAGER);
-        assertException(NotAuthorizedException.class, mockProject, mockEmployee);
+        assertException(InvalidActionException.class, mockProject, mockEmployee);
     }
 
     @Nested
