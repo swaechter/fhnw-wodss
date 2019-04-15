@@ -2,12 +2,14 @@ package ch.fhnw.wodss.webapplication.service;
 
 
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
+import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.components.project.ProjectDto;
 import ch.fhnw.wodss.webapplication.components.project.ProjectRepository;
 import ch.fhnw.wodss.webapplication.components.project.ProjectServiceImpl;
 import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
+import ch.fhnw.wodss.webapplication.exceptions.NotAuthorizedException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -49,18 +51,25 @@ public class ProjectServiceImplUnitTest {
     }
 
     @Test
-    public void whenNotAuthorized_thenCannotCreateProject()
+    public void whenDeveloper_thenCannotCreateProject()
     {
-        setupProjectWithManager(1L, 2L);
-        assertException(IllegalStateException.class, mockProject, mockEmployee);
+        given(mockEmployee.getRole()).willReturn(Role.DEVELOPER);
+        assertException(NotAuthorizedException.class, mockProject, mockEmployee);
+    }
+
+    @Test
+    public void whenProjectManager_thenCannotCreateProject()
+    {
+        given(mockEmployee.getRole()).willReturn(Role.PROJECTMANAGER);
+        assertException(NotAuthorizedException.class, mockProject, mockEmployee);
     }
 
     @Nested
-    public class whenEmployeeIsProjectManager {
+    public class whenEmployeeIsAdministrator {
         @BeforeEach
         public void setUp()
         {
-            setupProjectWithManager(1L, 1L);
+            given(mockEmployee.getRole()).willReturn(Role.ADMINISTRATOR);
         }
 
         @Test
@@ -81,14 +90,6 @@ public class ProjectServiceImplUnitTest {
                             mockProject,
                             mockEmployee);
         }
-    }
-
-    private void setupProjectWithManager(
-        long projectManagerId,
-        long employeeId)
-    {
-        given(mockProject.getProjectManagerId()).willReturn(projectManagerId);
-        given(mockEmployee.getId()).willReturn(employeeId);
     }
 
     private void assertException(

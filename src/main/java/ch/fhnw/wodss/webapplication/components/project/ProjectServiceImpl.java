@@ -2,9 +2,11 @@ package ch.fhnw.wodss.webapplication.components.project;
 
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
+import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
+import ch.fhnw.wodss.webapplication.exceptions.NotAuthorizedException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,26 +38,26 @@ public class ProjectServiceImpl implements ProjectService {
                 "Project or Employee must not be null");
         }
 
-        if (!project.getProjectManagerId()
-            .equals(authenticatedEmployee.getId()))
+        if (authenticatedEmployee.getRole()
+            .equals(Role.ADMINISTRATOR))
         {
-            throw new IllegalStateException("Not authorized to create project");
-        }
-        Optional<ProjectDto> createdProject =
-            projectRepository.saveProject(project);
-        if (createdProject.isEmpty())
-        {
-            throw new InternalException("Unable to create the project");
-        }
-        Optional<EmployeeDto> selectedEmployee =
-            employeeRepository.getEmployeeById(project.getProjectManagerId());
-        if (selectedEmployee.isEmpty())
-        {
-            throw new EntityNotFoundException("employee",
-                                              project.getProjectManagerId());
-        }
+            Optional<ProjectDto> createdProject = projectRepository.saveProject(project);
+            if (createdProject.isEmpty())
+            {
+                throw new InternalException("Unable to create the project");
+            }
+            Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(project.getProjectManagerId());
+            if (selectedEmployee.isEmpty())
+            {
+                throw new EntityNotFoundException("employee", project.getProjectManagerId());
+            }
 
-        return createdProject.get();
+            return createdProject.get();
+        }
+        else
+        {
+            throw new NotAuthorizedException("Not authorized to create project");
+        }
     }
 
     public List<ProjectDto> getProjects(
