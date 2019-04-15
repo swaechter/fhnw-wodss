@@ -20,9 +20,9 @@ import java.util.List;
 @Api(tags = "Project", description = "Endpoint for managing all projects")
 public class ProjectController {
 
-    private final ProjectService projectService;
+    private final ProjectServiceImpl projectService;
 
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectServiceImpl projectService) {
         this.projectService = projectService;
     }
 
