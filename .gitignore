@@ -6,9 +6,9 @@ out/
 # Test system
 tmp/
 
-# Generated configuration PKCS12 keystore file
+# Generated configuration
+gradle.properties
 config/application.properties
-config/keystore.p12
 
 # IDE: IntelliJ IDEA
 .idea/
