@@ -2,9 +2,11 @@ package ch.fhnw.wodss.webapplication.components.project;
 
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
+import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
+import ch.fhnw.wodss.webapplication.exceptions.InvalidActionException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,18 +26,26 @@ public class ProjectService {
     }
 
     public ProjectDto createProject(ProjectDto project, AuthenticatedEmployee authenticatedEmployee) {
-        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(project.getProjectManagerId());
-        if (selectedEmployee.isEmpty()) {
-            throw new EntityNotFoundException("employee", project.getProjectManagerId());
+        if (project == null || authenticatedEmployee == null) {
+            throw new IllegalArgumentException("Project or Employee must not be null");
+        }
+
+        if (!authenticatedEmployee.getRole().equals(Role.ADMINISTRATOR)) {
+            throw new InvalidActionException("Not authorized to create project");
         }
 
         Optional<ProjectDto> createdProject = projectRepository.saveProject(project);
         if (createdProject.isEmpty()) {
             throw new InternalException("Unable to create the project");
         }
+        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(project.getProjectManagerId());
+        if (selectedEmployee.isEmpty()) {
+            throw new EntityNotFoundException("employee", project.getProjectManagerId());
+        }
 
         return createdProject.get();
     }
+
 
     public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId, AuthenticatedEmployee authenticatedEmployee) {
         return projectRepository.getProjects(fromDate, toDate, projectManagerId);
