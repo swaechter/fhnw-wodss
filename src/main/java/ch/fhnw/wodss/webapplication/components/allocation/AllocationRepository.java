@@ -26,6 +26,10 @@ public class AllocationRepository extends GenericCrudRepository<AllocationDto, A
         return readMany(table -> table.ID.isNotNull());
     }
 
+    public List<AllocationDto> getAllocationsByContractId(Long contractId) {
+        return readMany(table -> table.CONTRACT_ID.eq(contractId));
+    }
+
     public Optional<AllocationDto> getAllocationById(Long id) {
         return readOne(table -> table.ID.eq(id));
     }

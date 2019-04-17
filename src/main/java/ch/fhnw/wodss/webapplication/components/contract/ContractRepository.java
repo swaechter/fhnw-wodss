@@ -7,6 +7,7 @@ import org.jooq.generated.tables.Contract;
 import org.jooq.generated.tables.records.ContractRecord;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +23,19 @@ public class ContractRepository extends GenericCrudRepository<ContractDto, Contr
         return createOne(contract);
     }
 
-    public List<ContractDto> getContracts(LocalDate fromDate, LocalDate toDate) {
-        return readMany(table -> table.ID.isNotNull());
+    public List<ContractDto> getContracts(LocalDate fromDate, LocalDate toDate, Long employeeId) {
+        // TODO: Protect against optional/null values of fromDate, toDate and employeeId - this will be fun....
+
+        // Be aware of overlapping start and end dates: https://stackoverflow.com/a/17014131
+        Date startDate = getConverter().localDateToSqlDate(fromDate);
+        Date endDate = getConverter().localDateToSqlDate(toDate);
+
+        // Show only the employee contract or all contracts during the time period?
+        if (employeeId != null) {
+            return readMany(table -> table.EMPLOYEE_ID.eq(employeeId).and(table.START_DATE.lessOrEqual(endDate).and(table.END_DATE.greaterOrEqual(startDate))));
+        } else {
+            return readMany(table -> table.START_DATE.lessOrEqual(endDate).and(table.END_DATE.greaterOrEqual(startDate)));
+        }
     }
 
     public Optional<ContractDto> getContractById(Long id) {
