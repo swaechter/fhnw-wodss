@@ -7,7 +7,6 @@ out/
 tmp/
 
 # Generated configuration
-gradle.properties
 config/application.properties
 
 # IDE: IntelliJ IDEA

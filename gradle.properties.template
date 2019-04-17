@@ -1,3 +1,0 @@
-databaseUrl=jdbc:postgresql://REPLACEHOSTNAME/REPLACEDATABASE
-databaseUser=REPLACEUSER
-databasePassword=REPLACEPASSWORD

@@ -1,3 +1,8 @@
+# Runtime settings for our Spring application (Required for runtime and development)
 PORT=8000
+DATABASE_URL=postgres://REPLACEUSERNAME:REPLACEPASSWORD@REPLACEHOSTNAME:5432/REPLACEDATABASE
 
-DATABASE_URL=postgres://wsbkgaawpd5iuj:a9778c25cd5a2fb38622db081353197c64db442bfc043645dc470780547bf775@ec2-134-72-219-22.compute-1.amazonaws.com:5432/deohc5atinq4g
+# Build time settings for the Jooq SQL table generation + Flyway data migration (Required for development only)
+JDBC_DATABASE_URL=jdbc:postgresql://REPLACEHOSTNAME:5432/REPLACEDATABASE
+JDBC_DATABASE_USER=REPLACEUSERNAME
+JDBC_DATABASE_PASSWORD=REPLACEPASSWORD
