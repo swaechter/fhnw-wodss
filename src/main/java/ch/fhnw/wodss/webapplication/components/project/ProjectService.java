@@ -46,7 +46,6 @@ public class ProjectService {
         return createdProject.get();
     }
 
-
     public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId, AuthenticatedEmployee authenticatedEmployee) {
         return projectRepository.getProjects(fromDate, toDate, projectManagerId);
     }

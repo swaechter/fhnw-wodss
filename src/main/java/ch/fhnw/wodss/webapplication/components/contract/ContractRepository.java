@@ -24,8 +24,6 @@ public class ContractRepository extends GenericCrudRepository<ContractDto, Contr
     }
 
     public List<ContractDto> getContracts(LocalDate fromDate, LocalDate toDate, Long employeeId) {
-        // TODO: Protect against optional/null values of fromDate, toDate and employeeId - this will be fun....
-
         // Be aware of overlapping start and end dates: https://stackoverflow.com/a/17014131
         Date startDate = getConverter().localDateToSqlDate(fromDate);
         Date endDate = getConverter().localDateToSqlDate(toDate);

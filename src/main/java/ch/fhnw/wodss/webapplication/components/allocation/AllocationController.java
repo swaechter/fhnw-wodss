@@ -43,6 +43,7 @@ public class AllocationController {
         @RequestBody @ApiParam(value = "Allocation to create (The ID in the body will be ignored)", required = true) AllocationDto allocation,
         AuthenticatedEmployee authenticatedEmployee
     ) {
+        allocation.setId(null);
         allocation = allocationService.createAllocation(allocation, authenticatedEmployee);
         return new ResponseEntity<>(allocation, HttpStatus.CREATED);
     }

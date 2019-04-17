@@ -62,6 +62,10 @@ public abstract class GenericCrudRepository<DTO, Record extends UpdatableRecord<
         dslContext.delete(table).where(function.apply(table));
     }
 
+    protected DSLContext getDslContext() {
+        return dslContext;
+    }
+
     protected Converter getConverter() {
         return converter;
     }

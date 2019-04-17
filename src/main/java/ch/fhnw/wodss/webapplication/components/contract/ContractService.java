@@ -67,6 +67,14 @@ public class ContractService {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
 
+        // Simulate a more or less "matching-everything" filter - otherwise we have to deal with 4 different scenarios in the repository
+        fromDate = fromDate != null ? fromDate : LocalDate.of(1900, 1, 1);
+        toDate = toDate != null ? toDate : LocalDate.of(2100, 1, 1);
+
+        if (!fromDate.isBefore(toDate)) {
+            throw new InvalidActionException("The start date of the search filter has to be before the end date");
+        }
+
         boolean showAllContracts = authenticatedEmployee.getRole() == Role.ADMINISTRATOR || authenticatedEmployee.getRole() == Role.PROJECTMANAGER;
         return contractRepository.getContracts(fromDate, toDate, showAllContracts ? null : authenticatedEmployee.getId());
     }
