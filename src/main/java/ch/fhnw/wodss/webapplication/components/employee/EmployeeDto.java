@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,6 +28,7 @@ public class EmployeeDto {
     private String lastName;
 
     @NotBlank
+    @Email
     @Size(min = 1, max = 120)
     @ApiModelProperty(value = "Employee email address", allowableValues = "range[1, 120]", example = "simon.waechter@students.fhnw.ch", required = true, position = 4)
     private String emailAddress;
