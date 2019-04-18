@@ -134,7 +134,7 @@ public class EmployeeService {
 
         List<EmployeeDto> administratorEmployees = employeeRepository.getEmployees(Role.ADMINISTRATOR);
         if (administratorEmployees.size() <= 1) {
-            throw new InvalidActionException("It's not possible to delete the last administrator");
+            throw new InvalidActionException("It's not possible to anonymize the last administrator");
         }
 
         EmployeeDto employee = selectedEmployee.get();
