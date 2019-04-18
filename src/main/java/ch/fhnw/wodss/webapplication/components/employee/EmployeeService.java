@@ -59,13 +59,13 @@ public class EmployeeService {
         return selectedEmployee.get();
     }
 
-    public EmployeeDto updateEmployee(Long id, EmployeeDto employee, AuthenticatedEmployee authenticatedEmployee) {
-        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(id);
+    public EmployeeDto updateEmployee(EmployeeDto employee, AuthenticatedEmployee authenticatedEmployee) {
+        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(employee.getId());
         if (selectedEmployee.isEmpty()) {
-            throw new EntityNotFoundException("employee", id);
+            throw new EntityNotFoundException("employee", employee.getId());
         }
 
-        Optional<EmployeeDto> updatedEmployee = employeeRepository.updateEmployee(id, employee);
+        Optional<EmployeeDto> updatedEmployee = employeeRepository.updateEmployee(employee);
         if (updatedEmployee.isEmpty()) {
             throw new InternalException("Unable to update the employee");
         }
@@ -83,6 +83,6 @@ public class EmployeeService {
         employee.setFirstName("NONE");
         employee.setLastName("NONE");
         employee.setEmailAddress(UUID.randomUUID() + "@NONE.NONE");
-        employeeRepository.updateEmployee(id, employee);
+        employeeRepository.updateEmployee(employee);
     }
 }

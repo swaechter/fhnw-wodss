@@ -33,8 +33,7 @@ public class EmployeeRepository extends GenericCrudRepository<EmployeeDto, Emplo
         return readOne(table -> table.EMAIL_ADDRESS.eq(emailAddress));
     }
 
-    public Optional<EmployeeDto> updateEmployee(Long id, EmployeeDto employee) {
-        employee.setId(id);
+    public Optional<EmployeeDto> updateEmployee(EmployeeDto employee) {
         return updateOne(employee);
     }
 

@@ -40,6 +40,7 @@ public class EmployeeController {
         @RequestParam(value = "role") @ApiParam(value = "Role of the new employee", required = true) Role role,
         AuthenticatedEmployee authenticatedEmployee
     ) {
+        employee.setId(null);
         employee = employeeService.createEmployee(employee, password, role, authenticatedEmployee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
@@ -90,9 +91,9 @@ public class EmployeeController {
         @Valid @RequestBody @ApiParam(value = "Updated employee (The ID and role in the body will be ignored)", required = true) EmployeeDto employee,
         AuthenticatedEmployee authenticatedEmployee
     ) {
-        employeeService.updateEmployee(id, employee, authenticatedEmployee);
+        employee.setId(id);
+        employeeService.updateEmployee(employee, authenticatedEmployee);
         return new ResponseEntity<>(employee, HttpStatus.OK);
-
     }
 
     @DeleteMapping("/{id}")

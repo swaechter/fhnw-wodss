@@ -41,7 +41,7 @@ public class ProjectService {
 
     private void abortIfNull(ProjectDto project, AuthenticatedEmployee authenticatedEmployee) {
         if (project == null || authenticatedEmployee == null) {
-            throw new IllegalArgumentException("Project or Employee must not be null");
+            throw new InvalidActionException("Project or Employee must not be null");
         }
     }
 
