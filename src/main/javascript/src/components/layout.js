@@ -25,7 +25,8 @@ export default class Layout extends Component {
 				</Navbar>
 				<div class="container-fluid">
 					<SideMenu>
-						<NavigationItem href='/project' title='Projekte' />
+						<NavigationItem href='/my-allocation' title='My Allocations' />
+						<NavigationItem href='/project' title='Projects' />
 						<NavigationItem href='/todo' title='Todo`s' />
 					</SideMenu>
 					<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
