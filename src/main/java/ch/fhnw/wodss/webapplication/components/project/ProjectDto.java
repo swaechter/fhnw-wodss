@@ -6,13 +6,14 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @JsonPropertyOrder({"id", "name", "ftePercentage", "startDate", "endDate", "projectManagerId"})
 @ApiModel(value = "Project", description = "Represents a FHNW research project with a given full-time-equivalent (FTE) workload in percentages managed by a project manager employee")
 public class ProjectDto {
 
-    @ApiModelProperty(value = "Project ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
-    private Long id;
+    @ApiModelProperty(value = "Project ID", example = "010a7082-61b0-11e9-8647-d663bd873d93", readOnly = true, position = 1)
+    private UUID id;
 
     @NotBlank
     @Size(min = 1, max = 50)
@@ -34,10 +35,8 @@ public class ProjectDto {
     private LocalDate endDate;
 
     @NotNull
-    @Min(1)
-    @Max(Long.MAX_VALUE)
-    @ApiModelProperty(value = "Project manager employee ID", allowableValues = "range[1, 9223372036854775807]", example = "5", required = true, position = 7)
-    private Long projectManagerId;
+    @ApiModelProperty(value = "Project manager employee ID", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true, position = 7)
+    private UUID projectManagerId;
 
     public ProjectDto() {
     }
@@ -49,11 +48,11 @@ public class ProjectDto {
         this.endDate = endDate;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -89,11 +88,11 @@ public class ProjectDto {
         this.endDate = endDate;
     }
 
-    public Long getProjectManagerId() {
+    public UUID getProjectManagerId() {
         return projectManagerId;
     }
 
-    public void setProjectManagerId(Long projectManagerId) {
+    public void setProjectManagerId(UUID projectManagerId) {
         this.projectManagerId = projectManagerId;
     }
 }

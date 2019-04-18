@@ -8,13 +8,14 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "employeeId"})
 @ApiModel(value = "Contract", description = "Represents the contract an employee can have (Multiple contracts are possible, but date overlapping is not allowed)")
 public class ContractDto {
 
-    @ApiModelProperty(value = "Contract ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
-    private Long id;
+    @ApiModelProperty(value = "Contract ID", example = "010a7082-61b0-11e9-8647-d663bd873d93", readOnly = true, position = 1)
+    private UUID id;
 
     @NotNull
     @ApiModelProperty(value = "Contract start date (YYYY-MM-DD)", example = "2019-03-13", required = true, position = 2)
@@ -31,10 +32,8 @@ public class ContractDto {
     private Short pensumPercentage;
 
     @NotNull
-    @Min(1)
-    @Max(Long.MAX_VALUE)
-    @ApiModelProperty(value = "Employee ID of the contract", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true, position = 5)
-    private Long employeeId;
+    @ApiModelProperty(value = "Employee ID of the contract", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true, position = 5)
+    private UUID employeeId;
 
     public ContractDto() {
     }
@@ -45,11 +44,11 @@ public class ContractDto {
         this.pensumPercentage = pensumPercentage;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -77,11 +76,11 @@ public class ContractDto {
         this.pensumPercentage = pensumPercentage;
     }
 
-    public Long getEmployeeId() {
+    public UUID getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Long employeeId) {
+    public void setEmployeeId(UUID employeeId) {
         this.employeeId = employeeId;
     }
 }

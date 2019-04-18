@@ -10,10 +10,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Validated
 @RestController
@@ -74,7 +73,7 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<ContractDto> getContract(
-        @PathVariable("id") @ApiParam(value = "ID of the contract", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the contract", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         AuthenticatedEmployee authenticatedEmployee
     ) {
         ContractDto contract = contractService.getContract(id, authenticatedEmployee);
@@ -92,7 +91,7 @@ public class ContractController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<ContractDto> updateContract(
-        @Valid @PathVariable("id") @ApiParam(value = "ID of the contract to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @Valid @PathVariable("id") @ApiParam(value = "ID of the contract to be updated", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) ContractDto contract,
         AuthenticatedEmployee authenticatedEmployee
     ) {
@@ -113,7 +112,7 @@ public class ContractController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> anonymizeContract(
-        @PathVariable("id") @ApiParam(value = "ID of the contract to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the contract to be deleted", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         AuthenticatedEmployee authenticatedEmployee
     ) {
         contractService.deleteContract(id, authenticatedEmployee);

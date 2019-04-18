@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ProjectService {
@@ -44,11 +45,11 @@ public class ProjectService {
         }
     }
 
-    public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId, EmployeeDto authenticatedEmployee) {
+    public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, UUID projectManagerId, EmployeeDto authenticatedEmployee) {
         return projectRepository.getProjects(fromDate, toDate, projectManagerId);
     }
 
-    public ProjectDto getProject(Long id, EmployeeDto authenticatedEmployee) {
+    public ProjectDto getProject(UUID id, EmployeeDto authenticatedEmployee) {
         Optional<ProjectDto> selectedProject = projectRepository.getProjectById(id);
         if (selectedProject.isEmpty()) {
             throw new EntityNotFoundException("project", id);
@@ -83,7 +84,7 @@ public class ProjectService {
         }
     }
 
-    private EmployeeDto findEmployee(Long employeeId) {
+    private EmployeeDto findEmployee(UUID employeeId) {
         Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(employeeId);
 
         if (selectedEmployee.isEmpty()) {
@@ -92,7 +93,7 @@ public class ProjectService {
         return selectedEmployee.get();
     }
 
-    public void deleteProject(Long id, EmployeeDto authenticatedEmployee) {
+    public void deleteProject(UUID id, EmployeeDto authenticatedEmployee) {
         Optional<ProjectDto> selectedProject = projectRepository.getProjectById(id);
         if (selectedProject.isEmpty()) {
             throw new EntityNotFoundException("project", id);

@@ -10,14 +10,15 @@ import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
 import ch.fhnw.wodss.webapplication.exceptions.InvalidActionException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -46,15 +47,15 @@ public class ProjectServiceUnitTest {
 
     @Test
     public void whenProjectOrEmployeeIsNull_thenCannotCreateProject() {
-        assertThrows(IllegalArgumentException.class, () -> projectService.createProject(null, mockEmployee));
-        assertThrows(IllegalArgumentException.class, () -> projectService.createProject(mockProject, null));
+        assertThrows(InvalidActionException.class, () -> projectService.createProject(null, mockEmployee));
+        assertThrows(InvalidActionException.class, () -> projectService.createProject(mockProject, null));
 
     }
 
     @Test
     public void whenProjectOrEmployeeIsNull_thenCannotUpdateProject() {
-        assertThrows(IllegalArgumentException.class, () -> projectService.updateProject(null, mockEmployee));
-        assertThrows(IllegalArgumentException.class, () -> projectService.updateProject(mockProject, null));
+        assertThrows(InvalidActionException.class, () -> projectService.updateProject(null, mockEmployee));
+        assertThrows(InvalidActionException.class, () -> projectService.updateProject(mockProject, null));
     }
 
     @Nested

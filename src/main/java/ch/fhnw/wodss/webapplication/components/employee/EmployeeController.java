@@ -9,9 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.List;
+import java.util.UUID;
 
 @Validated
 @RestController
@@ -69,7 +68,7 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<EmployeeDto> getEmployee(
-        @PathVariable("id") @ApiParam(value = "ID of the employee", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the employee", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         AuthenticatedEmployee authenticatedEmployee
     ) {
         EmployeeDto employee = employeeService.getEmployee(id, authenticatedEmployee);
@@ -87,7 +86,7 @@ public class EmployeeController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<EmployeeDto> updateEmployee(
-        @PathVariable("id") @ApiParam(value = "ID of the employee to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the employee to be updated", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         @Valid @RequestBody @ApiParam(value = "Updated employee (The ID and role in the body will be ignored)", required = true) EmployeeDto employee,
         AuthenticatedEmployee authenticatedEmployee
     ) {
@@ -107,7 +106,7 @@ public class EmployeeController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> anonymizeEmployee(
-        @PathVariable("id") @ApiParam(value = "ID of the employee to be anonymized", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the employee to be anonymized", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         AuthenticatedEmployee authenticatedEmployee
     ) {
         employeeService.anonymizeEmployee(id, authenticatedEmployee);

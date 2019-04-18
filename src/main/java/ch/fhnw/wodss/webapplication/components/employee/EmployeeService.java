@@ -49,7 +49,7 @@ public class EmployeeService {
         return employeeRepository.getEmployees(role);
     }
 
-    public EmployeeDto getEmployee(Long id, EmployeeDto authenticatedEmployee) {
+    public EmployeeDto getEmployee(UUID id, EmployeeDto authenticatedEmployee) {
         Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(id);
         if (selectedEmployee.isEmpty()) {
             throw new EntityNotFoundException("employee", id);
@@ -72,7 +72,7 @@ public class EmployeeService {
         return updatedEmployee.get();
     }
 
-    public void anonymizeEmployee(Long id, EmployeeDto authenticatedEmployee) {
+    public void anonymizeEmployee(UUID id, EmployeeDto authenticatedEmployee) {
         Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(id);
         if (selectedEmployee.isEmpty()) {
             throw new EntityNotFoundException("employee", id);
