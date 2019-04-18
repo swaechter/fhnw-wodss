@@ -11,6 +11,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class ContractRepository extends GenericCrudRepository<ContractDto, ContractRecord, Contract> {
@@ -23,7 +24,7 @@ public class ContractRepository extends GenericCrudRepository<ContractDto, Contr
         return createOne(contract);
     }
 
-    public List<ContractDto> getContracts(LocalDate fromDate, LocalDate toDate, Long employeeId) {
+    public List<ContractDto> getContracts(LocalDate fromDate, LocalDate toDate, UUID employeeId) {
         // Be aware of overlapping start and end dates: https://stackoverflow.com/a/17014131
         Date startDate = getConverter().localDateToSqlDate(fromDate);
         Date endDate = getConverter().localDateToSqlDate(toDate);
@@ -36,7 +37,7 @@ public class ContractRepository extends GenericCrudRepository<ContractDto, Contr
         }
     }
 
-    public Optional<ContractDto> getContractById(Long id) {
+    public Optional<ContractDto> getContractById(UUID id) {
         return readOne(table -> table.ID.eq(id));
     }
 
@@ -44,7 +45,7 @@ public class ContractRepository extends GenericCrudRepository<ContractDto, Contr
         return updateOne(contract);
     }
 
-    public void deleteContract(Long id) {
+    public void deleteContract(UUID id) {
         deleteOne(table -> table.ID.eq(id));
     }
 

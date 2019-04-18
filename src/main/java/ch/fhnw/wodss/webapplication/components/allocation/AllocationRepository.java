@@ -16,6 +16,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class AllocationRepository extends GenericCrudRepository<AllocationDto, AllocationRecord, Allocation> {
@@ -28,7 +29,7 @@ public class AllocationRepository extends GenericCrudRepository<AllocationDto, A
         return createOne(allocation);
     }
 
-    public List<AllocationDto> getAllocations(Long projectManagerId, Long employeeId, Long projectId, LocalDate fromDate, LocalDate toDate) {
+    public List<AllocationDto> getAllocations(UUID projectManagerId, UUID employeeId, UUID projectId, LocalDate fromDate, LocalDate toDate) {
         // Be aware of overlapping start and end dates: https://stackoverflow.com/a/17014131
         Date startDate = getConverter().localDateToSqlDate(fromDate);
         Date endDate = getConverter().localDateToSqlDate(toDate);
@@ -45,11 +46,11 @@ public class AllocationRepository extends GenericCrudRepository<AllocationDto, A
         return getConverter().allocationRecordListToAllocationDtoList(condition.fetchInto(Allocation.ALLOCATION));
     }
 
-    public List<AllocationDto> getAllocationsByContractId(Long contractId) {
+    public List<AllocationDto> getAllocationsByContractId(UUID contractId) {
         return readMany(table -> table.CONTRACT_ID.eq(contractId));
     }
 
-    public Optional<AllocationDto> getAllocationById(Long id) {
+    public Optional<AllocationDto> getAllocationById(UUID id) {
         return readOne(table -> table.ID.eq(id));
     }
 
@@ -57,7 +58,7 @@ public class AllocationRepository extends GenericCrudRepository<AllocationDto, A
         return updateOne(allocation);
     }
 
-    public void deleteAllocation(Long id) {
+    public void deleteAllocation(UUID id) {
         deleteOne(table -> table.ID.eq(id));
     }
 

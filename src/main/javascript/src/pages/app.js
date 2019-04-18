@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 
-import { Router, route } from 'preact-router';
-
+import createHashHistory from 'history/createHashHistory';
+import { Router, route} from 'preact-router';
 
 //require('Bootstrap')
 import 'bootstrap/dist/css/bootstrap.css';
@@ -17,7 +17,7 @@ export default class App extends Component {
 	render() {
 		return (
 			<AuthLock>
-				<Router onChange={this.handleRoute}>
+				<Router onChange={this.handleRoute} history={createHashHistory()}>
 					<TodoPage path='/todo' />
 					<ProjectPage path='/project' />
 					<Redirect default to="/project" />

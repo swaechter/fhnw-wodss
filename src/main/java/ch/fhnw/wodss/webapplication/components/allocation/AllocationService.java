@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AllocationService {
@@ -78,7 +75,7 @@ public class AllocationService {
         return createdAllocation.get();
     }
 
-    public List<AllocationDto> getAllocations(Long employeeId, Long projectId, LocalDate fromDate, LocalDate toDate, EmployeeDto authenticatedEmployee) {
+    public List<AllocationDto> getAllocations(UUID employeeId, UUID projectId, LocalDate fromDate, LocalDate toDate, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -100,7 +97,7 @@ public class AllocationService {
         }
     }
 
-    public AllocationDto getAllocation(Long id, EmployeeDto authenticatedEmployee) {
+    public AllocationDto getAllocation(UUID id, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -179,7 +176,7 @@ public class AllocationService {
         return updatedAllocation.get();
     }
 
-    public void deleteAllocation(Long id, EmployeeDto authenticatedEmployee) {
+    public void deleteAllocation(UUID id, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }

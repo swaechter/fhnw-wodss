@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build",
-    "serve": "preact build && preact serve",
+    "build": "preact build --clean --no-prerender --dest ../resources/public",
+    "serve": "npm run build && preact serve",
     "dev": "preact watch",
     "lint": "eslint src"
   },
@@ -17,13 +17,18 @@
     "build/*"
   ],
   "devDependencies": {
+    "babel-plugin-fast-async": "^6.1.2",
     "eslint": "^4.5.0",
     "eslint-config-synacor": "^1.1.0",
+    "fast-async": "^6.3.8",
     "if-env": "^1.0.0",
-    "preact-cli": "^2.2.1"
+    "preact-cli": "^3.0.0-next.14",
+    "preact-render-to-string": "^4.1.0",
+    "webpack": "^4.30.0"
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "history": "^4.9.0",
     "jquery": "^3.3.1",
     "jwt-decode": "^2.2.0",
     "popper.js": "^1.14.7",

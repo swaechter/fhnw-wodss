@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ContractService {
@@ -78,7 +79,7 @@ public class ContractService {
         return contractRepository.getContracts(fromDate, toDate, showAllContracts ? null : authenticatedEmployee.getId());
     }
 
-    public ContractDto getContract(Long id, EmployeeDto authenticatedEmployee) {
+    public ContractDto getContract(UUID id, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -135,7 +136,7 @@ public class ContractService {
         return updatedContract.get();
     }
 
-    public void deleteContract(Long id, EmployeeDto authenticatedEmployee) {
+    public void deleteContract(UUID id, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }

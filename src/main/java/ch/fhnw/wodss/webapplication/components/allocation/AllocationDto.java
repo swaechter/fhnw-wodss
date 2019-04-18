@@ -8,13 +8,14 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "contractId", "projectId"})
 @ApiModel(value = "Allocation", description = "Represents the work unit an employee is doing for a project")
 public class AllocationDto {
 
-    @ApiModelProperty(value = "Allocation ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
-    private Long id;
+    @ApiModelProperty(value = "Allocation ID", example = "010a7082-61b0-11e9-8647-d663bd873d93", readOnly = true, position = 1)
+    private UUID id;
 
     @NotNull
     @ApiModelProperty(value = "Allocation start date (YYYY-MM-DD)", example = "2019-03-13", required = true, position = 2)
@@ -31,21 +32,17 @@ public class AllocationDto {
     private Short pensumPercentage;
 
     @NotNull
-    @Min(1)
-    @Max(Long.MAX_VALUE)
-    @ApiModelProperty(value = "Contract ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true, position = 5)
-    private Long contractId;
+    @ApiModelProperty(value = "Contract ID of the allocation", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true, position = 5)
+    private UUID contractId;
 
     @NotNull
-    @Min(1)
-    @Max(Long.MAX_VALUE)
-    @ApiModelProperty(value = "Project ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true, position = 6)
-    private Long projectId;
+    @ApiModelProperty(value = "Project ID of the allocation", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true, position = 6)
+    private UUID projectId;
 
     public AllocationDto() {
     }
 
-    public AllocationDto(Long id, LocalDate startDate, LocalDate endDate, Short pensumPercentage, Long contractId, Long projectId) {
+    public AllocationDto(UUID id, LocalDate startDate, LocalDate endDate, Short pensumPercentage, UUID contractId, UUID projectId) {
         this.id = id;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -54,11 +51,11 @@ public class AllocationDto {
         this.projectId = projectId;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -86,19 +83,19 @@ public class AllocationDto {
         this.pensumPercentage = pensumPercentage;
     }
 
-    public Long getContractId() {
+    public UUID getContractId() {
         return contractId;
     }
 
-    public void setContractId(Long contractId) {
+    public void setContractId(UUID contractId) {
         this.contractId = contractId;
     }
 
-    public Long getProjectId() {
+    public UUID getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(UUID projectId) {
         this.projectId = projectId;
     }
 }

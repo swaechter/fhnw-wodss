@@ -9,10 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -54,7 +53,7 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<List<ProjectDto>> getProjects(
-        @RequestParam(value = "projectManagerId", required = false) @ApiParam(value = "Filter the projects by a project manager ID", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectManagerId,
+        @RequestParam(value = "projectManagerId", required = false) @ApiParam(value = "Filter the projects by a project manager ID", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = false) UUID projectManagerId,
         @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
         @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Projects with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate,
         AuthenticatedEmployee authenticatedEmployee
@@ -73,7 +72,7 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<ProjectDto> getProject(
-        @PathVariable("id") @ApiParam(value = "ID of the project", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the project", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         AuthenticatedEmployee authenticatedEmployee
     ) {
         ProjectDto project = projectService.getProject(id, authenticatedEmployee);
@@ -91,7 +90,7 @@ public class ProjectController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<ProjectDto> updateProject(
-        @PathVariable("id") @ApiParam(value = "ID of the project to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the project to be updated", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         @Valid @RequestBody @ApiParam(value = "Updated project (The ID in the body will be ignored)", required = true) ProjectDto project,
         AuthenticatedEmployee authenticatedEmployee
     ) {
@@ -111,7 +110,7 @@ public class ProjectController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteProject(
-        @PathVariable("id") @ApiParam(value = "ID of the project to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the project to be deleted", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         AuthenticatedEmployee authenticatedEmployee
     ) {
         projectService.deleteProject(id, authenticatedEmployee);

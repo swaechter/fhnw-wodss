@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class ProjectRepository extends GenericCrudRepository<ProjectDto, ProjectRecord, Project> {
@@ -22,11 +23,11 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
         return createOne(project);
     }
 
-    public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId) {
+    public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, UUID projectManagerId) {
         return readMany(table -> table.ID.isNotNull());
     }
 
-    public Optional<ProjectDto> getProjectById(Long id) {
+    public Optional<ProjectDto> getProjectById(UUID id) {
         return readOne(table -> table.ID.eq(id));
     }
 
@@ -34,7 +35,7 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
         return updateOne(project);
     }
 
-    public void deleteProject(Long id) {
+    public void deleteProject(UUID id) {
         deleteOne(table -> table.ID.eq(id));
     }
 

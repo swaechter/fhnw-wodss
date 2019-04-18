@@ -9,13 +9,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.UUID;
 
 @JsonPropertyOrder({"id", "firstName", "lastName", "emailAddress", "isActive", "role"})
 @ApiModel(value = "Employee", description = "Represents the employee of the FHNW. An employee can have several non-overlapping contracts. In addition he can work in multiple projects and act as project leader")
 public class EmployeeDto {
 
-    @ApiModelProperty(value = "Employee ID", allowableValues = "range[1, 9223372036854775807]", example = "42", readOnly = true, position = 1)
-    private Long id;
+    @ApiModelProperty(value = "Employee ID", example = "010a7082-61b0-11e9-8647-d663bd873d93", readOnly = true, position = 1)
+    private UUID id;
 
     @NotBlank
     @Size(min = 1, max = 50)
@@ -56,7 +57,7 @@ public class EmployeeDto {
         this.passwordHash = employee.passwordHash;
     }
 
-    public EmployeeDto(Long id, String firstName, String lastName, String emailAddress, String passwordHash, Boolean isActive, Role role) {
+    public EmployeeDto(UUID id, String firstName, String lastName, String emailAddress, String passwordHash, Boolean isActive, Role role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -66,11 +67,11 @@ public class EmployeeDto {
         this.role = role;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

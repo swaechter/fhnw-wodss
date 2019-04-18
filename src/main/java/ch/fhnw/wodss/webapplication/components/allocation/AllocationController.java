@@ -10,10 +10,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Validated
 @RestController
@@ -58,8 +57,8 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<List<AllocationDto>> getAllocations(
-        @RequestParam(value = "employeeId", required = false) @ApiParam(value = "Filter the allocations by an employee (Filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long employeeId,
-        @RequestParam(value = "projectId", required = false) @ApiParam(value = "Filter the allocations by a project (Filters can stack)", allowableValues = "range[1, 9223372036854775807]", example = "42", required = false) Long projectId,
+        @RequestParam(value = "employeeId", required = false) @ApiParam(value = "Filter the allocations by an employee (Filters can stack)", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = false) UUID employeeId,
+        @RequestParam(value = "projectId", required = false) @ApiParam(value = "Filter the allocations by a project (Filters can stack)", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = false) UUID projectId,
         @RequestParam(value = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "Start date (YYYY-MM-DD) to create a time range with a lower boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-01-01", required = false) LocalDate fromDate,
         @RequestParam(value = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @ApiParam(value = "End date (YYYY-MM-DD) to create a time range with an upper boundary (Allocations with a start date before, but an end date after this date will match the criteria). Filters can stack", example = "2019-03-13", required = false) LocalDate toDate,
         AuthenticatedEmployee authenticatedEmployee
@@ -78,7 +77,7 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<AllocationDto> getAllocation(
-        @PathVariable("id") @ApiParam(value = "ID of the allocation", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the allocation", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         AuthenticatedEmployee authenticatedEmployee
     ) {
         AllocationDto allocation = allocationService.getAllocation(id, authenticatedEmployee);
@@ -96,7 +95,7 @@ public class AllocationController {
         @ApiResponse(code = 500, message = "Uncaught or internal server error")
     })
     public ResponseEntity<AllocationDto> updateAllocation(
-        @PathVariable("id") @ApiParam(value = "ID of the allocation to be updated", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the allocation to be updated", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         @Valid @RequestBody @ApiParam(value = "Updated allocation (The ID in the body will be ignored)", required = true) AllocationDto allocation,
         AuthenticatedEmployee authenticatedEmployee
     ) {
@@ -116,7 +115,7 @@ public class AllocationController {
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteAllocation(
-        @PathVariable("id") @ApiParam(value = "ID of the allocation to be deleted", allowableValues = "range[1, 9223372036854775807]", example = "42", required = true) @Min(1) @Max(Long.MAX_VALUE) Long id,
+        @PathVariable("id") @ApiParam(value = "ID of the allocation to be deleted", example = "010a7082-61b0-11e9-8647-d663bd873d93", required = true) UUID id,
         AuthenticatedEmployee authenticatedEmployee
     ) {
         allocationService.deleteAllocation(id, authenticatedEmployee);
