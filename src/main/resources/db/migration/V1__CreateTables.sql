@@ -1,9 +1,7 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 CREATE TYPE role AS ENUM ('ADMINISTRATOR', 'PROJECTMANAGER', 'DEVELOPER');
 
 CREATE TABLE employee (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     email_address VARCHAR(120) UNIQUE NOT NULL,
@@ -13,7 +11,7 @@ CREATE TABLE employee (
 );
 
 CREATE TABLE project (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
     fte_percentage BIGINT NOT NULL,
     start_date DATE NOT NULL,
@@ -22,7 +20,7 @@ CREATE TABLE project (
 );
 
 CREATE TABLE contract (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     pensum_percentage SMALLINT NOT NULL,
@@ -30,7 +28,7 @@ CREATE TABLE contract (
 );
 
 CREATE TABLE allocation (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     pensum_percentage SMALLINT NOT NULL,

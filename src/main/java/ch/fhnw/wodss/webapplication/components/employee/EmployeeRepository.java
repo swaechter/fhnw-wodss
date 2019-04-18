@@ -19,6 +19,7 @@ public class EmployeeRepository extends GenericCrudRepository<EmployeeDto, Emplo
     }
 
     public Optional<EmployeeDto> saveEmployee(EmployeeDto employee) {
+        employee.setId(UUID.randomUUID());
         return createOne(employee);
     }
 

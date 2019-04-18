@@ -20,6 +20,7 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
     }
 
     public Optional<ProjectDto> saveProject(ProjectDto project) {
+        project.setId(UUID.randomUUID());
         return createOne(project);
     }
 
