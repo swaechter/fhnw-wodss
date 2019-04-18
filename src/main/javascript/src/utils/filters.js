@@ -1,3 +1,5 @@
+import { checkDateRangeOverlap } from "./date";
+
 export const unique = (array, getIdentifier) => {
     let result = []
     let ids = new Set()
@@ -10,3 +12,9 @@ export const unique = (array, getIdentifier) => {
     }
     return result
 }
+
+export const filterAllocations = (from, to, allocations) => {
+    if(from>to) throw new Error('Invalid date range')
+    return allocations.filter((alloc) => checkDateRangeOverlap(from,to,alloc.startDate, alloc.endDate))
+}
+

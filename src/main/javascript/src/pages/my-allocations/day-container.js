@@ -1,20 +1,25 @@
-import { h, Component } from 'preact';
+import { h, Component, options } from 'preact';
 import PlanningItem from './planning-item';
-import {getObjectColor} from '../../utils/colors'
+import { getObjectColor } from '../../utils/colors'
 
 
 export default class DayContainer extends Component {
 
-    render() {
-        let items = [{width: 10, color:'1'}, {width: 20, color:'11'}, {width: 10, color:'11   11'}]
-
+    render({date, allocations}) {
         return (
-            <div class="progress">
-                {
-                    items.map(element =>
-                        <PlanningItem width={element.width} color={getObjectColor(element)} />
-                    )
-                }
+            <div class='row'>
+                <div class="col">
+                    {date.toLocaleString()}
+                </div>
+                <div class="col-8">
+                    <div class="progress">
+                        {
+                            allocations.map(dispAlloc =>
+                                <PlanningItem width={dispAlloc.pensumPercentage} color={dispAlloc.color} />
+                            )
+                        }
+                    </div>
+                </div>
             </div>
         );
     }
