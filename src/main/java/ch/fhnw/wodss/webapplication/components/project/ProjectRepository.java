@@ -1,10 +1,8 @@
 package ch.fhnw.wodss.webapplication.components.project;
 
-import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.utils.Converter;
 import ch.fhnw.wodss.webapplication.utils.GenericCrudRepository;
 import org.jooq.DSLContext;
-import org.jooq.generated.tables.Employee;
 import org.jooq.generated.tables.Project;
 import org.jooq.generated.tables.records.ProjectRecord;
 import org.springframework.stereotype.Repository;
@@ -32,8 +30,7 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
         return readOne(table -> table.ID.eq(id));
     }
 
-    public Optional<ProjectDto> updateProject(Long id, ProjectDto project) {
-        project.setId(id);
+    public Optional<ProjectDto> updateProject(ProjectDto project) {
         return updateOne(project);
     }
 
