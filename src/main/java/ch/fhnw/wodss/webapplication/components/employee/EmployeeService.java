@@ -45,6 +45,10 @@ public class EmployeeService {
         return passwordEncoder.matches(credentials.getRawPassword(), selectedEmployee.get().getPasswordHash()) ? selectedEmployee : Optional.empty();
     }
 
+    public Optional<EmployeeDto> getEmployeeByEmailAddress(String emailAddress) {
+        return employeeRepository.getEmployeeByEmailAddress(emailAddress);
+    }
+
     public List<EmployeeDto> getEmployees(Role role, EmployeeDto authenticatedEmployee) {
         return employeeRepository.getEmployees(role);
     }

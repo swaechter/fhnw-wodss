@@ -1,6 +1,7 @@
 package ch.fhnw.wodss.webapplication.configuration;
 
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
+import ch.fhnw.wodss.webapplication.components.employee.EmployeeService;
 import ch.fhnw.wodss.webapplication.components.token.Token;
 import ch.fhnw.wodss.webapplication.components.token.TokenService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,8 +22,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
 
-    public AuthenticationFilter(TokenService tokenService) {
+    private final EmployeeService employeeService;
+
+    public AuthenticationFilter(TokenService tokenService, EmployeeService employeeService) {
         this.tokenService = tokenService;
+        this.employeeService = employeeService;
     }
 
     @Override
@@ -30,8 +34,13 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String rawToken = httpServletRequest.getHeader(HEADER_NAME);
         if (rawToken != null && rawToken.startsWith(KEY_BEGINNING)) {
             Token token = new Token(rawToken.replace(KEY_BEGINNING, ""));
-            Optional<EmployeeDto> employee = tokenService.getEmployeeFromToken(token);
-            employee.ifPresent(employeeDto -> SecurityContextHolder.getContext().setAuthentication(new AuthenticatedEmployee(employeeDto, token)));
+            Optional<EmployeeDto> tokenEmployee = tokenService.getEmployeeFromToken(token);
+
+            // Manually recheck the token employee in the database. Not really the idea of a stateless & signed token like JWT...but simple
+            tokenEmployee.ifPresent(tokenEmployeeDto -> {
+                Optional<EmployeeDto> databaseEmployee = employeeService.getEmployeeByEmailAddress(tokenEmployeeDto.getEmailAddress());
+                databaseEmployee.ifPresent(employeeDto -> SecurityContextHolder.getContext().setAuthentication(new AuthenticatedEmployee(employeeDto, token)));
+            });
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);

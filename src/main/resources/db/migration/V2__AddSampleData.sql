@@ -1,7 +1,7 @@
 /* Create an employee account for each team member */
-INSERT INTO employee (id, first_name, last_name, email_address, password_hash, is_active, role) VALUES ('6bae2bc7-9d1e-457d-ac92-dd78e467b7d1', 'Simon', 'Wächter', 'simon.waechter@students.fhnw.ch', 'TODO', true, 'ADMINISTRATOR');
-INSERT INTO employee (id, first_name, last_name, email_address, password_hash, is_active, role) VALUES ('8d7a6f19-676d-42de-8f3a-039588a49c5f', 'Philipp', 'Lüthi', 'philipp.luethi@students.fhnw.ch', 'TODO', true, 'ADMINISTRATOR');
-INSERT INTO employee (id, first_name, last_name, email_address, password_hash, is_active, role) VALUES ('0ac9e9f4-66c6-44ed-b8d6-a038364afaa6', 'Thibault', 'Gagnaux', 'thibault.gagnaux@students.fhnw.ch', 'TODO', true, 'ADMINISTRATOR');
+INSERT INTO employee (id, first_name, last_name, email_address, password_hash, is_active, role) VALUES ('6bae2bc7-9d1e-457d-ac92-dd78e467b7d1', 'Simon', 'Wächter', 'simon.waechter@students.fhnw.ch', '$2a$10$S7G/79ca.oiLxEFOWf3JauDqHJ2c9UautlF65kkY9PpY04Zyo0rIi', true, 'ADMINISTRATOR');
+INSERT INTO employee (id, first_name, last_name, email_address, password_hash, is_active, role) VALUES ('8d7a6f19-676d-42de-8f3a-039588a49c5f', 'Philipp', 'Lüthi', 'philipp.luethi@students.fhnw.ch', '$2a$10$xjyUmWTl4Fnli1EVIc6zmupK.TfQxpzxIn5L2r.ZTmW8khhxKLLXy', true, 'ADMINISTRATOR');
+INSERT INTO employee (id, first_name, last_name, email_address, password_hash, is_active, role) VALUES ('0ac9e9f4-66c6-44ed-b8d6-a038364afaa6', 'Thibault', 'Gagnaux', 'thibault.gagnaux@students.fhnw.ch', '$2a$10$6ruyoKCOW2.NGxMvPJRaO.oZGhqEDdGpq5ZLXhNQJVsIpAaz823e.', true, 'ADMINISTRATOR');
 
 /* Create a contract for each team member */
 INSERT INTO contract (id, start_date, end_date, pensum_percentage, employee_id) VALUES ('20dc78ec-6a83-4959-81e4-fd3007508218', now(), now(), 0.4, '6bae2bc7-9d1e-457d-ac92-dd78e467b7d1');
