@@ -24,7 +24,11 @@ public class EmployeeRepository extends GenericCrudRepository<EmployeeDto, Emplo
     }
 
     public List<EmployeeDto> getEmployees(Role role) {
-        return readMany(table -> table.ID.isNotNull());
+        if (role != null) {
+            return readMany(table -> table.ROLE.eq(getConverter().roleDtoToRoleRecord(role)));
+        } else {
+            return readMany(table -> table.ID.isNotNull());
+        }
     }
 
     public Optional<EmployeeDto> getEmployeeById(UUID id) {
@@ -49,7 +53,7 @@ public class EmployeeRepository extends GenericCrudRepository<EmployeeDto, Emplo
         employeeRecord.setEmailAddress(employee.getEmailAddress());
         employeeRecord.setPasswordHash(employee.getPasswordHash());
         employeeRecord.setIsActive(employee.isActive());
-        employeeRecord.setRole(getConverter().roleRecordToRoleDto(employee.getRole()));
+        employeeRecord.setRole(getConverter().roleDtoToRoleRecord(employee.getRole()));
         return employeeRecord;
     }
 
