@@ -5,7 +5,6 @@ import ch.fhnw.wodss.webapplication.components.allocation.AllocationRepository;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
 import ch.fhnw.wodss.webapplication.components.employee.Role;
-import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InsufficientPermissionException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
@@ -31,7 +30,7 @@ public class ContractService {
         this.employeeRepository = employeeRepository;
     }
 
-    public ContractDto createContract(ContractDto contract, AuthenticatedEmployee authenticatedEmployee) {
+    public ContractDto createContract(ContractDto contract, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -62,7 +61,7 @@ public class ContractService {
         return createdContract.get();
     }
 
-    public List<ContractDto> getContracts(LocalDate fromDate, LocalDate toDate, AuthenticatedEmployee authenticatedEmployee) {
+    public List<ContractDto> getContracts(LocalDate fromDate, LocalDate toDate, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -79,7 +78,7 @@ public class ContractService {
         return contractRepository.getContracts(fromDate, toDate, showAllContracts ? null : authenticatedEmployee.getId());
     }
 
-    public ContractDto getContract(Long id, AuthenticatedEmployee authenticatedEmployee) {
+    public ContractDto getContract(Long id, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -96,7 +95,7 @@ public class ContractService {
         return selectedContract.get();
     }
 
-    public ContractDto updateContract(ContractDto contract, AuthenticatedEmployee authenticatedEmployee) {
+    public ContractDto updateContract(ContractDto contract, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -136,7 +135,7 @@ public class ContractService {
         return updatedContract.get();
     }
 
-    public void deleteContract(Long id, AuthenticatedEmployee authenticatedEmployee) {
+    public void deleteContract(Long id, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }

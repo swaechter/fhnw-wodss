@@ -3,7 +3,6 @@ package ch.fhnw.wodss.webapplication.components.project;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
 import ch.fhnw.wodss.webapplication.components.employee.Role;
-import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
 import ch.fhnw.wodss.webapplication.exceptions.InvalidActionException;
@@ -25,7 +24,7 @@ public class ProjectService {
         this.employeeRepository = employeeRepository;
     }
 
-    public ProjectDto createProject(ProjectDto project, AuthenticatedEmployee authenticatedEmployee) {
+    public ProjectDto createProject(ProjectDto project, EmployeeDto authenticatedEmployee) {
         abortIfNull(project, authenticatedEmployee);
         EmployeeDto employee = findEmployee(authenticatedEmployee.getId());
         abortIfNoPermission(employee);
@@ -39,17 +38,17 @@ public class ProjectService {
         return createdProject.get();
     }
 
-    private void abortIfNull(ProjectDto project, AuthenticatedEmployee authenticatedEmployee) {
+    private void abortIfNull(ProjectDto project, EmployeeDto authenticatedEmployee) {
         if (project == null || authenticatedEmployee == null) {
             throw new InvalidActionException("Project or Employee must not be null");
         }
     }
 
-    public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId, AuthenticatedEmployee authenticatedEmployee) {
+    public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId, EmployeeDto authenticatedEmployee) {
         return projectRepository.getProjects(fromDate, toDate, projectManagerId);
     }
 
-    public ProjectDto getProject(Long id, AuthenticatedEmployee authenticatedEmployee) {
+    public ProjectDto getProject(Long id, EmployeeDto authenticatedEmployee) {
         Optional<ProjectDto> selectedProject = projectRepository.getProjectById(id);
         if (selectedProject.isEmpty()) {
             throw new EntityNotFoundException("project", id);
@@ -58,7 +57,7 @@ public class ProjectService {
         return selectedProject.get();
     }
 
-    public ProjectDto updateProject(ProjectDto project, AuthenticatedEmployee authenticatedEmployee) {
+    public ProjectDto updateProject(ProjectDto project, EmployeeDto authenticatedEmployee) {
         abortIfNull(project, authenticatedEmployee);
 
         EmployeeDto employee = findEmployee(project.getProjectManagerId());
@@ -93,7 +92,7 @@ public class ProjectService {
         return selectedEmployee.get();
     }
 
-    public void deleteProject(Long id, AuthenticatedEmployee authenticatedEmployee) {
+    public void deleteProject(Long id, EmployeeDto authenticatedEmployee) {
         Optional<ProjectDto> selectedProject = projectRepository.getProjectById(id);
         if (selectedProject.isEmpty()) {
             throw new EntityNotFoundException("project", id);

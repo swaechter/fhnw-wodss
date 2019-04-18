@@ -1,7 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.employee;
 
 import ch.fhnw.wodss.webapplication.components.token.Credentials;
-import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class EmployeeService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public EmployeeDto createEmployee(EmployeeDto employee, String password, Role role, AuthenticatedEmployee authenticatedEmployee) {
+    public EmployeeDto createEmployee(EmployeeDto employee, String password, Role role, EmployeeDto authenticatedEmployee) {
         employee.setRole(role);
         employee.setPasswordHash(passwordEncoder.encode(password));
 
@@ -46,11 +45,11 @@ public class EmployeeService {
         return passwordEncoder.matches(credentials.getRawPassword(), selectedEmployee.get().getPasswordHash()) ? selectedEmployee : Optional.empty();
     }
 
-    public List<EmployeeDto> getEmployees(Role role, AuthenticatedEmployee authenticatedEmployee) {
+    public List<EmployeeDto> getEmployees(Role role, EmployeeDto authenticatedEmployee) {
         return employeeRepository.getEmployees(role);
     }
 
-    public EmployeeDto getEmployee(Long id, AuthenticatedEmployee authenticatedEmployee) {
+    public EmployeeDto getEmployee(Long id, EmployeeDto authenticatedEmployee) {
         Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(id);
         if (selectedEmployee.isEmpty()) {
             throw new EntityNotFoundException("employee", id);
@@ -59,7 +58,7 @@ public class EmployeeService {
         return selectedEmployee.get();
     }
 
-    public EmployeeDto updateEmployee(EmployeeDto employee, AuthenticatedEmployee authenticatedEmployee) {
+    public EmployeeDto updateEmployee(EmployeeDto employee, EmployeeDto authenticatedEmployee) {
         Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(employee.getId());
         if (selectedEmployee.isEmpty()) {
             throw new EntityNotFoundException("employee", employee.getId());
@@ -73,7 +72,7 @@ public class EmployeeService {
         return updatedEmployee.get();
     }
 
-    public void anonymizeEmployee(Long id, AuthenticatedEmployee authenticatedEmployee) {
+    public void anonymizeEmployee(Long id, EmployeeDto authenticatedEmployee) {
         Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(id);
         if (selectedEmployee.isEmpty()) {
             throw new EntityNotFoundException("employee", id);

@@ -2,10 +2,10 @@ package ch.fhnw.wodss.webapplication.components.allocation;
 
 import ch.fhnw.wodss.webapplication.components.contract.ContractDto;
 import ch.fhnw.wodss.webapplication.components.contract.ContractRepository;
+import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.components.project.ProjectDto;
 import ch.fhnw.wodss.webapplication.components.project.ProjectRepository;
-import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InsufficientPermissionException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
@@ -34,7 +34,7 @@ public class AllocationService {
         this.projectRepository = projectRepository;
     }
 
-    public AllocationDto createAllocation(AllocationDto allocation, AuthenticatedEmployee authenticatedEmployee) {
+    public AllocationDto createAllocation(AllocationDto allocation, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -78,7 +78,7 @@ public class AllocationService {
         return createdAllocation.get();
     }
 
-    public List<AllocationDto> getAllocations(Long employeeId, Long projectId, LocalDate fromDate, LocalDate toDate, AuthenticatedEmployee authenticatedEmployee) {
+    public List<AllocationDto> getAllocations(Long employeeId, Long projectId, LocalDate fromDate, LocalDate toDate, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -100,7 +100,7 @@ public class AllocationService {
         }
     }
 
-    public AllocationDto getAllocation(Long id, AuthenticatedEmployee authenticatedEmployee) {
+    public AllocationDto getAllocation(Long id, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -127,7 +127,7 @@ public class AllocationService {
         return selectedAllocation.get();
     }
 
-    public AllocationDto updateAllocation(AllocationDto allocation, AuthenticatedEmployee authenticatedEmployee) {
+    public AllocationDto updateAllocation(AllocationDto allocation, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -179,7 +179,7 @@ public class AllocationService {
         return updatedAllocation.get();
     }
 
-    public void deleteAllocation(Long id, AuthenticatedEmployee authenticatedEmployee) {
+    public void deleteAllocation(Long id, EmployeeDto authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
