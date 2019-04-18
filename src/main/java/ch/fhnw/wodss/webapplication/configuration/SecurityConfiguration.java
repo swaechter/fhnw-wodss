@@ -59,7 +59,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/swagger-resources/configuration/security",
             "/configuration/security",
             "/swagger-ui.html",
-            "/webjars/**");
+            "/index.html**",
+            "/webjars/**",
+            "/assets/***",
+            "/**.js",
+            "/**.css",
+            "/**.png",
+            "/**.ico",
+            "/**.json");
     }
 
     @Bean

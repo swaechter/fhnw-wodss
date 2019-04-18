@@ -11,6 +11,7 @@ buildscript {
         classpath 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
         classpath 'org.postgresql:postgresql:42.2.5'
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE'
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.3.1'
     }
 }
 
@@ -24,6 +25,7 @@ plugins {
 
 apply plugin: 'idea'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: "com.moowork.node"
 
 group = 'ch.fhnw.wodss'
 version = '0.0.1-SNAPSHOT'
@@ -102,7 +104,21 @@ jooq {
     }
 }
 
+node {
+    version = '10.15.3'
+    npmVersion = '6.4.1'
+    download = true
+    nodeModulesDir = file("src/main/javascript")
+}
+
+task buildFrontend(type: NpmTask) {
+    args = ['run', 'build']
+}
+
 task downloadDependencies(type: Exec) {
     configurations.testRuntime.files
     commandLine 'echo', 'Downloaded all dependencies'
 }
+
+buildFrontend.dependsOn(npm_install)
+compileJava.dependsOn(buildFrontend)
