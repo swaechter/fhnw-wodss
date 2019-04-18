@@ -9,7 +9,7 @@ export default class DayContainer extends Component {
         return (
             <div class='row'>
                 <div class="col">
-                    {date.toLocaleString()}
+                    {date.toDateString()}
                 </div>
                 <div class="col-8">
                     <div class="progress">

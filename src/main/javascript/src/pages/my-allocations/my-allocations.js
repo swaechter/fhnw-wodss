@@ -6,7 +6,7 @@ import { connect } from 'preact-redux';
 import Layout from '../../components/layout';
 import DayContainer from './day-container';
 import { filterAllocations, unique } from '../../utils/filters';
-import { getMonday, getDateRange } from '../../utils/date';
+import { getMonday, getDateRange, removeTimeUTC } from '../../utils/date';
 import { getObjectColor } from '../../utils/colors';
 
 @connect(reducers, actions)
@@ -16,11 +16,10 @@ export default class MyAllocationsPage extends Component {
         super(props)
         let monday = getMonday(new Date('Sat Apr 06 2019')).setHours(0, 0, 0, 0)
         this.state = {
-            from: Date.UTC(2019,3,4),
+            from: new Date(2019,3,4),
             to:   Date.UTC(2019,4,5),
             displayAllocations: []
         }
-        console.log(this.state)
     }
 
     componentDidMount() {
