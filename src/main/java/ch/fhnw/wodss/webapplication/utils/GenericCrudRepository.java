@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+// Inspired by: https://github.com/jOOQ/jOOQ/issues/5984
 public abstract class GenericCrudRepository<DTO, Record extends UpdatableRecord<Record>, Table extends TableImpl<Record>> {
 
     private final DSLContext dslContext;
@@ -59,7 +60,11 @@ public abstract class GenericCrudRepository<DTO, Record extends UpdatableRecord<
     }
 
     protected void deleteOne(Function<Table, Condition> function) {
-        dslContext.delete(table).where(function.apply(table));
+        dslContext.delete(table).where(function.apply(table)).execute();
+    }
+
+    protected DSLContext getDslContext() {
+        return dslContext;
     }
 
     protected Converter getConverter() {

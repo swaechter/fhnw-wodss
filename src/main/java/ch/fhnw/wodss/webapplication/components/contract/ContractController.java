@@ -43,6 +43,7 @@ public class ContractController {
         @Valid @RequestBody @ApiParam(value = "Contract to create (The ID in the body will be ignored)", required = true) ContractDto contract,
         AuthenticatedEmployee authenticatedEmployee
     ) {
+        contract.setId(null);
         contract = contractService.createContract(contract, authenticatedEmployee);
         return new ResponseEntity<>(contract, HttpStatus.CREATED);
     }
@@ -95,7 +96,8 @@ public class ContractController {
         @RequestBody @ApiParam(value = "Updated contract (The ID in the body will be ignored)", required = true) ContractDto contract,
         AuthenticatedEmployee authenticatedEmployee
     ) {
-        contract = contractService.updateContract(id, contract, authenticatedEmployee);
+        contract.setId(id);
+        contract = contractService.updateContract(contract, authenticatedEmployee);
         return new ResponseEntity<>(contract, HttpStatus.OK);
     }
 

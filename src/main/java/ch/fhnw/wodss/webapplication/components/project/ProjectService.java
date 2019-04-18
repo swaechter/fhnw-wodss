@@ -46,7 +46,6 @@ public class ProjectService {
         return createdProject.get();
     }
 
-
     public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId, AuthenticatedEmployee authenticatedEmployee) {
         return projectRepository.getProjects(fromDate, toDate, projectManagerId);
     }
@@ -60,10 +59,10 @@ public class ProjectService {
         return selectedProject.get();
     }
 
-    public ProjectDto updateProject(Long id, ProjectDto project, AuthenticatedEmployee authenticatedEmployee) {
-        Optional<ProjectDto> selectedProject = projectRepository.getProjectById(id);
+    public ProjectDto updateProject(ProjectDto project, AuthenticatedEmployee authenticatedEmployee) {
+        Optional<ProjectDto> selectedProject = projectRepository.getProjectById(project.getId());
         if (selectedProject.isEmpty()) {
-            throw new EntityNotFoundException("project", id);
+            throw new EntityNotFoundException("project", project.getId());
         }
 
         Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(project.getProjectManagerId());
@@ -71,7 +70,7 @@ public class ProjectService {
             throw new EntityNotFoundException("employee", project.getProjectManagerId());
         }
 
-        Optional<ProjectDto> updatedProject = projectRepository.updateProject(id, project);
+        Optional<ProjectDto> updatedProject = projectRepository.updateProject(project);
         if (updatedProject.isEmpty()) {
             throw new InternalException("Unable to update the project");
         }
