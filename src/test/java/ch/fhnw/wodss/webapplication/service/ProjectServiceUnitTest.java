@@ -40,132 +40,97 @@ public class ProjectServiceUnitTest {
     private ProjectService projectService;
 
     @BeforeEach
-    public void setUp()
-    {
+    public void setUp() {
         projectService = new ProjectService(projectRepo, employeeRepo);
     }
 
     @Test
-    public void whenProjectOrEmployeeIsNull_thenCannotCreateProject()
-    {
-        assertThrows(IllegalArgumentException.class,
-                     () -> projectService.createProject(null, mockEmployee));
-        assertThrows(IllegalArgumentException.class,
-                     () -> projectService.createProject(mockProject, null));
+    public void whenProjectOrEmployeeIsNull_thenCannotCreateProject() {
+        assertThrows(IllegalArgumentException.class, () -> projectService.createProject(null, mockEmployee));
+        assertThrows(IllegalArgumentException.class, () -> projectService.createProject(mockProject, null));
 
     }
 
     @Test
-    public void whenProjectOrEmployeeIsNull_thenCannotUpdateProject()
-    {
-        assertThrows(IllegalArgumentException.class,
-                     () -> projectService.updateProject(null, mockEmployee));
-        assertThrows(IllegalArgumentException.class,
-                     () -> projectService.updateProject(mockProject, null));
+    public void whenProjectOrEmployeeIsNull_thenCannotUpdateProject() {
+        assertThrows(IllegalArgumentException.class, () -> projectService.updateProject(null, mockEmployee));
+        assertThrows(IllegalArgumentException.class, () -> projectService.updateProject(mockProject, null));
     }
 
     @Nested
     public class WhenEmployeeNotFound {
         @BeforeEach
-        public void setup()
-        {
-            given(employeeRepo.getEmployeeById(mockEmployee.getId())).willReturn(
-                Optional.empty());
+        public void setup() {
+            given(employeeRepo.getEmployeeById(mockEmployee.getId())).willReturn(Optional.empty());
         }
 
         @Test
-        public void thenCannotCreateProject()
-        {
-            assertThrows(EntityNotFoundException.class,
-                         () -> projectService.createProject(mockProject,
-                                                            mockEmployee));
+        public void thenCannotCreateProject() {
+            assertThrows(EntityNotFoundException.class, () -> projectService.createProject(mockProject, mockEmployee));
         }
 
         @Test
-        public void thenCannotUpdateProject()
-        {
-            assertThrows(EntityNotFoundException.class,
-                         () -> projectService.updateProject(mockProject,
-                                                            mockEmployee));
+        public void thenCannotUpdateProject() {
+            assertThrows(EntityNotFoundException.class, () -> projectService.updateProject(mockProject, mockEmployee));
         }
     }
 
     @Nested
     public class WhenEmployeeExists {
         @BeforeEach
-        public void setup()
-        {
-            given(employeeRepo.getEmployeeById(mockEmployee.getId())).willReturn(
-                Optional.of(mockEmployee));
+        public void setup() {
+            given(employeeRepo.getEmployeeById(mockEmployee.getId())).willReturn(Optional.of(mockEmployee));
         }
 
         @Nested
         public class whenDeveloper {
             @BeforeEach
-            public void setup()
-            {
+            public void setup() {
                 given(mockEmployee.getRole()).willReturn(Role.DEVELOPER);
             }
 
             @Test
-            public void thenCannotCreateProject()
-            {
-                assertThrows(InvalidActionException.class,
-                             () -> projectService.createProject(mockProject,
-                                                                mockEmployee));
+            public void thenCannotCreateProject() {
+                assertThrows(InvalidActionException.class, () -> projectService.createProject(mockProject, mockEmployee));
             }
 
             @Test
-            public void thenCannotUpdateProject()
-            {
-                assertThrows(InvalidActionException.class,
-                             () -> projectService.updateProject(mockProject,
-                                                                mockEmployee));
+            public void thenCannotUpdateProject() {
+                assertThrows(InvalidActionException.class, () -> projectService.updateProject(mockProject, mockEmployee));
             }
         }
 
 
         @Test
-        public void whenProjectManager_thenCannotCreateProject()
-        {
+        public void whenProjectManager_thenCannotCreateProject() {
             given(mockEmployee.getRole()).willReturn(Role.PROJECTMANAGER);
-            assertThrows(InvalidActionException.class,
-                         () -> projectService.createProject(mockProject,
-                                                            mockEmployee));
+            assertThrows(InvalidActionException.class, () -> projectService.createProject(mockProject, mockEmployee));
         }
 
         @Nested
         public class whenEmployeeIsAdministrator {
             @BeforeEach
-            public void setUp()
-            {
+            public void setUp() {
                 given(mockEmployee.getRole()).willReturn(Role.ADMINISTRATOR);
             }
 
             @Test
-            public void whenProjectCannotBeSavedToDatabase_thenThrowException()
-            {
+            public void whenProjectCannotBeSavedToDatabase_thenThrowException() {
                 given(projectRepo.saveProject(mockProject)).willReturn(Optional.empty());
-                assertThrows(InternalException.class,
-                             () -> projectService.createProject(mockProject,
-                                                                mockEmployee));
+                assertThrows(InternalException.class, () -> projectService.createProject(mockProject, mockEmployee));
             }
 
 
             @Nested
             public class whenExistingEmployeeAndExistingProject {
                 @BeforeEach
-                public void setup()
-                {
-                    given(projectRepo.saveProject(mockProject)).willReturn(
-                        Optional.of(mockProject));
-                    given(employeeRepo.getEmployeeById(mockProject.getProjectManagerId())).willReturn(
-                        Optional.of(mockEmployee));
+                public void setup() {
+                    given(projectRepo.saveProject(mockProject)).willReturn(Optional.of(mockProject));
+                    given(employeeRepo.getEmployeeById(mockProject.getProjectManagerId())).willReturn(Optional.of(mockEmployee));
                 }
 
                 @Test
-                public void whenValidProject_thenVerifyIfSaveIsCalled()
-                {
+                public void whenValidProject_thenVerifyIfSaveIsCalled() {
                     projectService.createProject(mockProject, mockEmployee);
                     verify(projectRepo, times(1)).saveProject(mockProject);
                 }
