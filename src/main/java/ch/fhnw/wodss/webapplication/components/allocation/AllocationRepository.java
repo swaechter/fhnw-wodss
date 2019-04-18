@@ -53,8 +53,7 @@ public class AllocationRepository extends GenericCrudRepository<AllocationDto, A
         return readOne(table -> table.ID.eq(id));
     }
 
-    public Optional<AllocationDto> updateAllocation(Long id, AllocationDto allocation) {
-        allocation.setId(id);
+    public Optional<AllocationDto> updateAllocation(AllocationDto allocation) {
         return updateOne(allocation);
     }
 

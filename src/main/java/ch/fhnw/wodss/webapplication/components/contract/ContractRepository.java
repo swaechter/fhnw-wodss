@@ -40,8 +40,7 @@ public class ContractRepository extends GenericCrudRepository<ContractDto, Contr
         return readOne(table -> table.ID.eq(id));
     }
 
-    public Optional<ContractDto> updateContract(Long id, ContractDto contract) {
-        contract.setId(id);
+    public Optional<ContractDto> updateContract(ContractDto contract) {
         return updateOne(contract);
     }
 

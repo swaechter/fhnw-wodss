@@ -36,7 +36,7 @@ public class ContractService {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
 
-        if (authenticatedEmployee.getRole() != Role.ADMINISTRATOR || authenticatedEmployee.getRole() != Role.PROJECTMANAGER) {
+        if (authenticatedEmployee.getRole() != Role.ADMINISTRATOR && authenticatedEmployee.getRole() != Role.PROJECTMANAGER) {
             throw new InsufficientPermissionException("Only administrators and project managers can create new contracts");
         }
 
@@ -89,14 +89,14 @@ public class ContractService {
             throw new EntityNotFoundException("contract", id);
         }
 
-        if ((authenticatedEmployee.getRole() != Role.ADMINISTRATOR && authenticatedEmployee.getRole() != Role.PROJECTMANAGER) || !authenticatedEmployee.getId().equals(selectedContract.get().getEmployeeId())) {
+        if ((authenticatedEmployee.getRole() != Role.ADMINISTRATOR && authenticatedEmployee.getRole() != Role.PROJECTMANAGER) && !authenticatedEmployee.getId().equals(selectedContract.get().getEmployeeId())) {
             throw new InsufficientPermissionException("Only administrators, project managers or the employee itself can access this contract");
         }
 
         return selectedContract.get();
     }
 
-    public ContractDto updateContract(Long id, ContractDto contract, AuthenticatedEmployee authenticatedEmployee) {
+    public ContractDto updateContract(ContractDto contract, AuthenticatedEmployee authenticatedEmployee) {
         if (!authenticatedEmployee.isActive()) {
             throw new InvalidActionException("The authenticated employee is not activated");
         }
@@ -105,9 +105,9 @@ public class ContractService {
             throw new InsufficientPermissionException("Only administrators can update a contract");
         }
 
-        Optional<ContractDto> selectedContract = contractRepository.getContractById(id);
+        Optional<ContractDto> selectedContract = contractRepository.getContractById(contract.getId());
         if (selectedContract.isEmpty()) {
-            throw new EntityNotFoundException("contract", id);
+            throw new EntityNotFoundException("contract", contract.getId());
         }
 
         Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(contract.getEmployeeId());
@@ -119,12 +119,16 @@ public class ContractService {
             throw new InvalidActionException("The start date of a contract has to be before the end date");
         }
 
+        if (!contract.getPensumPercentage().equals(selectedContract.get().getPensumPercentage())) {
+            throw new InvalidActionException("The contract pensum percentage can't be changed afterwards");
+        }
+
         List<ContractDto> existingContractDtos = contractRepository.getContracts(contract.getStartDate(), contract.getEndDate(), contract.getEmployeeId());
         if (!existingContractDtos.isEmpty() && !existingContractDtos.get(0).getId().equals(contract.getId())) {
             throw new InvalidActionException("There already exists an overlapping contract for this time period");
         }
 
-        Optional<ContractDto> updatedContract = contractRepository.updateContract(id, contract);
+        Optional<ContractDto> updatedContract = contractRepository.updateContract(contract);
         if (updatedContract.isEmpty()) {
             throw new InternalException("Unable to update the contract");
         }

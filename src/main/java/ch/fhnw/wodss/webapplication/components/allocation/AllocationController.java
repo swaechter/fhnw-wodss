@@ -100,7 +100,8 @@ public class AllocationController {
         @Valid @RequestBody @ApiParam(value = "Updated allocation (The ID in the body will be ignored)", required = true) AllocationDto allocation,
         AuthenticatedEmployee authenticatedEmployee
     ) {
-        allocation = allocationService.updateAllocation(id, allocation, authenticatedEmployee);
+        allocation.setId(id);
+        allocation = allocationService.updateAllocation(allocation, authenticatedEmployee);
         return new ResponseEntity<>(allocation, HttpStatus.OK);
     }
 
