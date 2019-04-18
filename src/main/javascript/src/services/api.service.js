@@ -19,6 +19,10 @@ function handleErrors(response) {
     return response;
 }
 
+export function getUrl(url){
+    return new URL(url, apiServerUrl)
+}
+
 export async function doGet(url, token=null) {
     let headers = getHeader(token)
     let json = fetch(new URL(url, apiServerUrl), {
