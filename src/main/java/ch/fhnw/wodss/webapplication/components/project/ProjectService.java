@@ -45,7 +45,6 @@ public class ProjectService {
         }
     }
 
-
     public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, Long projectManagerId, AuthenticatedEmployee authenticatedEmployee) {
         return projectRepository.getProjects(fromDate, toDate, projectManagerId);
     }
@@ -65,11 +64,9 @@ public class ProjectService {
         EmployeeDto employee = findEmployee(project.getProjectManagerId());
         abortIfNoPermission(employee);
 
-
-        Long projectId = project.getId();
-        Optional<ProjectDto> selectedProject = projectRepository.getProjectById(projectId);
+        Optional<ProjectDto> selectedProject = projectRepository.getProjectById(project.getId());
         if (selectedProject.isEmpty()) {
-            throw new EntityNotFoundException("project", projectId);
+            throw new EntityNotFoundException("project", project.getId());
         }
 
 

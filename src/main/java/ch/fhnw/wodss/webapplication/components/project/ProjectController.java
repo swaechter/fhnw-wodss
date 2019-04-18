@@ -40,6 +40,7 @@ public class ProjectController {
         @Valid @RequestBody @ApiParam(value = "Project to create (The ID in the body will be ignored)", required = true) ProjectDto project,
         AuthenticatedEmployee authenticatedEmployee
     ) {
+        project.setId(null);
         project = projectService.createProject(project, authenticatedEmployee);
         return new ResponseEntity<>(project, HttpStatus.CREATED);
     }

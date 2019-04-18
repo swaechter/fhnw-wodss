@@ -1,8 +1,7 @@
 buildscript {
     ext {
-        databaseUrl = databaseUrl
-        databaseUser = databaseUser
-        databasePassword = databasePassword
+        ext.externalSettings = new Properties()
+        externalSettings.load(new FileInputStream("config/application.properties"))
     }
     repositories {
         mavenCentral()
@@ -44,7 +43,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-jooq'
-    testImplementation ('org.springframework.boot:spring-boot-starter-test') {
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'junit', module: 'junit'
     }
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
@@ -74,9 +73,9 @@ bootJar {
 }
 
 flyway {
-    url = databaseUrl
-    user = databaseUser
-    password = databasePassword
+    url = externalSettings['JDBC_DATABASE_URL']
+    user = externalSettings['JDBC_DATABASE_USER']
+    password = externalSettings['JDBC_DATABASE_PASSWORD']
 }
 
 jooq {
@@ -85,9 +84,9 @@ jooq {
     application(sourceSets.main) {
         jdbc {
             driver = 'org.postgresql.Driver'
-            url = databaseUrl
-            user = databaseUser
-            password = databasePassword
+            url = externalSettings['JDBC_DATABASE_URL']
+            user = externalSettings['JDBC_DATABASE_USER']
+            password = externalSettings['JDBC_DATABASE_PASSWORD']
         }
         generator {
             database {
