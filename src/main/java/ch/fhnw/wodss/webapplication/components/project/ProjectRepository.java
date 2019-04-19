@@ -57,5 +57,10 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
     protected ProjectDto mapRecordToDto(ProjectRecord projectRecord) {
         return getConverter().projectRecordToProjectDto(projectRecord);
     }
+
+    public Optional<ProjectDto> getProjectIfAssigned(UUID projectId)
+    {
+        return Optional.empty();
+    }
 }
 

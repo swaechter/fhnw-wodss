@@ -12,6 +12,7 @@ import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InsufficientPermissionException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
 import ch.fhnw.wodss.webapplication.exceptions.InvalidActionException;
+import org.jooq.generated.tables.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -60,7 +61,7 @@ public class ProjectServiceUnitTest {
         validProject.setEndDate(LocalDate.now()
                                     .plusYears(1));
         validProject.setId(UUID.randomUUID());
-        validProject.setProjectManagerId(validEmployee.getId());
+        validProject.setProjectManagerId(UUID.randomUUID());
     }
 
     @Nested
@@ -256,10 +257,7 @@ public class ProjectServiceUnitTest {
                              EntityNotFoundException.message("project",
                                                              validProject.getId()));
             }
-
-
         }
-
 
         @Nested
         public class whenDeveloper {
@@ -272,11 +270,10 @@ public class ProjectServiceUnitTest {
             @Test
             public void thenCannotCreateProject()
             {
-                Exception ex = assertThrows(
-                    InsufficientPermissionException.class,
-                    () -> projectService.createProject(
-                                                validProject,
-                                                validEmployee));
+                Exception ex =
+                    assertThrows(InsufficientPermissionException.class,
+                                 () -> projectService.createProject(validProject,
+                                                                    validEmployee));
                 assertEquals(ex.getMessage(),
                              ProjectService.NO_PERMISSION_TO_CREATE_PROJECT);
             }
@@ -284,10 +281,10 @@ public class ProjectServiceUnitTest {
             @Test
             public void thenCannotUpdateProject()
             {
-                Exception ex = assertThrows(InsufficientPermissionException.class,
-                                            () -> projectService.updateProject(
-                                                validProject,
-                                                validEmployee));
+                Exception ex =
+                    assertThrows(InsufficientPermissionException.class,
+                                 () -> projectService.updateProject(validProject,
+                                                                    validEmployee));
                 assertEquals(ex.getMessage(),
                              ProjectService.NO_PERMISSION_TO_UPDATE_PROJECT);
             }
@@ -295,24 +292,50 @@ public class ProjectServiceUnitTest {
             @Test
             public void thenCannotDeleteProject()
             {
-                Exception ex = assertThrows(InsufficientPermissionException.class,
-                                            () -> projectService.deleteProject(
-                                                validProject.getId(),
-                                                validEmployee));
+                Exception ex =
+                    assertThrows(InsufficientPermissionException.class,
+                                 () -> projectService.deleteProject(validProject.getId(),
+                                                                    validEmployee));
                 assertEquals(ex.getMessage(),
                              ProjectService.NO_PERMISSION_TO_DELETE_PROJECT);
             }
 
-//            @Test
-//            public void thenCanReadSingleProject()
-//            {
-//                projectService.getProject(
-//                    validProject.getId(),
-//                    validEmployee);
-//            }
+            @Nested
+            public class whenProjectIsFound {
+                @BeforeEach
+                public void setup()
+                {
+                    given(projectRepo.getProjectById(validProject.getId())).willReturn(
+                        Optional.of(validProject));
+                }
+
+                @Test
+                public void whenNotAssignedOnSelectedProject_thenCannotReadSingleProject()
+                {
+                    given(projectRepo.getProjectIfAssigned(validProject.getId())).willReturn(
+                        Optional.empty());
+                    Exception ex =
+                        assertThrows(InsufficientPermissionException.class,
+                                     () -> projectService.getProject(
+                                         validProject.getId(),
+                                         validEmployee));
+                    assertEquals(ex.getMessage(),
+                                 ProjectService.NO_PERMISSION_TO_READ_PROJECT);
+                }
+
+                @Test
+                public void whenAssignedOnSelectedProject_thenCanReadSingleProject()
+                {
+                    given(projectRepo.getProjectIfAssigned(validProject.getId())).willReturn(
+                        Optional.of(validProject));
+                    projectService.getProject(
+                        validProject.getId(),
+                        validEmployee);
+                    verify(projectRepo,
+                           times(1)).getProjectIfAssigned(validProject.getId());
+                }
+            }
         }
-
-
     }
 }
 

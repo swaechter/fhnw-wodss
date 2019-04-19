@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+
 @Service
 public class ProjectService {
 
@@ -28,6 +29,9 @@ public class ProjectService {
         "The authenticated employee is " + "not activated";
     public static final String NO_PERMISSION_TO_DELETE_PROJECT =
         "No permission to delete a " + "project";
+    public static final String NO_PERMISSION_TO_READ_PROJECT =
+        "No permission to get a " + "project";
+
     private final ProjectRepository projectRepository;
 
     private final EmployeeRepository employeeRepository;
@@ -54,9 +58,9 @@ public class ProjectService {
 
         if (!found.isAdministrator())
         {
-            throw new InsufficientPermissionException(NO_PERMISSION_TO_CREATE_PROJECT);
+            throw new InsufficientPermissionException(
+                NO_PERMISSION_TO_CREATE_PROJECT);
         }
-
 
 
         Optional<ProjectDto> createdProject =
@@ -93,17 +97,22 @@ public class ProjectService {
         UUID id,
         EmployeeDto employee)
     {
-        EmployeeDto found = employeeRepository.getEmployeeById(employee.getId())
+        EmployeeDto foundEmployee = employeeRepository.getEmployeeById(employee.getId())
             .orElseThrow(() -> new EntityNotFoundException("employee",
                                                            employee.getId()));
-        if (!found.isActive())
+        if (!foundEmployee.isActive())
         {
             throw new InvalidActionException(EMPLOYEE_NOT_ACTIVATED);
         }
 
-        return projectRepository.getProjectById(id)
+        projectRepository.getProjectById(id)
             .orElseThrow(() -> new EntityNotFoundException("project", id));
+        return foundEmployee.getRole()
+            .getSingleProjectAccordingToPermission(projectRepository, id)
+            .orElseThrow(() -> new InsufficientPermissionException(
+                NO_PERMISSION_TO_READ_PROJECT));
     }
+
 
     public ProjectDto updateProject(
         ProjectDto project,
@@ -120,7 +129,8 @@ public class ProjectService {
 
         if (foundEmployee.isDeveloper())
         {
-            throw new InsufficientPermissionException(NO_PERMISSION_TO_UPDATE_PROJECT);
+            throw new InsufficientPermissionException(
+                NO_PERMISSION_TO_UPDATE_PROJECT);
         }
 
 
@@ -157,7 +167,8 @@ public class ProjectService {
 
         if (!foundEmployee.isAdministrator())
         {
-            throw new InsufficientPermissionException(NO_PERMISSION_TO_DELETE_PROJECT);
+            throw new InsufficientPermissionException(
+                NO_PERMISSION_TO_DELETE_PROJECT);
         }
 
         projectRepository.getProjectById(id)
