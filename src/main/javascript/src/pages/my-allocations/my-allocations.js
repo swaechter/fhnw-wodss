@@ -56,7 +56,7 @@ export default class MyAllocationsPage extends Component {
         return {
             'pensumPercentage': alloc.pensumPercentage/contractPercentage,
             'color': getObjectColor(alloc.projectId),
-            'projectName': projects.filter((project) => project.id == alloc.projectId)[0].name
+            'projectName': projects.find((project) => project.id == alloc.projectId).name
         }
     }
 
@@ -70,15 +70,11 @@ export default class MyAllocationsPage extends Component {
 
 
     render({ allocations, projects, contracts }) {
-        console.log('rendering')
         let displayAllocation = this.updateDisplayElements(allocations, projects, contracts)
         return (
             <Layout>
                 <h2>My Allocations</h2>
-
                 <FromToDatePicker onRangeUpdated={this.updateDateRange} from={this.state.from} to={this.state.to}/>
-
-
                 {
                     displayAllocation.map(item =>
                         <DayContainer date={item.date} allocations={item.allocations} />)
