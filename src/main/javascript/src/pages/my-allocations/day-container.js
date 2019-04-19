@@ -12,7 +12,7 @@ export default class DayContainer extends Component {
                     {date.toDateString()}
                 </div>
                 <div class="col-8">
-                    <div class="progress">
+                    <div class="progress planning-progress">
                         {
                             allocations.map(dispAlloc =>
                                 <PlanningItem width={dispAlloc.pensumPercentage} color={dispAlloc.color} />

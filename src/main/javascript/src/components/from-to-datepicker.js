@@ -24,6 +24,7 @@ export default class FromToDatePicker extends Component {
       }
       }
     }
+    this.props.onRangeUpdated(monday,friday)
   }
 
   onInputChanged = (dates) => {
