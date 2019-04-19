@@ -21,6 +21,7 @@ public class ContractRepository extends GenericCrudRepository<ContractDto, Contr
     }
 
     public Optional<ContractDto> saveContract(ContractDto contract) {
+        contract.setId(UUID.randomUUID());
         return createOne(contract);
     }
 

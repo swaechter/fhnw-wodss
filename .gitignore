@@ -9,11 +9,14 @@ tmp/
 # Generated configuration
 config/application.properties
 
+# Generated build assets
+src/main/resources/public/
+
 # IDE: IntelliJ IDEA
 .idea/
 *.iml
 
-# VS Code
+# IDE: VS Code
 .classpath
 .project
 .settings/

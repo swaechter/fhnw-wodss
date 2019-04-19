@@ -39,7 +39,6 @@ public class EmployeeController {
         @RequestParam(value = "role") @ApiParam(value = "Role of the new employee", required = true) Role role,
         AuthenticatedEmployee authenticatedEmployee
     ) {
-        employee.setId(null);
         employee = employeeService.createEmployee(employee, password, role, authenticatedEmployee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }

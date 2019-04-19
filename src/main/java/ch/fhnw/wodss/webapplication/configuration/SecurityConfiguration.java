@@ -1,7 +1,7 @@
 package ch.fhnw.wodss.webapplication.configuration;
 
+import ch.fhnw.wodss.webapplication.components.employee.EmployeeService;
 import ch.fhnw.wodss.webapplication.components.token.TokenService;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -19,8 +17,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final TokenService tokenService;
 
-    public SecurityConfiguration(TokenService tokenService) {
+    private final EmployeeService employeeService;
+
+    public SecurityConfiguration(TokenService tokenService, EmployeeService employeeService) {
         this.tokenService = tokenService;
+        this.employeeService = employeeService;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated()
 
             // Add a filter to check the the JWT token and authenticate based on the token
-            .and().addFilterBefore(new AuthenticationFilter(tokenService), BasicAuthenticationFilter.class);
+            .and().addFilterBefore(new AuthenticationFilter(tokenService, employeeService), BasicAuthenticationFilter.class);
     }
 
     @Override
@@ -59,11 +60,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/swagger-resources/configuration/security",
             "/configuration/security",
             "/swagger-ui.html",
-            "/webjars/**");
-    }
-
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+            "/index.html**",
+            "/webjars/**",
+            "/assets/***",
+            "/**.js",
+            "/**.css",
+            "/**.png",
+            "/**.ico",
+            "/**.json");
     }
 }

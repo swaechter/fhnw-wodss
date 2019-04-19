@@ -41,10 +41,10 @@ public interface Converter {
     EmployeeDto employeeRecordToEmployeeDto(EmployeeRecord employeeRecord);
 
     @Mappings({})
-    org.jooq.generated.enums.Role roleRecordToRoleDto(Role role);
+    Role roleRecordToRoleDto(org.jooq.generated.enums.Role role);
 
     @Mappings({})
-    Role roleDtoToRoleRecord(org.jooq.generated.enums.Role role);
+    org.jooq.generated.enums.Role roleDtoToRoleRecord(Role role);
 
     @Mappings({})
     List<ProjectDto> projectRecordListToProjectDtoList(List<ProjectRecord> projectRecordList);

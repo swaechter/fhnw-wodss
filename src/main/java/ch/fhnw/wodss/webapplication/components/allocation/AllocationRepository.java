@@ -26,6 +26,7 @@ public class AllocationRepository extends GenericCrudRepository<AllocationDto, A
     }
 
     public Optional<AllocationDto> saveAllocation(AllocationDto allocation) {
+        allocation.setId(UUID.randomUUID());
         return createOne(allocation);
     }
 
