@@ -6,99 +6,159 @@ import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
 import ch.fhnw.wodss.webapplication.exceptions.InvalidActionException;
+import org.jooq.generated.tables.Employee;
+import org.jooq.generated.tables.Project;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Service
 public class ProjectService {
 
+    public static final String NO_PERMISSION_TO_CREATE_PROJECT =
+        "No permission to create a " + "project";
+    public static final String NO_PERMISSION_TO_UPDATE_PROJECT =
+        "No permission to update a " + "project";
+    public static final String EMPLOYEE_NOT_ACTIVATED =
+        "The authenticated employee is " + "not activated";
+    public static final String NO_PERMISSION_TO_DELETE_PROJECT =
+        "No permission to delete a " + "project";
     private final ProjectRepository projectRepository;
 
     private final EmployeeRepository employeeRepository;
 
-    public ProjectService(ProjectRepository projectRepository, EmployeeRepository employeeRepository) {
+    public ProjectService(
+        ProjectRepository projectRepository,
+        EmployeeRepository employeeRepository)
+    {
         this.projectRepository = projectRepository;
         this.employeeRepository = employeeRepository;
     }
 
-    public ProjectDto createProject(ProjectDto project, EmployeeDto authenticatedEmployee) {
-        abortIfNull(project, authenticatedEmployee);
-        EmployeeDto employee = findEmployee(authenticatedEmployee.getId());
-        abortIfNoPermission(employee);
+    public ProjectDto createProject(
+        ProjectDto project,
+        EmployeeDto employee)
+    {
+        EmployeeDto found = employeeRepository.getEmployeeById(employee.getId())
+            .orElseThrow(() -> new EntityNotFoundException("employee",
+                                                           employee.getId()));
+        if (!found.isAdministrator())
+        {
+            throw new InvalidActionException(NO_PERMISSION_TO_CREATE_PROJECT);
+        }
 
-        Optional<ProjectDto> createdProject = projectRepository.saveProject(project);
+        if (!found.isActive())
+        {
+            throw new InvalidActionException(EMPLOYEE_NOT_ACTIVATED);
+        }
 
-        if (createdProject.isEmpty()) {
+
+        Optional<ProjectDto> createdProject =
+            projectRepository.saveProject(project);
+
+        if (createdProject.isEmpty())
+        {
             throw new InternalException("Unable to create the project");
         }
 
         return createdProject.get();
     }
 
-    private void abortIfNull(ProjectDto project, EmployeeDto authenticatedEmployee) {
-        if (project == null || authenticatedEmployee == null) {
-            throw new InvalidActionException("Project or Employee must not be null");
-        }
-    }
-
-    public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, UUID projectManagerId, EmployeeDto authenticatedEmployee) {
-        return projectRepository.getProjects(fromDate, toDate, projectManagerId);
-    }
-
-    public ProjectDto getProject(UUID id, EmployeeDto authenticatedEmployee) {
-        Optional<ProjectDto> selectedProject = projectRepository.getProjectById(id);
-        if (selectedProject.isEmpty()) {
-            throw new EntityNotFoundException("project", id);
+    public List<ProjectDto> getProjects(
+        LocalDate fromDate,
+        LocalDate toDate,
+        UUID projectManagerId,
+        EmployeeDto employee)
+    {
+        EmployeeDto found = employeeRepository.getEmployeeById(employee.getId())
+            .orElseThrow(() -> new EntityNotFoundException("employee",
+                                                           employee.getId()));
+        if (!found.isActive())
+        {
+            throw new InvalidActionException(EMPLOYEE_NOT_ACTIVATED);
         }
 
-        return selectedProject.get();
+        return projectRepository.getProjects(fromDate,
+                                             toDate,
+                                             projectManagerId);
     }
 
-    public ProjectDto updateProject(ProjectDto project, EmployeeDto authenticatedEmployee) {
-        abortIfNull(project, authenticatedEmployee);
-
-        EmployeeDto employee = findEmployee(project.getProjectManagerId());
-        abortIfNoPermission(employee);
-
-        Optional<ProjectDto> selectedProject = projectRepository.getProjectById(project.getId());
-        if (selectedProject.isEmpty()) {
-            throw new EntityNotFoundException("project", project.getId());
+    public ProjectDto getProject(
+        UUID id,
+        EmployeeDto employee)
+    {
+        EmployeeDto found = employeeRepository.getEmployeeById(employee.getId())
+            .orElseThrow(() -> new EntityNotFoundException("employee",
+                                                           employee.getId()));
+        if (!found.isActive())
+        {
+            throw new InvalidActionException(EMPLOYEE_NOT_ACTIVATED);
         }
 
+        return projectRepository.getProjectById(id)
+            .orElseThrow(() -> new EntityNotFoundException("project", id));
+    }
 
-        Optional<ProjectDto> updatedProject = projectRepository.updateProject(project);
-        if (updatedProject.isEmpty()) {
+    public ProjectDto updateProject(
+        ProjectDto project,
+        EmployeeDto employee)
+    {
+        EmployeeDto foundEmployee =
+            employeeRepository.getEmployeeById(employee.getId())
+                .orElseThrow(() -> new EntityNotFoundException("employee",
+                                                               employee.getId()));
+        if (foundEmployee.isDeveloper())
+        {
+            throw new InvalidActionException(NO_PERMISSION_TO_UPDATE_PROJECT);
+        }
+
+        if (!foundEmployee.isActive())
+        {
+            throw new InvalidActionException(EMPLOYEE_NOT_ACTIVATED);
+        }
+
+        ProjectDto foundProject =
+            projectRepository.getProjectById(project.getId())
+                .orElseThrow(() -> new EntityNotFoundException("project",
+                                                               project.getId()));
+
+
+        Optional<ProjectDto> updatedProject =
+            projectRepository.updateProject(project);
+        if (updatedProject.isEmpty())
+        {
             throw new InternalException("Unable to update the project");
         }
 
         return updatedProject.get();
     }
 
-    private void abortIfNoPermission(EmployeeDto employee) {
-        if (!employee.getRole().equals(Role.ADMINISTRATOR)) {
-            throw new InvalidActionException("No permission to create a " + "project");
-        }
-    }
 
-    private EmployeeDto findEmployee(UUID employeeId) {
-        Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(employeeId);
+    public void deleteProject(
+        UUID id,
+        EmployeeDto employee)
+    {
+        EmployeeDto foundEmployee =
+            employeeRepository.getEmployeeById(employee.getId())
+                .orElseThrow(() -> new EntityNotFoundException("employee",
+                                                               employee.getId()));
 
-        if (selectedEmployee.isEmpty()) {
-            throw new EntityNotFoundException("employee", employeeId);
-        }
-        return selectedEmployee.get();
-    }
-
-    public void deleteProject(UUID id, EmployeeDto authenticatedEmployee) {
-        Optional<ProjectDto> selectedProject = projectRepository.getProjectById(id);
-        if (selectedProject.isEmpty()) {
-            throw new EntityNotFoundException("project", id);
+        if (!foundEmployee.isActive())
+        {
+            throw new InvalidActionException(EMPLOYEE_NOT_ACTIVATED);
         }
 
+        if (!foundEmployee.isAdministrator())
+        {
+            throw new InvalidActionException(NO_PERMISSION_TO_DELETE_PROJECT);
+        }
+
+        projectRepository.getProjectById(id)
+            .orElseThrow(() -> new EntityNotFoundException("project", id));
         projectRepository.deleteProject(id);
     }
 }

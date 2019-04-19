@@ -1,6 +1,7 @@
 package ch.fhnw.wodss.webapplication.service;
 
 
+import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
 import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.components.project.ProjectDto;
@@ -17,8 +18,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -32,110 +36,281 @@ public class ProjectServiceUnitTest {
     @Mock
     private EmployeeRepository employeeRepo;
 
-    @Mock
-    private AuthenticatedEmployee mockEmployee;
+    private EmployeeDto validEmployee = new EmployeeDto();
 
-    @Mock
-    private ProjectDto mockProject;
+    private ProjectDto validProject = new ProjectDto();
 
     private ProjectService projectService;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp()
+    {
         projectService = new ProjectService(projectRepo, employeeRepo);
-    }
+        validEmployee.setId(UUID.randomUUID());
+        validEmployee.setRole(Role.ADMINISTRATOR);
+        validEmployee.setActive(true);
+        validEmployee.setEmailAddress("test@fhnw.ch");
+        validEmployee.setFirstName("John");
+        validEmployee.setLastName("Doe");
+        validEmployee.setPasswordHash("My secret PW");
 
-    @Test
-    public void whenProjectOrEmployeeIsNull_thenCannotCreateProject() {
-        assertThrows(InvalidActionException.class, () -> projectService.createProject(null, mockEmployee));
-        assertThrows(InvalidActionException.class, () -> projectService.createProject(mockProject, null));
-
-    }
-
-    @Test
-    public void whenProjectOrEmployeeIsNull_thenCannotUpdateProject() {
-        assertThrows(InvalidActionException.class, () -> projectService.updateProject(null, mockEmployee));
-        assertThrows(InvalidActionException.class, () -> projectService.updateProject(mockProject, null));
+        validProject.setName("Test project");
+        validProject.setStartDate(LocalDate.now());
+        validProject.setEndDate(LocalDate.now()
+                                    .plusYears(1));
+        validProject.setId(UUID.randomUUID());
+        validProject.setProjectManagerId(validEmployee.getId());
     }
 
     @Nested
     public class WhenEmployeeNotFound {
         @BeforeEach
-        public void setup() {
-            given(employeeRepo.getEmployeeById(mockEmployee.getId())).willReturn(Optional.empty());
+        public void setup()
+        {
+            given(employeeRepo.getEmployeeById(validEmployee.getId())).willReturn(
+                Optional.empty());
         }
 
         @Test
-        public void thenCannotCreateProject() {
-            assertThrows(EntityNotFoundException.class, () -> projectService.createProject(mockProject, mockEmployee));
+        public void thenCannotCreateProject()
+        {
+            Exception ex = assertThrows(EntityNotFoundException.class,
+                                        () -> projectService.createProject(
+                                            validProject,
+                                            validEmployee));
+            assertEquals(ex.getMessage(),
+                         EntityNotFoundException.message("employee",
+                                                         validEmployee.getId()));
         }
 
         @Test
-        public void thenCannotUpdateProject() {
-            assertThrows(EntityNotFoundException.class, () -> projectService.updateProject(mockProject, mockEmployee));
+        public void thenCannotUpdateProject()
+        {
+            Exception ex = assertThrows(EntityNotFoundException.class,
+                                        () -> projectService.updateProject(
+                                            validProject,
+                                            validEmployee));
+            assertEquals(ex.getMessage(),
+                         EntityNotFoundException.message("employee",
+                                                         validEmployee.getId()));
+        }
+
+        @Test
+        public void thenCannotReadSingleProject()
+        {
+            Exception ex = assertThrows(EntityNotFoundException.class,
+                                        () -> projectService.getProject(
+                                            validProject.getId(),
+                                            validEmployee));
+            assertEquals(ex.getMessage(),
+                         EntityNotFoundException.message("employee",
+                                                         validEmployee.getId()));
+        }
+
+        @Test
+        public void thenCannotReadAllProject()
+        {
+            Exception ex = assertThrows(EntityNotFoundException.class,
+                                        () -> projectService.getProjects(
+                                            LocalDate.now(),
+                                            LocalDate.now()
+                                                .plusYears(1),
+                                            validProject.getProjectManagerId(),
+                                            validEmployee));
+            assertEquals(ex.getMessage(),
+                         EntityNotFoundException.message("employee",
+                                                         validEmployee.getId()));
+        }
+
+        @Test
+        public void thenCannotDeleteProject()
+        {
+            Exception ex = assertThrows(EntityNotFoundException.class,
+                                        () -> projectService.deleteProject(
+                                            validProject.getId(),
+                                            validEmployee));
+            assertEquals(ex.getMessage(),
+                         EntityNotFoundException.message("employee",
+                                                         validEmployee.getId()));
         }
     }
 
     @Nested
     public class WhenEmployeeExists {
         @BeforeEach
-        public void setup() {
-            given(employeeRepo.getEmployeeById(mockEmployee.getId())).willReturn(Optional.of(mockEmployee));
+        public void setup()
+        {
+            given(employeeRepo.getEmployeeById(validEmployee.getId())).willReturn(
+                Optional.of(validEmployee));
         }
+
+        @Nested
+        public class WhenEmployeeIsNotActive {
+            @BeforeEach
+            public void setup()
+            {
+                validEmployee.setActive(false);
+            }
+
+            @Test
+            public void thenCannotCreateProject()
+            {
+                Exception ex = assertThrows(InvalidActionException.class,
+                                            () -> projectService.createProject(
+                                                validProject,
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             ProjectService.EMPLOYEE_NOT_ACTIVATED);
+            }
+
+            @Test
+            public void thenCannotUpdateProject()
+            {
+                Exception ex = assertThrows(InvalidActionException.class,
+                                            () -> projectService.updateProject(
+                                                validProject,
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             ProjectService.EMPLOYEE_NOT_ACTIVATED);
+            }
+
+            @Test
+            public void thenCannotReadSingleProject()
+            {
+                Exception ex = assertThrows(InvalidActionException.class,
+                                            () -> projectService.getProject(
+                                                validProject.getId(),
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             ProjectService.EMPLOYEE_NOT_ACTIVATED);
+            }
+
+            @Test
+            public void thenCannotReadAllProject()
+            {
+                Exception ex = assertThrows(InvalidActionException.class,
+                                            () -> projectService.getProjects(
+                                                LocalDate.now(),
+                                                LocalDate.now()
+                                                    .plusYears(1),
+                                                validProject.getProjectManagerId(),
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             ProjectService.EMPLOYEE_NOT_ACTIVATED);
+            }
+
+            @Test
+            public void thenCannotDeleteProject()
+            {
+                Exception ex = assertThrows(InvalidActionException.class,
+                                            () -> projectService.deleteProject(
+                                                validProject.getId(),
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             ProjectService.EMPLOYEE_NOT_ACTIVATED);
+            }
+        }
+
+        @Nested
+        public class whenProjectIsNotFound {
+            @BeforeEach
+            public void setup()
+            {
+                given(projectRepo.getProjectById(validProject.getId())).willReturn(
+                    Optional.empty());
+            }
+
+            @Test
+            public void thenCannotReadSingleProject()
+            {
+                Exception ex = assertThrows(EntityNotFoundException.class,
+                                            () -> projectService.getProject(
+                                                validProject.getId(),
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             EntityNotFoundException.message("project",
+                                                             validProject.getId()));
+            }
+
+            @Test
+            public void thenCannotUpdateProject()
+            {
+                Exception ex = assertThrows(EntityNotFoundException.class,
+                                            () -> projectService.updateProject(
+                                                validProject,
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             EntityNotFoundException.message("project",
+                                                             validProject.getId()));
+            }
+
+            @Test
+            public void thenCannotDeleteProject()
+            {
+                Exception ex = assertThrows(EntityNotFoundException.class,
+                                            () -> projectService.deleteProject(
+                                                validProject.getId(),
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             EntityNotFoundException.message("project",
+                                                             validProject.getId()));
+            }
+
+
+        }
+
 
         @Nested
         public class whenDeveloper {
             @BeforeEach
-            public void setup() {
-                given(mockEmployee.getRole()).willReturn(Role.DEVELOPER);
+            public void setup()
+            {
+                validEmployee.setRole(Role.DEVELOPER);
             }
 
             @Test
-            public void thenCannotCreateProject() {
-                assertThrows(InvalidActionException.class, () -> projectService.createProject(mockProject, mockEmployee));
+            public void thenCannotCreateProject()
+            {
+                Exception ex = assertThrows(InvalidActionException.class,
+                                            () -> projectService.createProject(
+                                                validProject,
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             ProjectService.NO_PERMISSION_TO_CREATE_PROJECT);
             }
 
             @Test
-            public void thenCannotUpdateProject() {
-                assertThrows(InvalidActionException.class, () -> projectService.updateProject(mockProject, mockEmployee));
-            }
-        }
-
-
-        @Test
-        public void whenProjectManager_thenCannotCreateProject() {
-            given(mockEmployee.getRole()).willReturn(Role.PROJECTMANAGER);
-            assertThrows(InvalidActionException.class, () -> projectService.createProject(mockProject, mockEmployee));
-        }
-
-        @Nested
-        public class whenEmployeeIsAdministrator {
-            @BeforeEach
-            public void setUp() {
-                given(mockEmployee.getRole()).willReturn(Role.ADMINISTRATOR);
+            public void thenCannotUpdateProject()
+            {
+                Exception ex = assertThrows(InvalidActionException.class,
+                                            () -> projectService.updateProject(
+                                                validProject,
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             ProjectService.NO_PERMISSION_TO_UPDATE_PROJECT);
             }
 
             @Test
-            public void whenProjectCannotBeSavedToDatabase_thenThrowException() {
-                given(projectRepo.saveProject(mockProject)).willReturn(Optional.empty());
-                assertThrows(InternalException.class, () -> projectService.createProject(mockProject, mockEmployee));
+            public void thenCannotDeleteProject()
+            {
+                Exception ex = assertThrows(InvalidActionException.class,
+                                            () -> projectService.deleteProject(
+                                                validProject.getId(),
+                                                validEmployee));
+                assertEquals(ex.getMessage(),
+                             ProjectService.NO_PERMISSION_TO_DELETE_PROJECT);
             }
 
-
-            @Nested
-            public class whenExistingEmployeeAndExistingProject {
-                @BeforeEach
-                public void setup() {
-                    given(projectRepo.saveProject(mockProject)).willReturn(Optional.of(mockProject));
-                    given(employeeRepo.getEmployeeById(mockProject.getProjectManagerId())).willReturn(Optional.of(mockEmployee));
-                }
-
-                @Test
-                public void whenValidProject_thenVerifyIfSaveIsCalled() {
-                    projectService.createProject(mockProject, mockEmployee);
-                    verify(projectRepo, times(1)).saveProject(mockProject);
-                }
-            }
+//            @Test
+//            public void thenCanReadSingleProject()
+//            {
+//                projectService.getProject(
+//                    validProject.getId(),
+//                    validEmployee);
+//            }
         }
+
+
     }
 }
+

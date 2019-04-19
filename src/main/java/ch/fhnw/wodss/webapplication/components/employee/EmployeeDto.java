@@ -122,4 +122,16 @@ public class EmployeeDto {
     public void setRole(Role role) {
         this.role = role;
     }
+
+    public boolean isAdministrator() {
+        return role.equals(Role.ADMINISTRATOR);
+    }
+
+    public boolean isProjectManager() {
+        return role.equals(Role.PROJECTMANAGER);
+    }
+
+    public boolean isDeveloper() {
+        return role.equals(Role.DEVELOPER);
+    }
 }
