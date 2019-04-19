@@ -6,7 +6,7 @@ import { connect } from 'preact-redux';
 import Layout from '../../components/layout';
 import DayContainer from './day-container';
 import { filterAllocations } from '../../utils/filters';
-import { getMonday, getDateRange, removeTimeUTC, checkDateRangeOverlap } from '../../utils/date';
+import { getMonday, getDateRange, removeTimeUTC, checkDateRangeOverlap, addDays } from '../../utils/date';
 import { getObjectColor } from '../../utils/colors';
 import FromToDatePicker from '../../components/from-to-datepicker';
 
@@ -15,10 +15,12 @@ export default class MyAllocationsPage extends Component {
 
     constructor(props) {
         super(props)
-        let monday = getMonday(new Date('Sat Apr 06 2019')).setHours(0, 0, 0, 0)
+        let today = removeTimeUTC(new Date())
+        let monday = getMonday(today)
+        let friday = addDays(monday, 4)
         this.state = {
-            from: null,
-            to: null,
+            from: monday,
+            to: friday,
             displayAllocations: []
         }
     }
@@ -68,12 +70,13 @@ export default class MyAllocationsPage extends Component {
 
 
     render({ allocations, projects, contracts }) {
+        console.log('rendering')
         let displayAllocation = this.updateDisplayElements(allocations, projects, contracts)
         return (
             <Layout>
                 <h2>My Allocations</h2>
 
-                <FromToDatePicker onRangeUpdated={this.updateDateRange} />
+                <FromToDatePicker onRangeUpdated={this.updateDateRange} from={this.state.from} to={this.state.to}/>
 
 
                 {
