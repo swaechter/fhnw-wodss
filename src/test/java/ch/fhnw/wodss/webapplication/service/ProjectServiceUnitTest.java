@@ -9,6 +9,7 @@ import ch.fhnw.wodss.webapplication.components.project.ProjectRepository;
 import ch.fhnw.wodss.webapplication.components.project.ProjectService;
 import ch.fhnw.wodss.webapplication.configuration.AuthenticatedEmployee;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
+import ch.fhnw.wodss.webapplication.exceptions.InsufficientPermissionException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
 import ch.fhnw.wodss.webapplication.exceptions.InvalidActionException;
 import org.junit.jupiter.api.BeforeEach;
@@ -271,8 +272,9 @@ public class ProjectServiceUnitTest {
             @Test
             public void thenCannotCreateProject()
             {
-                Exception ex = assertThrows(InvalidActionException.class,
-                                            () -> projectService.createProject(
+                Exception ex = assertThrows(
+                    InsufficientPermissionException.class,
+                    () -> projectService.createProject(
                                                 validProject,
                                                 validEmployee));
                 assertEquals(ex.getMessage(),
@@ -282,7 +284,7 @@ public class ProjectServiceUnitTest {
             @Test
             public void thenCannotUpdateProject()
             {
-                Exception ex = assertThrows(InvalidActionException.class,
+                Exception ex = assertThrows(InsufficientPermissionException.class,
                                             () -> projectService.updateProject(
                                                 validProject,
                                                 validEmployee));
@@ -293,7 +295,7 @@ public class ProjectServiceUnitTest {
             @Test
             public void thenCannotDeleteProject()
             {
-                Exception ex = assertThrows(InvalidActionException.class,
+                Exception ex = assertThrows(InsufficientPermissionException.class,
                                             () -> projectService.deleteProject(
                                                 validProject.getId(),
                                                 validEmployee));

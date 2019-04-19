@@ -4,6 +4,7 @@ import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
 import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
+import ch.fhnw.wodss.webapplication.exceptions.InsufficientPermissionException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
 import ch.fhnw.wodss.webapplication.exceptions.InvalidActionException;
 import org.jooq.generated.tables.Employee;
@@ -46,15 +47,16 @@ public class ProjectService {
         EmployeeDto found = employeeRepository.getEmployeeById(employee.getId())
             .orElseThrow(() -> new EntityNotFoundException("employee",
                                                            employee.getId()));
-        if (!found.isAdministrator())
-        {
-            throw new InvalidActionException(NO_PERMISSION_TO_CREATE_PROJECT);
-        }
-
         if (!found.isActive())
         {
             throw new InvalidActionException(EMPLOYEE_NOT_ACTIVATED);
         }
+
+        if (!found.isAdministrator())
+        {
+            throw new InsufficientPermissionException(NO_PERMISSION_TO_CREATE_PROJECT);
+        }
+
 
 
         Optional<ProjectDto> createdProject =
@@ -111,15 +113,16 @@ public class ProjectService {
             employeeRepository.getEmployeeById(employee.getId())
                 .orElseThrow(() -> new EntityNotFoundException("employee",
                                                                employee.getId()));
-        if (foundEmployee.isDeveloper())
-        {
-            throw new InvalidActionException(NO_PERMISSION_TO_UPDATE_PROJECT);
-        }
-
         if (!foundEmployee.isActive())
         {
             throw new InvalidActionException(EMPLOYEE_NOT_ACTIVATED);
         }
+
+        if (foundEmployee.isDeveloper())
+        {
+            throw new InsufficientPermissionException(NO_PERMISSION_TO_UPDATE_PROJECT);
+        }
+
 
         ProjectDto foundProject =
             projectRepository.getProjectById(project.getId())
@@ -154,7 +157,7 @@ public class ProjectService {
 
         if (!foundEmployee.isAdministrator())
         {
-            throw new InvalidActionException(NO_PERMISSION_TO_DELETE_PROJECT);
+            throw new InsufficientPermissionException(NO_PERMISSION_TO_DELETE_PROJECT);
         }
 
         projectRepository.getProjectById(id)
