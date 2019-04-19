@@ -29,7 +29,6 @@ export default class FromToDatePicker extends Component {
 
   onInputChanged = (dates) => {
     if (dates.length == 2) {
-      console.log(dates)
       this.props.onRangeUpdated(...dates)
     }
   } 

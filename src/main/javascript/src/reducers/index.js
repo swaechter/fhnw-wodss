@@ -4,12 +4,14 @@ import { todos } from './todo.reducer';
 import { auth } from './auth.reducer';
 import { projects } from './projects.reducer'
 import { allocations } from './allocations.reducer'
+import { contracts } from './contracts.reducer'
 
 const reducers = combineReducers({
 	todos,
 	auth,
 	projects,
-	allocations
+	allocations,
+	contracts
 });
 
 export default reducers;

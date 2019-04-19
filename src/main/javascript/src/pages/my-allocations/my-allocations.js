@@ -6,7 +6,7 @@ import { connect } from 'preact-redux';
 import Layout from '../../components/layout';
 import DayContainer from './day-container';
 import { filterAllocations } from '../../utils/filters';
-import { getMonday, getDateRange, removeTimeUTC } from '../../utils/date';
+import { getMonday, getDateRange, removeTimeUTC, checkDateRangeOverlap } from '../../utils/date';
 import { getObjectColor } from '../../utils/colors';
 import FromToDatePicker from '../../components/from-to-datepicker';
 
@@ -26,20 +26,21 @@ export default class MyAllocationsPage extends Component {
     componentDidMount() {
         this.props.fetchProjectsAsync();
         this.props.fetchAllocationsAsync();
+        this.props.fetchContractsAsync();
     }
 
-    updateDisplayElements = (allocations, projects) => {
+    updateDisplayElements = (allocations, projects, contracts) => {
         let dates = getDateRange(this.state.from, this.state.to)
         let reducedAllocations = filterAllocations(this.state.from, this.state.to, allocations)
-        let displayAllocations = this.createOutputDataStructure(dates, reducedAllocations, projects)
+        let displayAllocations = this.createOutputDataStructure(dates, reducedAllocations, projects, contracts)
         return displayAllocations
     }
 
-    createOutputDataStructure = (dates, allocations, projects) => {
+    createOutputDataStructure = (dates, allocations, projects, contracts) => {
         let result = []
         dates.map((date) => {
             let activeAlloc = filterAllocations(date, date, allocations)
-            let displayAlloc = activeAlloc.map((alloc) => this.allocationToDisplayallocation(alloc, projects))
+            let displayAlloc = activeAlloc.map((alloc) => this.allocationToDisplayallocation(alloc, projects, contracts))
             result.push({
                 'date': date,
                 'allocations': displayAlloc
@@ -48,9 +49,10 @@ export default class MyAllocationsPage extends Component {
         return result
     }
 
-    allocationToDisplayallocation = (alloc, projects) => {
+    allocationToDisplayallocation = (alloc, projects, contracts) => {
+        let contractPercentage = contracts.find((contract) => contract.id==alloc.contractId).pensumPercentage
         return {
-            'pensumPercentage': alloc.pensumPercentage + 10,
+            'pensumPercentage': alloc.pensumPercentage/contractPercentage,
             'color': getObjectColor(alloc.projectId),
             'projectName': projects.filter((project) => project.id == alloc.projectId)[0].name
         }
@@ -59,15 +61,14 @@ export default class MyAllocationsPage extends Component {
     updateDateRange = (from, to) => {
         this.setState({
             ...this.state,
-            from,
-            to
-        }
-        )
+            from: removeTimeUTC(from),
+            to: removeTimeUTC(to)
+        })
     }
 
 
-    render({ allocations, projects }) {
-        let displayAllocation = this.updateDisplayElements(allocations, projects)
+    render({ allocations, projects, contracts }) {
+        let displayAllocation = this.updateDisplayElements(allocations, projects, contracts)
         return (
             <Layout>
                 <h2>My Allocations</h2>

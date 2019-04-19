@@ -24,8 +24,8 @@ export const getDateRange = (startDate, stopDate) => {
     var dateArray = new Array();
     var currentDate = removeTimeUTC(startDate);
     while (currentDate <= stopDate) {
-        dateArray.push(new Date (currentDate));
-        currentDate = new Date(currentDate).setDate(new Date(currentDate).getDate() + 1);
+        dateArray.push(removeTimeUTC(new Date (currentDate)));
+        currentDate = removeTimeUTC(new Date(currentDate).setDate(new Date(currentDate).getDate() + 1));
     }
     return dateArray;
 }
