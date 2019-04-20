@@ -8,6 +8,7 @@ import org.jooq.generated.tables.records.ProjectRecord;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -58,9 +59,12 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
         return getConverter().projectRecordToProjectDto(projectRecord);
     }
 
-    public Optional<ProjectDto> getProjectIfAssigned(UUID projectId)
-    {
+    public Optional<ProjectDto> getProjectIfAssigned(UUID projectId, UUID employeeId) {
         return Optional.empty();
+    }
+
+    public List<ProjectDto> getAllAssignedProjects(LocalDate fromDate, LocalDate toDate, UUID employeeId) {
+        return Collections.emptyList();
     }
 }
 
