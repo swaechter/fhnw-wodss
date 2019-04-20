@@ -16,6 +16,7 @@ export default class ProjectPage extends Component {
                 <h2>ProjectPage</h2>
                 <div class="jumbotron" id="app">
                     <button onClick={this.props.fetchProjectsAsync}>Lade Projekte</button>
+                    <p>{JSON.stringify(this.props.projects)}</p>
                 </div>
             </Layout>
         );
