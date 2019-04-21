@@ -3,12 +3,14 @@ package ch.fhnw.wodss.webapplication.configuration;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
 @Configuration
+@ConditionalOnProperty(value="profile", havingValue="production")
 public class DatabaseConfiguration {
 
     private final String jdbcUrl;
