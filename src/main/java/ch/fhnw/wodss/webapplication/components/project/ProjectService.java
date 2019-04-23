@@ -74,7 +74,7 @@ public class ProjectService {
         fromDate = fromDate != null ? fromDate : LocalDate.of(1900, 1, 1);
         toDate = toDate != null ? toDate : LocalDate.of(2100, 1, 1);
 
-        return getAllProjectsAccordingToPermission(found.getRole(), fromDate, toDate, employee.getId(), projectManagerId);
+        return getAllProjectsAccordingToPermission(found.getRole(), fromDate, toDate, projectManagerId, employee.getId());
     }
 
     public ProjectDto getProject(UUID id, EmployeeDto employee) {
@@ -148,7 +148,7 @@ public class ProjectService {
         }
     }
 
-    private List<ProjectDto> getAllProjectsAccordingToPermission(Role role, LocalDate fromDate, LocalDate toDate, UUID employeeId, UUID projectManagerId) {
+    private List<ProjectDto> getAllProjectsAccordingToPermission(Role role, LocalDate fromDate, LocalDate toDate, UUID projectManagerId, UUID employeeId) {
         if (role == Role.ADMINISTRATOR || role == Role.PROJECTMANAGER) {
             return projectRepository.getProjects(fromDate, toDate, projectManagerId);
         } else {

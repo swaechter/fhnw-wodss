@@ -62,7 +62,7 @@ public class ProjectServiceUnitTest {
     }
 
     private static String createEntityNotFoundMessage(String name, UUID id) {
-        return new EntityNotFoundException(name, UUID.randomUUID()).getMessage();
+        return new EntityNotFoundException(name, id).getMessage();
     }
 
     @Nested
@@ -303,9 +303,9 @@ public class ProjectServiceUnitTest {
 
         @Test
         public void thenCanReadAllProjects() {
-            given(projectRepo.getProjects(LocalDate.now(), LocalDate.now().plusYears(1), validEmployee.getId())).willReturn(List.of(validProject));
+            given(projectRepo.getProjects(LocalDate.now(), LocalDate.now().plusYears(1), validProject.getProjectManagerId())).willReturn(List.of(validProject));
             projectService.getProjects(LocalDate.now(), LocalDate.now().plusYears(1), validProject.getProjectManagerId(), validEmployee);
-            verify(projectRepo, times(1)).getProjects(LocalDate.now(), LocalDate.now().plusYears(1), validEmployee.getId());
+            verify(projectRepo, times(1)).getProjects(LocalDate.now(), LocalDate.now().plusYears(1), validProject.getProjectManagerId());
 
         }
 
@@ -386,9 +386,8 @@ public class ProjectServiceUnitTest {
             }
 
             @Test
-            public void whenProjectManagerAndProjectDoesNotYetExist_thenCanCreateProject() {
+            public void whenProjectHasAValidProjectManager_thenCanCreateProject() {
                 projectManager.setRole(Role.PROJECTMANAGER);
-                given(projectRepo.getProjectById(validProject.getId())).willReturn(Optional.empty());
                 given(projectRepo.saveProject(validProject)).willReturn(Optional.of(validProject));
                 projectService.createProject(validProject, validEmployee);
                 verify(projectRepo, times(1)).saveProject(validProject);

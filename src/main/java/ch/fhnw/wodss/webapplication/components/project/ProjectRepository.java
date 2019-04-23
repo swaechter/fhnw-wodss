@@ -34,7 +34,6 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
         return createOne(project);
     }
 
-    // TODO@Thibo Test Case dafür schreiben
     public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, UUID projectManagerId) {
         // Be aware of overlapping start and end dates: https://stackoverflow.com/a/17014131
         Date startDate = getConverter().localDateToSqlDate(fromDate);
