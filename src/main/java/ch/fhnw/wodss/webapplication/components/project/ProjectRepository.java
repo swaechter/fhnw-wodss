@@ -6,8 +6,10 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.SelectConditionStep;
 import org.jooq.SelectSeekStep1;
+import org.jooq.generated.tables.Allocation;
 import org.jooq.generated.tables.Project;
 import org.jooq.generated.tables.records.ProjectRecord;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
@@ -37,7 +39,12 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
         // Be aware of overlapping start and end dates: https://stackoverflow.com/a/17014131
         Date startDate = getConverter().localDateToSqlDate(fromDate);
         Date endDate = getConverter().localDateToSqlDate(toDate);
-        return readMany(table -> table.PROJECT_MANAGER_ID.eq(projectManagerId).and(table.START_DATE.lessOrEqual(endDate).and(table.END_DATE.greaterOrEqual(startDate))));
+
+        SelectConditionStep<Record> condition = getDslContext().select().from(PROJECT)
+            .where(PROJECT.START_DATE.lessOrEqual(endDate)).and(PROJECT.END_DATE.greaterOrEqual(startDate))
+            .and(projectManagerId != null ? PROJECT.PROJECT_MANAGER_ID.eq(projectManagerId) : DSL.noCondition());
+
+        return getConverter().projectRecordListToProjectDtoList(condition.fetchInto(PROJECT));
     }
 
     public Optional<ProjectDto> getProjectById(UUID id) {

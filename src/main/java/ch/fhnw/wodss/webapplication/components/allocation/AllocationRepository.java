@@ -46,7 +46,7 @@ public class AllocationRepository extends GenericCrudRepository<AllocationDto, A
             .and(employeeId != null ? CONTRACT.EMPLOYEE_ID.eq(employeeId) : DSL.noCondition())
             .and(projectId != null ? PROJECT.ID.eq(projectId) : DSL.noCondition());
 
-        return getConverter().allocationRecordListToAllocationDtoList(condition.fetchInto(Allocation.ALLOCATION));
+        return getConverter().allocationRecordListToAllocationDtoList(condition.fetchInto(ALLOCATION));
     }
 
     public List<AllocationDto> getAllocationsByContractId(UUID contractId) {
