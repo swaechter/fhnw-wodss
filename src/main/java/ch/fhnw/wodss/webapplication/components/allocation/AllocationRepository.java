@@ -63,6 +63,11 @@ public class AllocationRepository extends GenericCrudRepository<AllocationDto, A
         deleteOne(table -> table.ID.eq(id));
     }
 
+    public void deleteAllocationsByProjectId(UUID projectId) {
+        // TODO: Rename deleteOne in deleteMany because the filter can match multiple rows
+        deleteOne(table -> table.PROJECT_ID.eq(projectId));
+    }
+
     @Override
     protected AllocationRecord mapDtoToRecord(AllocationDto allocation, AllocationRecord allocationRecord) {
         if (allocation.getId() != null) {

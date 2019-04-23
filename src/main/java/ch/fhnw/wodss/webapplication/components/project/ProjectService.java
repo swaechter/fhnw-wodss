@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.project;
 
+import ch.fhnw.wodss.webapplication.components.allocation.AllocationRepository;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -29,9 +29,12 @@ public class ProjectService {
 
     private final EmployeeRepository employeeRepository;
 
-    public ProjectService(ProjectRepository projectRepository, EmployeeRepository employeeRepository) {
+    private final AllocationRepository allocationRepository;
+
+    public ProjectService(ProjectRepository projectRepository, EmployeeRepository employeeRepository, AllocationRepository allocationRepository) {
         this.projectRepository = projectRepository;
         this.employeeRepository = employeeRepository;
+        this.allocationRepository = allocationRepository;
     }
 
     public ProjectDto createProject(ProjectDto project, EmployeeDto employee) {
@@ -117,6 +120,7 @@ public class ProjectService {
         }
 
         projectRepository.getProjectById(id).orElseThrow(() -> new EntityNotFoundException("project", id));
+        allocationRepository.deleteAllocationsByProjectId(id);
         projectRepository.deleteProject(id);
     }
 }

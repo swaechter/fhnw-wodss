@@ -24,11 +24,10 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,16 +39,19 @@ public class IntegrationTests {
     private TestRestTemplate template;
 
     @Container
-    private static final PostgreSQLContainer DB_CONTAINER = new PostgreSQLContainer("postgres:11.2").withDatabaseName("dev_wodss_db").withUsername("user").withPassword("password");
+    private PostgreSQLContainer dbContainer = new PostgreSQLContainer("postgres:11.2").withDatabaseName("dev_wodss_db").withUsername("user").withPassword("password");
 
     private JSONObject request = new JSONObject();
     private Token token;
     private HttpHeaders headers = new HttpHeaders();
     private static ProjectDto expected = new ProjectDto();
 
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+    public class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        public Initializer() {
+
+        }
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues.of("spring.datasource.url=" + DB_CONTAINER.getJdbcUrl(), "spring.datasource.username=" + DB_CONTAINER.getUsername(), "spring.datasource.password=" + DB_CONTAINER.getPassword()).applyTo(configurableApplicationContext.getEnvironment());
+            TestPropertyValues.of("spring.datasource.url=" + dbContainer.getJdbcUrl(), "spring.datasource.username=" + dbContainer.getUsername(), "spring.datasource.password=" + dbContainer.getPassword()).applyTo(configurableApplicationContext.getEnvironment());
         }
     }
 
@@ -111,13 +113,21 @@ public class IntegrationTests {
         public void setupAdministrator() {
             request.put("emailAddress", "simon.waechter@students.fhnw.ch");
             request.put("rawPassword", "123456aA");
+            token = Objects.requireNonNull(template.postForEntity("/api/token", request, Token.class).getBody());
+            headers.setBearerAuth(token.getToken());
+        }
+
+        @Test
+        public void thenCanDeleteAnExistingProject() {
+            HttpEntity entity = new HttpEntity<>(null, headers);
+            ResponseEntity<ProjectDto> response = template.exchange("/api/project/{id}", HttpMethod.DELETE, entity, ProjectDto.class, expected.getId());
+            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+            ResponseEntity<String> notFound = template.exchange("/api/project/{id}", HttpMethod.GET, entity, String.class, expected.getId());
+            assertEquals(HttpStatus.NOT_FOUND, notFound.getStatusCode());
         }
 
         @Test
         public void thenReturnAllProjects() {
-            ResponseEntity<Token> token = template.postForEntity("/api/token", request, Token.class);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(Objects.requireNonNull(token.getBody()).getToken());
             HttpEntity entity = new HttpEntity<>(null, headers);
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/api/project/").queryParam("projectManagerId", "").queryParam("fromDate", "2019-01-01").queryParam("toDate", "2019-12-01");
             ResponseEntity<List<ProjectDto>> response = template.exchange(builder.toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<List<ProjectDto>>() {
@@ -137,6 +147,34 @@ public class IntegrationTests {
             assertEquals(HttpStatus.OK, response.getStatusCode());
             ProjectDto project = Objects.requireNonNull(response.getBody());
             assertProjectDto(expected, project);
+        }
+
+        @Test
+        public void thenCanCreateANewProject() {
+            ProjectDto newProject = new ProjectDto();
+            newProject.setId(UUID.randomUUID());
+            newProject.setFtePercentage(10L);
+            newProject.setName("IP7 - Blockchain Driven FHNW Tokens");
+            newProject.setStartDate(LocalDate.of(2019, 9, 1));
+            newProject.setEndDate(LocalDate.of(2020, 2, 1));
+            newProject.setProjectManagerId(expected.getProjectManagerId());
+            HttpEntity entity = new HttpEntity<>(newProject, headers);
+            ResponseEntity<ProjectDto> response = template.postForEntity("/api/project", entity, ProjectDto.class);
+            assertEquals(HttpStatus.CREATED, response.getStatusCode());
+            ProjectDto project = Objects.requireNonNull(response.getBody());
+            newProject.setId(project.getId());
+            assertProjectDto(newProject, project);
+        }
+
+        @Test
+        public void thenCanUpdateAnExistingProject() {
+            ProjectDto updatedProject = new ProjectDto(expected);
+            updatedProject.setName("IP7 - A New Reactive Web Framework");
+            HttpEntity entity = new HttpEntity<>(updatedProject, headers);
+            ResponseEntity<ProjectDto> response = template.exchange("/api/project/{id}", HttpMethod.PUT, entity, ProjectDto.class, expected.getId());
+            assertEquals(HttpStatus.OK, response.getStatusCode());
+            ProjectDto project = Objects.requireNonNull(response.getBody());
+            assertProjectDto(updatedProject, project);
         }
     }
 }

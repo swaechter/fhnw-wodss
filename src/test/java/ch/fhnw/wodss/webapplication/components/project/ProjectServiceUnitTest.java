@@ -1,6 +1,7 @@
 package ch.fhnw.wodss.webapplication.components.project;
 
 
+import ch.fhnw.wodss.webapplication.components.allocation.AllocationRepository;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
 import ch.fhnw.wodss.webapplication.components.employee.Role;
@@ -33,6 +34,9 @@ public class ProjectServiceUnitTest {
     @Mock
     private EmployeeRepository employeeRepo;
 
+    @Mock
+    private AllocationRepository allocationRepo;
+
     private EmployeeDto validEmployee = new EmployeeDto();
 
     private ProjectDto validProject = new ProjectDto();
@@ -41,7 +45,7 @@ public class ProjectServiceUnitTest {
 
     @BeforeEach
     public void setUp() {
-        projectService = new ProjectService(projectRepo, employeeRepo);
+        projectService = new ProjectService(projectRepo, employeeRepo, allocationRepo);
         validEmployee.setId(UUID.randomUUID());
         validEmployee.setRole(Role.ADMINISTRATOR);
         validEmployee.setActive(true);
@@ -312,6 +316,7 @@ public class ProjectServiceUnitTest {
             public void thenCanDeleteProject() {
                 projectService.deleteProject(validProject.getId(), validEmployee);
                 verify(projectRepo, times(1)).deleteProject(validProject.getId());
+                verify(allocationRepo, times(1)).deleteAllocationsByProjectId(validProject.getId());
             }
 
             @Test

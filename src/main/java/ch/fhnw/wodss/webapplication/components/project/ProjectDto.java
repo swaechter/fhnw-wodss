@@ -41,6 +41,15 @@ public class ProjectDto {
     public ProjectDto() {
     }
 
+    public ProjectDto(ProjectDto p) {
+        this.id = p.id;
+        this.projectManagerId = p.projectManagerId;
+        this.name = p.name;
+        this.ftePercentage = p.ftePercentage;
+        this.startDate = p.startDate;
+        this.endDate = p.endDate;
+    }
+
     public ProjectDto(String name, Long ftePercentage, LocalDate startDate, LocalDate endDate) {
         this.name = name;
         this.ftePercentage = ftePercentage;
