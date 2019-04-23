@@ -30,6 +30,12 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/* FIX ME: At the moment you can only write idempotent request test because we have not yet found a way to make
+
+- our tests transactional: https://stackoverflow.com/questions/37344471/failed-to-retrieve-platformtransactionmanager-for-transactional-test-for-test-c
+- rollback the changes to a savepoint before the change
+*/
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = IntegrationTests.Initializer.class)
@@ -116,15 +122,6 @@ public class IntegrationTests {
         }
 
         @Test
-        public void thenCanDeleteAnExistingProject() {
-            HttpEntity entity = new HttpEntity<>(null, headers);
-            ResponseEntity<ProjectDto> response = template.exchange("/api/project/{id}", HttpMethod.DELETE, entity, ProjectDto.class, expected.getId());
-            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-            ResponseEntity<String> notFound = template.exchange("/api/project/{id}", HttpMethod.GET, entity, String.class, expected.getId());
-            assertEquals(HttpStatus.NOT_FOUND, notFound.getStatusCode());
-        }
-
-        @Test
         public void thenReturnAllProjects() {
             HttpEntity entity = new HttpEntity<>(null, headers);
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/api/project/").queryParam("projectManagerId", "").queryParam("fromDate", "2019-01-01").queryParam("toDate", "2019-12-01");
@@ -147,32 +144,42 @@ public class IntegrationTests {
             assertProjectDto(expected, project);
         }
 
-        @Test
-        public void thenCanCreateANewProject() {
-            ProjectDto newProject = new ProjectDto();
-            newProject.setId(UUID.randomUUID());
-            newProject.setFtePercentage(10L);
-            newProject.setName("IP7 - Blockchain Driven FHNW Tokens");
-            newProject.setStartDate(LocalDate.of(2019, 9, 1));
-            newProject.setEndDate(LocalDate.of(2020, 2, 1));
-            newProject.setProjectManagerId(expected.getProjectManagerId());
-            HttpEntity entity = new HttpEntity<>(newProject, headers);
-            ResponseEntity<ProjectDto> response = template.postForEntity("/api/project", entity, ProjectDto.class);
-            assertEquals(HttpStatus.CREATED, response.getStatusCode());
-            ProjectDto project = Objects.requireNonNull(response.getBody());
-            newProject.setId(project.getId());
-            assertProjectDto(newProject, project);
-        }
+//        @Test
+//        public void thenCanUpdateAnExistingProject() {
+//            ProjectDto updatedProject = new ProjectDto(expected);
+//            updatedProject.setName("IP7 - A New Reactive Web Framework");
+//            HttpEntity entity = new HttpEntity<>(updatedProject, headers);
+//            ResponseEntity<ProjectDto> response = template.exchange("/api/project/{id}", HttpMethod.PUT, entity, ProjectDto.class, expected.getId());
+//            assertEquals(HttpStatus.OK, response.getStatusCode());
+//            ProjectDto project = Objects.requireNonNull(response.getBody());
+//            assertProjectDto(updatedProject, project);
+//        }
 
-        @Test
-        public void thenCanUpdateAnExistingProject() {
-            ProjectDto updatedProject = new ProjectDto(expected);
-            updatedProject.setName("IP7 - A New Reactive Web Framework");
-            HttpEntity entity = new HttpEntity<>(updatedProject, headers);
-            ResponseEntity<ProjectDto> response = template.exchange("/api/project/{id}", HttpMethod.PUT, entity, ProjectDto.class, expected.getId());
-            assertEquals(HttpStatus.OK, response.getStatusCode());
-            ProjectDto project = Objects.requireNonNull(response.getBody());
-            assertProjectDto(updatedProject, project);
-        }
+//        @Test
+//        public void thenCanCreateANewProject() {
+//            ProjectDto newProject = new ProjectDto();
+//            newProject.setId(UUID.randomUUID());
+//            newProject.setFtePercentage(10L);
+//            newProject.setName("IP7 - Blockchain Driven FHNW Tokens");
+//            newProject.setStartDate(LocalDate.of(2019, 9, 1));
+//            newProject.setEndDate(LocalDate.of(2020, 2, 1));
+//            newProject.setProjectManagerId(expected.getProjectManagerId());
+//            HttpEntity entity = new HttpEntity<>(newProject, headers);
+//            ResponseEntity<ProjectDto> response = template.postForEntity("/api/project", entity, ProjectDto.class);
+//            assertEquals(HttpStatus.CREATED, response.getStatusCode());
+//            ProjectDto project = Objects.requireNonNull(response.getBody());
+//            newProject.setId(project.getId());
+//            assertProjectDto(newProject, project);
+//            template.exchange("/api/project/{id}", HttpMethod.DELETE, entity, ProjectDto.class, newProject.getId());
+//        }
+
+//        @Test
+//        public void thenCanDeleteAnExistingProject() {
+//            HttpEntity entity = new HttpEntity<>(null, headers);
+//            ResponseEntity<ProjectDto> response = template.exchange("/api/project/{id}", HttpMethod.DELETE, entity, ProjectDto.class, expected.getId());
+//            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+//            ResponseEntity<String> notFound = template.exchange("/api/project/{id}", HttpMethod.GET, entity, String.class, expected.getId());
+//            assertEquals(HttpStatus.NOT_FOUND, notFound.getStatusCode());
+//        }
     }
 }
