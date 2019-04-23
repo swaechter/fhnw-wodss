@@ -46,10 +46,6 @@ public class AllocationService {
             throw new EntityNotFoundException("project", allocation.getProjectId());
         }
 
-        if (!allocation.getStartDate().isBefore(allocation.getEndDate())) {
-            throw new InvalidActionException("The start date of an allocation has to be before the end date");
-        }
-
         if (allocation.getStartDate().isBefore(selectedContract.get().getStartDate())) {
             throw new InvalidActionException("The start date of an allocation can't be before the contract start date");
         }
@@ -142,10 +138,6 @@ public class AllocationService {
         Optional<ProjectDto> selectedProject = projectRepository.getProjectById(allocation.getProjectId());
         if (selectedProject.isEmpty()) {
             throw new EntityNotFoundException("project", allocation.getProjectId());
-        }
-
-        if (!allocation.getStartDate().isBefore(allocation.getEndDate())) {
-            throw new InvalidActionException("The start date of an allocation has to be before the end date");
         }
 
         if (allocation.getStartDate().isBefore(selectedContract.get().getStartDate())) {

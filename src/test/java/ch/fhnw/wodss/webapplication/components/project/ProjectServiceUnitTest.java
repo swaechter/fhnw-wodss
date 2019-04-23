@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -28,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@ExtendWith({MockitoExtension.class, SpringExtension.class})
+@ExtendWith({MockitoExtension.class})
 public class ProjectServiceUnitTest {
     @Mock
     private ProjectRepository projectRepo;
@@ -58,7 +56,7 @@ public class ProjectServiceUnitTest {
 
         validProject.setName("Test project");
         validProject.setStartDate(LocalDate.now());
-        validProject.setEndDate(LocalDate.now().minusYears(1));
+        validProject.setEndDate(LocalDate.now().plusYears(1));
         validProject.setId(UUID.randomUUID());
         validProject.setProjectManagerId(UUID.randomUUID());
     }

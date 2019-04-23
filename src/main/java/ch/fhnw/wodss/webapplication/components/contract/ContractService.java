@@ -45,10 +45,6 @@ public class ContractService {
             throw new EntityNotFoundException("employee", contract.getEmployeeId());
         }
 
-        if (!contract.getStartDate().isBefore(contract.getEndDate())) {
-            throw new InvalidActionException("The start date of a contract has to be before the end date");
-        }
-
         List<ContractDto> existingContractDtos = contractRepository.getContracts(contract.getStartDate(), contract.getEndDate(), contract.getEmployeeId());
         if (!existingContractDtos.isEmpty()) {
             throw new InvalidActionException("There already exists an overlapping contract for this time period");
@@ -113,10 +109,6 @@ public class ContractService {
         Optional<EmployeeDto> selectedEmployee = employeeRepository.getEmployeeById(contract.getEmployeeId());
         if (selectedEmployee.isEmpty()) {
             throw new EntityNotFoundException("employee", contract.getEmployeeId());
-        }
-
-        if (!contract.getStartDate().isBefore(contract.getEndDate())) {
-            throw new InvalidActionException("The start date of a contract has to be before the end date");
         }
 
         if (!contract.getPensumPercentage().equals(selectedContract.get().getPensumPercentage())) {

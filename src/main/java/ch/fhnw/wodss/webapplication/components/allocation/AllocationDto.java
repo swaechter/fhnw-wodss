@@ -1,6 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.allocation;
 
-import ch.fhnw.wodss.webapplication.components.DateRange;
+import ch.fhnw.wodss.webapplication.utils.DateRange;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "contractId", "projectId"})
 @ApiModel(value = "Allocation", description = "Represents the work unit an employee is doing for a project")
-public class AllocationDto extends DateRange {
+public class AllocationDto implements DateRange {
 
     @ApiModelProperty(value = "Allocation ID", example = "010a7082-61b0-11e9-8647-d663bd873d93", readOnly = true, position = 1)
     private UUID id;

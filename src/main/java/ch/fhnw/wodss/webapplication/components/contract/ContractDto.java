@@ -1,6 +1,6 @@
 package ch.fhnw.wodss.webapplication.components.contract;
 
-import ch.fhnw.wodss.webapplication.components.DateRange;
+import ch.fhnw.wodss.webapplication.utils.DateRange;
 import ch.fhnw.wodss.webapplication.utils.ValidDateRange;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @JsonPropertyOrder({"id", "startDate", "endDate", "pensumPercentage", "employeeId"})
 @ApiModel(value = "Contract", description = "Represents the contract an employee can have (Multiple contracts are possible, but date overlapping is not allowed)")
 @ValidDateRange
-public class ContractDto extends DateRange {
+public class ContractDto implements DateRange {
 
     @ApiModelProperty(value = "Contract ID", example = "010a7082-61b0-11e9-8647-d663bd873d93", readOnly = true, position = 1)
     private UUID id;

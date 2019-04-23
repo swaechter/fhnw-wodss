@@ -56,11 +56,6 @@ public class ProjectService {
             throw new InvalidActionException(PROJECT_MANAGER_IS_DEVELOPER);
         }
 
-        // TODO@Thibo Test Case dafür schreiben
-        if (project.getEndDate().isAfter(project.getEndDate())) {
-            throw new InvalidActionException(PROJECT_END_DATE_BEFORE_START_DATE);
-        }
-
         // TODO@Thibo: Half-done Falls Integration Test Issue resolved, noch einen Integration Test schreiben
         projectRepository.getProjectByName(project.getName()).ifPresent((__) -> {
             throw new InvalidActionException(PROJECT_NAME_IS_ALREADY_TAKEN);
@@ -118,12 +113,6 @@ public class ProjectService {
         if (projectManager.isDeveloper()) {
             throw new InvalidActionException(PROJECT_MANAGER_IS_DEVELOPER);
         }
-
-        // TODO@Thibo Test Case dafür schreiben
-        if (project.getEndDate().isAfter(project.getEndDate())) {
-            throw new InvalidActionException(PROJECT_END_DATE_BEFORE_START_DATE);
-        }
-
 
         return projectRepository.updateProject(project).orElseThrow(() -> new InternalException("Unable to update the project"));
     }
