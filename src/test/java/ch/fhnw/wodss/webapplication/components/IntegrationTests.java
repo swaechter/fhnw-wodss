@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.components;
 
+import ch.fhnw.wodss.webapplication.components.contract.ContractDto;
 import ch.fhnw.wodss.webapplication.components.project.ProjectDto;
 import ch.fhnw.wodss.webapplication.components.token.Token;
 import net.minidev.json.JSONObject;
@@ -155,23 +156,33 @@ public class IntegrationTests {
 //            assertProjectDto(updatedProject, project);
 //        }
 
-//        @Test
-//        public void thenCanCreateANewProject() {
-//            ProjectDto newProject = new ProjectDto();
-//            newProject.setId(UUID.randomUUID());
-//            newProject.setFtePercentage(10L);
-//            newProject.setName("IP7 - Blockchain Driven FHNW Tokens");
-//            newProject.setStartDate(LocalDate.of(2019, 9, 1));
-//            newProject.setEndDate(LocalDate.of(2020, 2, 1));
-//            newProject.setProjectManagerId(expected.getProjectManagerId());
-//            HttpEntity entity = new HttpEntity<>(newProject, headers);
-//            ResponseEntity<ProjectDto> response = template.postForEntity("/api/project", entity, ProjectDto.class);
-//            assertEquals(HttpStatus.CREATED, response.getStatusCode());
-//            ProjectDto project = Objects.requireNonNull(response.getBody());
-//            newProject.setId(project.getId());
-//            assertProjectDto(newProject, project);
-//            template.exchange("/api/project/{id}", HttpMethod.DELETE, entity, ProjectDto.class, newProject.getId());
-//        }
+        @Test
+        public void thenCanCreateANewProject() {
+            // TODO: Manual validation test of date Range on contractDTO. Remove again if pull request accepted and uncomment until Transactional issue is resolved
+            ProjectDto newProject = new ProjectDto();
+            newProject.setId(UUID.randomUUID());
+            newProject.setFtePercentage(10L);
+            newProject.setName("IP7 - Blockchain Driven FHNW Tokens");
+            newProject.setStartDate(LocalDate.of(2019, 9, 1));
+            newProject.setEndDate(LocalDate.of(2020, 2, 1));
+            newProject.setProjectManagerId(expected.getProjectManagerId());
+            ContractDto contract = new ContractDto();
+            contract.setEmployeeId(newProject.getProjectManagerId());
+            contract.setId(UUID.randomUUID());
+            contract.setPensumPercentage((short) 50);
+            contract.setStartDate(LocalDate.of(2019, 9, 1));
+            contract.setEndDate(LocalDate.of(2018, 2, 1));
+            HttpEntity contractTestEntity = new HttpEntity<>(contract, headers);
+            HttpEntity entity = new HttpEntity<>(newProject, headers);
+            ResponseEntity<ContractDto> resp = template.postForEntity("/api/contract", contractTestEntity, ContractDto.class);
+            assertEquals(HttpStatus.CREATED, resp.getStatusCode());
+            ResponseEntity<ProjectDto> response = template.postForEntity("/api/project", entity, ProjectDto.class);
+            assertEquals(HttpStatus.CREATED, response.getStatusCode());
+            ProjectDto project = Objects.requireNonNull(response.getBody());
+            newProject.setId(project.getId());
+            assertProjectDto(newProject, project);
+            template.exchange("/api/project/{id}", HttpMethod.DELETE, entity, ProjectDto.class, newProject.getId());
+        }
 
 //        @Test
 //        public void thenCanDeleteAnExistingProject() {

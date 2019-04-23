@@ -102,9 +102,7 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
 
     // TODO: This compares names with all projects in the DB. What about finished project names? Should it be possible to have the same name as finished project years ago?
     public Optional<ProjectDto> getProjectByName(String name) {
-        SelectConditionStep<Record> condition = getDslContext().select().from(PROJECT)
-            .where(PROJECT.NAME.eq(name));
-        return Optional.of(mapRecordToDto(condition.fetchSingleInto(PROJECT)));
+        return readOne(table -> table.NAME.eq(name));
     }
 }
 
