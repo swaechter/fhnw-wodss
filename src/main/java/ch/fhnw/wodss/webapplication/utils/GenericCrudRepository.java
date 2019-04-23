@@ -59,7 +59,7 @@ public abstract class GenericCrudRepository<DTO, Record extends UpdatableRecord<
         }
     }
 
-    protected void deleteOne(Function<Table, Condition> function) {
+    protected void deleteMany(Function<Table, Condition> function) {
         dslContext.delete(table).where(function.apply(table)).execute();
     }
 

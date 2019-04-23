@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.jooq.generated.tables.Contract.CONTRACT;
+
 @Repository
 public class ContractRepository extends GenericCrudRepository<ContractDto, ContractRecord, Contract> {
 
     public ContractRepository(DSLContext dslContext, Converter converter) {
-        super(dslContext, converter, Contract.CONTRACT);
+        super(dslContext, converter, CONTRACT);
     }
 
     public Optional<ContractDto> saveContract(ContractDto contract) {
@@ -47,7 +49,7 @@ public class ContractRepository extends GenericCrudRepository<ContractDto, Contr
     }
 
     public void deleteContract(UUID id) {
-        deleteOne(table -> table.ID.eq(id));
+        deleteMany(table -> table.ID.eq(id));
     }
 
     @Override

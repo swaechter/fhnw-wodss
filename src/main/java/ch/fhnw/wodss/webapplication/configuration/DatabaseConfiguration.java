@@ -35,25 +35,32 @@ public class DatabaseConfiguration {
      * @return Proper data source based on the Heroku URL input for Jooq
      */
     @Bean
-    public DataSource getDataSource() {
-        // Split the original line
-        String[] arguments = jdbcUrl.split(":|\\@|\\//|\\/");
-        if (arguments.length != 7) {
-            throw new IllegalArgumentException("Invalid datasource URL");
+    public DataSource getDataSource(
+        @Value("${spring.datasource.url}") String jdbcUrl,
+        @Value("${spring.datasource.username:#{null}}") String jdbcUsername,
+        @Value("${spring.datasource.password:#{null}}") String jdbcPassword
+    ) {
+        // Check of Heroku URL (We don't have to handle a vanilla JDBC URL + Credentials)
+        if (jdbcUrl.startsWith("postgres://")) {
+            // Split the original line
+            String[] arguments = jdbcUrl.split(":|\\@|\\//|\\/");
+            if (arguments.length != 7) {
+                throw new IllegalArgumentException("Invalid datasource URL");
+            }
+
+            // Reuse the username and password - they are fine
+            jdbcUsername = arguments[2];
+            jdbcPassword = arguments[3];
+
+            // Replace their strange jdbc:postgres with jdbc:postgesql + reuse the original values
+            jdbcUrl = "jdbc:postgresql://" + arguments[4] + ":" + arguments[5] + "/" + arguments[6];
         }
-
-        // Reuse the username and password - they are fine
-        String username = arguments[2];
-        String password = arguments[3];
-
-        // Replace their strange jdbc:postgres with jdbc:postgesql + reuse the original values
-        String url = "jdbc:postgresql://" + arguments[4] + ":" + arguments[5] + "/" + arguments[6];
 
         // Create the origjnal Hikari config including username and password (Hikari can't parse the credentials in the original URL)
         HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(url);
-        hikariConfig.setUsername(username);
-        hikariConfig.setPassword(password);
+        hikariConfig.setJdbcUrl(jdbcUrl);
+        hikariConfig.setUsername(jdbcUsername);
+        hikariConfig.setPassword(jdbcPassword);
         hikariConfig.setDriverClassName("org.postgresql.Driver");
         return new HikariDataSource(hikariConfig);
     }
