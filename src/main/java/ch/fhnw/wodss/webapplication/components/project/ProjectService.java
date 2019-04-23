@@ -26,6 +26,7 @@ public class ProjectService {
     public static final String NO_PERMISSION_TO_READ_PROJECT = "No permission to get a project";
     public static final String PROJECT_MANAGER_IS_DEVELOPER = "The given project manager is a developer";
     public static final String PROJECT_END_DATE_BEFORE_START_DATE = "The end date of a project can't be after the project end date";
+    public static final String PROJECT_NAME_IS_ALREADY_TAKEN = "The project name is already taken";
 
     private final ProjectRepository projectRepository;
 
@@ -59,7 +60,10 @@ public class ProjectService {
             throw new InvalidActionException(PROJECT_END_DATE_BEFORE_START_DATE);
         }
 
-        // TODO@Thibo Prüfen ob Projektname bereits vergeben ist
+        // TODO@Thibo: Half-done Falls Integration Test Issue resolved, noch einen Integration Test schreiben
+        projectRepository.getProjectByName(project.getName()).ifPresent((__) -> {
+            throw new InvalidActionException(PROJECT_NAME_IS_ALREADY_TAKEN);
+        });
 
         return projectRepository.saveProject(project).orElseThrow(() -> new InternalException("Unable to create the project"));
     }
@@ -103,6 +107,11 @@ public class ProjectService {
             throw new InsufficientPermissionException(NO_PERMISSION_TO_UPDATE_PROJECT);
         }
 
+        // TODO@Thibo: Half-done Falls Integration Test Issue resolved, noch einen Integration Test schreiben
+        projectRepository.getProjectByName(project.getName()).ifPresent((p) -> {
+            if (!p.getId().equals(project.getId())) throw new InvalidActionException(PROJECT_NAME_IS_ALREADY_TAKEN);
+        });
+
         EmployeeDto projectManager = employeeRepository.getEmployeeById(project.getProjectManagerId()).orElseThrow(() -> new EntityNotFoundException("employee", project.getProjectManagerId()));
 
         if (projectManager.isDeveloper()) {
@@ -114,7 +123,6 @@ public class ProjectService {
             throw new InvalidActionException(PROJECT_END_DATE_BEFORE_START_DATE);
         }
 
-        // TODO@Thibo Prüfen ob Projektname bereits vergeben ist & die ID von dieser Entität nicht der zu updatenden entspricht
 
         return projectRepository.updateProject(project).orElseThrow(() -> new InternalException("Unable to update the project"));
     }

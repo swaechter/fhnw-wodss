@@ -334,9 +334,17 @@ public class ProjectServiceUnitTest {
             @Test
             public void whenProjectManagerIsNotFound_thenCannotUpdateProject() {
                 when(employeeRepo.getEmployeeById(validProject.getProjectManagerId())).thenReturn(Optional.empty());
-
                 Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.updateProject(validProject, validEmployee));
                 assertEquals(ex.getMessage(), createEntityNotFoundMessage("employee", validProject.getProjectManagerId()));
+            }
+
+            @Test
+            public void whenProjectNameIsAlreadyTaken_thenCannotUpdateProject() {
+                ProjectDto existingProject = new ProjectDto(validProject);
+                existingProject.setId(UUID.randomUUID());
+                given(projectRepo.getProjectByName(validProject.getName())).willReturn(Optional.of(existingProject));
+                Exception ex = assertThrows(InvalidActionException.class, () -> projectService.updateProject(validProject, validEmployee));
+                assertEquals(ProjectService.PROJECT_NAME_IS_ALREADY_TAKEN, ex.getMessage());
             }
         }
 
@@ -349,6 +357,7 @@ public class ProjectServiceUnitTest {
             assertEquals(ex.getMessage(), createEntityNotFoundMessage("employee", validProject.getProjectManagerId()));
         }
 
+
         @Nested
         public class whenProjectHasAnExistingProjectManager {
             private EmployeeDto projectManager;
@@ -360,6 +369,14 @@ public class ProjectServiceUnitTest {
                 validProject.setProjectManagerId(projectManager.getId());
                 when(employeeRepo.getEmployeeById(validProject.getProjectManagerId())).thenReturn(Optional.of(projectManager));
             }
+
+            @Test
+            public void whenProjectNameIsAlreadyTaken_thenCannotCreateProject() {
+                given(projectRepo.getProjectByName(validProject.getName())).willReturn(Optional.of(validProject));
+                Exception ex = assertThrows(InvalidActionException.class, () -> projectService.createProject(validProject, validEmployee));
+                assertEquals(ProjectService.PROJECT_NAME_IS_ALREADY_TAKEN, ex.getMessage());
+            }
+
 
             @Test
             public void whenProjectManagerIsDeveloper_thenCannotCreateProject() {
@@ -385,9 +402,11 @@ public class ProjectServiceUnitTest {
                 verify(projectRepo, times(1)).updateProject(validProject);
             }
 
+
             @Test
             public void whenProjectHasAValidProjectManager_thenCanCreateProject() {
                 projectManager.setRole(Role.PROJECTMANAGER);
+                given(projectRepo.getProjectByName(validProject.getName())).willReturn(Optional.empty());
                 given(projectRepo.saveProject(validProject)).willReturn(Optional.of(validProject));
                 projectService.createProject(validProject, validEmployee);
                 verify(projectRepo, times(1)).saveProject(validProject);
