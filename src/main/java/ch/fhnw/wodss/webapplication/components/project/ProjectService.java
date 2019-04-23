@@ -10,6 +10,7 @@ import ch.fhnw.wodss.webapplication.exceptions.InternalException;
 import ch.fhnw.wodss.webapplication.exceptions.InvalidActionException;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class ProjectService {
         this.allocationRepository = allocationRepository;
     }
 
-    public ProjectDto createProject(ProjectDto project, EmployeeDto employee) {
+    public ProjectDto createProject(@Valid ProjectDto project, EmployeeDto employee) {
         EmployeeDto found = employeeRepository.getEmployeeById(employee.getId()).orElseThrow(() -> new EntityNotFoundException("employee", employee.getId()));
         if (!found.isActive()) {
             throw new InvalidActionException(EMPLOYEE_NOT_ACTIVATED);

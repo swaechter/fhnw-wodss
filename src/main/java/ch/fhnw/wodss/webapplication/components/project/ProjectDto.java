@@ -1,5 +1,7 @@
 package ch.fhnw.wodss.webapplication.components.project;
 
+import ch.fhnw.wodss.webapplication.components.DateRange;
+import ch.fhnw.wodss.webapplication.utils.ValidDateRange;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,7 +12,8 @@ import java.util.UUID;
 
 @JsonPropertyOrder({"id", "name", "ftePercentage", "startDate", "endDate", "projectManagerId"})
 @ApiModel(value = "Project", description = "Represents a FHNW research project with a given full-time-equivalent (FTE) workload in percentages managed by a project manager employee")
-public class ProjectDto {
+@ValidDateRange
+public class ProjectDto extends DateRange {
 
     @ApiModelProperty(value = "Project ID", example = "010a7082-61b0-11e9-8647-d663bd873d93", readOnly = true, position = 1)
     private UUID id;

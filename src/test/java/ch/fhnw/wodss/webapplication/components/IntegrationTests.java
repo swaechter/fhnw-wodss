@@ -1,5 +1,6 @@
 package ch.fhnw.wodss.webapplication.components;
 
+import ch.fhnw.wodss.webapplication.components.contract.ContractDto;
 import ch.fhnw.wodss.webapplication.components.project.ProjectDto;
 import ch.fhnw.wodss.webapplication.components.token.Token;
 import net.minidev.json.JSONObject;
