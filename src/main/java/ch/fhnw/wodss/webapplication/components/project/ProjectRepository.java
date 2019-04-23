@@ -3,7 +3,6 @@ package ch.fhnw.wodss.webapplication.components.project;
 import ch.fhnw.wodss.webapplication.utils.Converter;
 import ch.fhnw.wodss.webapplication.utils.GenericCrudRepository;
 import org.jooq.*;
-import org.jooq.generated.tables.Allocation;
 import org.jooq.generated.tables.Project;
 import org.jooq.generated.tables.records.ProjectRecord;
 import org.springframework.stereotype.Repository;
@@ -44,7 +43,7 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
     }
 
     public void deleteProject(UUID id) {
-        deleteOne(table -> table.ID.eq(id));
+        deleteMany(table -> table.ID.eq(id));
     }
 
     @Override

@@ -11,11 +11,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.jooq.generated.tables.Employee.EMPLOYEE;
+
 @Repository
 public class EmployeeRepository extends GenericCrudRepository<EmployeeDto, EmployeeRecord, Employee> {
 
     public EmployeeRepository(DSLContext dslContext, Converter converter) {
-        super(dslContext, converter, Employee.EMPLOYEE);
+        super(dslContext, converter, EMPLOYEE);
     }
 
     public Optional<EmployeeDto> saveEmployee(EmployeeDto employee) {

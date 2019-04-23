@@ -61,6 +61,10 @@ public class ProjectServiceUnitTest {
         validProject.setProjectManagerId(UUID.randomUUID());
     }
 
+    private static String createEntityNotFoundMessage(String name, UUID id) {
+        return new EntityNotFoundException(name, UUID.randomUUID()).getMessage();
+    }
+
     @Nested
     public class WhenEmployeeNotFound {
         @BeforeEach
@@ -71,31 +75,31 @@ public class ProjectServiceUnitTest {
         @Test
         public void thenCannotCreateProject() {
             Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.createProject(validProject, validEmployee));
-            assertEquals(ex.getMessage(), EntityNotFoundException.message("employee", validEmployee.getId()));
+            assertEquals(ex.getMessage(), createEntityNotFoundMessage("employee", validEmployee.getId()));
         }
 
         @Test
         public void thenCannotUpdateProject() {
             Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.updateProject(validProject, validEmployee));
-            assertEquals(ex.getMessage(), EntityNotFoundException.message("employee", validEmployee.getId()));
+            assertEquals(ex.getMessage(), createEntityNotFoundMessage("employee", validEmployee.getId()));
         }
 
         @Test
         public void thenCannotReadSingleProject() {
             Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.getProject(validProject.getId(), validEmployee));
-            assertEquals(ex.getMessage(), EntityNotFoundException.message("employee", validEmployee.getId()));
+            assertEquals(ex.getMessage(), createEntityNotFoundMessage("employee", validEmployee.getId()));
         }
 
         @Test
         public void thenCannotReadAllProject() {
             Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.getProjects(LocalDate.now(), LocalDate.now().plusYears(1), validProject.getProjectManagerId(), validEmployee));
-            assertEquals(ex.getMessage(), EntityNotFoundException.message("employee", validEmployee.getId()));
+            assertEquals(ex.getMessage(), createEntityNotFoundMessage("employee", validEmployee.getId()));
         }
 
         @Test
         public void thenCannotDeleteProject() {
             Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.deleteProject(validProject.getId(), validEmployee));
-            assertEquals(ex.getMessage(), EntityNotFoundException.message("employee", validEmployee.getId()));
+            assertEquals(ex.getMessage(), createEntityNotFoundMessage("employee", validEmployee.getId()));
         }
     }
 
@@ -154,19 +158,19 @@ public class ProjectServiceUnitTest {
             @Test
             public void thenCannotReadSingleProject() {
                 Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.getProject(validProject.getId(), validEmployee));
-                assertEquals(ex.getMessage(), EntityNotFoundException.message("project", validProject.getId()));
+                assertEquals(ex.getMessage(), createEntityNotFoundMessage("project", validProject.getId()));
             }
 
             @Test
             public void thenCannotUpdateProject() {
                 Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.updateProject(validProject, validEmployee));
-                assertEquals(ex.getMessage(), EntityNotFoundException.message("project", validProject.getId()));
+                assertEquals(ex.getMessage(), createEntityNotFoundMessage("project", validProject.getId()));
             }
 
             @Test
             public void thenCannotDeleteProject() {
                 Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.deleteProject(validProject.getId(), validEmployee));
-                assertEquals(ex.getMessage(), EntityNotFoundException.message("project", validProject.getId()));
+                assertEquals(ex.getMessage(), createEntityNotFoundMessage("project", validProject.getId()));
             }
         }
 
@@ -332,7 +336,7 @@ public class ProjectServiceUnitTest {
                 when(employeeRepo.getEmployeeById(validProject.getProjectManagerId())).thenReturn(Optional.empty());
 
                 Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.updateProject(validProject, validEmployee));
-                assertEquals(ex.getMessage(), EntityNotFoundException.message("employee", validProject.getProjectManagerId()));
+                assertEquals(ex.getMessage(), createEntityNotFoundMessage("employee", validProject.getProjectManagerId()));
             }
         }
 
@@ -342,7 +346,7 @@ public class ProjectServiceUnitTest {
             when(employeeRepo.getEmployeeById(validProject.getProjectManagerId())).thenReturn(Optional.empty());
 
             Exception ex = assertThrows(EntityNotFoundException.class, () -> projectService.createProject(validProject, validEmployee));
-            assertEquals(ex.getMessage(), EntityNotFoundException.message("employee", validProject.getProjectManagerId()));
+            assertEquals(ex.getMessage(), createEntityNotFoundMessage("employee", validProject.getProjectManagerId()));
         }
 
         @Nested
@@ -379,15 +383,6 @@ public class ProjectServiceUnitTest {
                 projectManager.setRole(Role.PROJECTMANAGER);
                 projectService.updateProject(validProject, validEmployee);
                 verify(projectRepo, times(1)).updateProject(validProject);
-            }
-
-            @Test
-            public void whenProjectAlreadyExists_thenCannotCreateProject() {
-                projectManager.setRole(Role.PROJECTMANAGER);
-                given(projectRepo.getProjectById(validProject.getId())).willReturn(Optional.of(validProject));
-
-                Exception ex = assertThrows(InvalidActionException.class, () -> projectService.createProject(validProject, validEmployee));
-                assertEquals(ex.getMessage(), ProjectService.PROJECT_ALREADY_EXISTS);
             }
 
             @Test

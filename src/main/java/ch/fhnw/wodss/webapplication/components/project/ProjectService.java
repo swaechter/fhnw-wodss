@@ -3,6 +3,7 @@ package ch.fhnw.wodss.webapplication.components.project;
 import ch.fhnw.wodss.webapplication.components.allocation.AllocationRepository;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeDto;
 import ch.fhnw.wodss.webapplication.components.employee.EmployeeRepository;
+import ch.fhnw.wodss.webapplication.components.employee.Role;
 import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import ch.fhnw.wodss.webapplication.exceptions.InsufficientPermissionException;
 import ch.fhnw.wodss.webapplication.exceptions.InternalException;
@@ -11,19 +12,20 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
 @Service
 public class ProjectService {
 
-    public static final String NO_PERMISSION_TO_CREATE_PROJECT = "No permission to create a " + "project";
-    public static final String NO_PERMISSION_TO_UPDATE_PROJECT = "No permission to update a " + "project";
-    public static final String EMPLOYEE_NOT_ACTIVATED = "The authenticated employee is " + "not activated";
-    public static final String NO_PERMISSION_TO_DELETE_PROJECT = "No permission to delete a " + "project";
-    public static final String NO_PERMISSION_TO_READ_PROJECT = "No permission to get a " + "project";
-    public static final String PROJECT_MANAGER_IS_DEVELOPER = "The given project manager is a " + "developer";
-    public static final String PROJECT_ALREADY_EXISTS = "Project already exists";
+    public static final String NO_PERMISSION_TO_CREATE_PROJECT = "No permission to create a project";
+    public static final String NO_PERMISSION_TO_UPDATE_PROJECT = "No permission to update a project";
+    public static final String EMPLOYEE_NOT_ACTIVATED = "The authenticated employee is not activated";
+    public static final String NO_PERMISSION_TO_DELETE_PROJECT = "No permission to delete a project";
+    public static final String NO_PERMISSION_TO_READ_PROJECT = "No permission to get a project";
+    public static final String PROJECT_MANAGER_IS_DEVELOPER = "The given project manager is a developer";
+    public static final String PROJECT_END_DATE_BEFORE_START_DATE = "The end date of a project can't be after the project end date";
 
     private final ProjectRepository projectRepository;
 
@@ -52,9 +54,13 @@ public class ProjectService {
             throw new InvalidActionException(PROJECT_MANAGER_IS_DEVELOPER);
         }
 
-        projectRepository.getProjectById(project.getId()).ifPresent((__) -> {
-            throw new InvalidActionException(PROJECT_ALREADY_EXISTS);
-        });
+        // TODO@Thibo Test Case dafür schreiben
+        if (project.getEndDate().isAfter(project.getEndDate())) {
+            throw new InvalidActionException(PROJECT_END_DATE_BEFORE_START_DATE);
+        }
+
+        // TODO@Thibo Prüfen ob Projektname bereits vergeben ist
+
         return projectRepository.saveProject(project).orElseThrow(() -> new InternalException("Unable to create the project"));
     }
 
@@ -64,7 +70,11 @@ public class ProjectService {
             throw new InvalidActionException(EMPLOYEE_NOT_ACTIVATED);
         }
 
-        return found.getRole().getAllProjectsAccordingToPermission(projectRepository, fromDate, toDate, employee.getId());
+        // Simulate a more or less "matching-everything" filter - otherwise we have to deal with 4 different scenarios in the repository
+        fromDate = fromDate != null ? fromDate : LocalDate.of(1900, 1, 1);
+        toDate = toDate != null ? toDate : LocalDate.of(2100, 1, 1);
+
+        return getAllProjectsAccordingToPermission(found.getRole(), fromDate, toDate, employee.getId());
     }
 
     public ProjectDto getProject(UUID id, EmployeeDto employee) {
@@ -74,7 +84,7 @@ public class ProjectService {
         }
 
         projectRepository.getProjectById(id).orElseThrow(() -> new EntityNotFoundException("project", id));
-        return foundEmployee.getRole().getSingleProjectAccordingToPermission(projectRepository, id, employee.getId()).orElseThrow(() -> new InsufficientPermissionException(NO_PERMISSION_TO_READ_PROJECT));
+        return getSingleProjectAccordingToPermission(foundEmployee.getRole(), id, employee.getId()).orElseThrow(() -> new InsufficientPermissionException(NO_PERMISSION_TO_READ_PROJECT));
     }
 
 
@@ -99,6 +109,12 @@ public class ProjectService {
             throw new InvalidActionException(PROJECT_MANAGER_IS_DEVELOPER);
         }
 
+        // TODO@Thibo Test Case dafür schreiben
+        if (project.getEndDate().isAfter(project.getEndDate())) {
+            throw new InvalidActionException(PROJECT_END_DATE_BEFORE_START_DATE);
+        }
+
+        // TODO@Thibo Prüfen ob Projektname bereits vergeben ist & die ID von dieser Entität nicht der zu updatenden entspricht
 
         return projectRepository.updateProject(project).orElseThrow(() -> new InternalException("Unable to update the project"));
     }
@@ -122,5 +138,27 @@ public class ProjectService {
         projectRepository.getProjectById(id).orElseThrow(() -> new EntityNotFoundException("project", id));
         allocationRepository.deleteAllocationsByProjectId(id);
         projectRepository.deleteProject(id);
+    }
+
+    private Optional<ProjectDto> getSingleProjectAccordingToPermission(Role role, UUID projectId, UUID employeeId) {
+        if (role == Role.ADMINISTRATOR) {
+            return projectRepository.getProjectById(projectId);
+
+        } else if (role == Role.PROJECTMANAGER) {
+            return projectRepository.getProjectById(projectId);
+
+        } else {
+            return projectRepository.getProjectIfAssigned(projectId, employeeId);
+        }
+    }
+
+    private List<ProjectDto> getAllProjectsAccordingToPermission(Role role, LocalDate fromDate, LocalDate toDate, UUID employeeId) {
+        if (role == Role.ADMINISTRATOR) {
+            return projectRepository.getProjects(fromDate, toDate, employeeId);
+        } else if (role == Role.PROJECTMANAGER) {
+            return projectRepository.getProjects(fromDate, toDate, employeeId);
+        } else {
+            return projectRepository.getAllAssignedProjects(fromDate, toDate, employeeId);
+        }
     }
 }
