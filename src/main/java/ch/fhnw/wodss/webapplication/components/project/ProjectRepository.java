@@ -6,7 +6,6 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.SelectConditionStep;
 import org.jooq.SelectSeekStep1;
-import org.jooq.generated.tables.Allocation;
 import org.jooq.generated.tables.Project;
 import org.jooq.generated.tables.records.ProjectRecord;
 import org.jooq.impl.DSL;
@@ -50,30 +49,12 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
         return readOne(table -> table.ID.eq(id));
     }
 
+    public Optional<ProjectDto> getProjectByName(String name) {
+        return readOne(table -> table.NAME.eq(name));
+    }
+
     public Optional<ProjectDto> updateProject(ProjectDto project) {
         return updateOne(project);
-    }
-
-    public void deleteProject(UUID id) {
-        deleteMany(table -> table.ID.eq(id));
-    }
-
-    @Override
-    protected ProjectRecord mapDtoToRecord(ProjectDto project, ProjectRecord projectRecord) {
-        if (project.getId() != null) {
-            projectRecord.setId(project.getId());
-        }
-        projectRecord.setName(project.getName());
-        projectRecord.setFtePercentage(project.getFtePercentage());
-        projectRecord.setStartDate(getConverter().localDateToSqlDate(project.getStartDate()));
-        projectRecord.setEndDate(getConverter().localDateToSqlDate(project.getEndDate()));
-        projectRecord.setProjectManagerId(project.getProjectManagerId());
-        return projectRecord;
-    }
-
-    @Override
-    protected ProjectDto mapRecordToDto(ProjectRecord projectRecord) {
-        return getConverter().projectRecordToProjectDto(projectRecord);
     }
 
     public Optional<ProjectDto> getProjectIfAssigned(UUID projectId, UUID employeeId) {
@@ -100,11 +81,25 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
         return getConverter().projectRecordListToProjectDtoList(condition.fetchInto(PROJECT));
     }
 
-    // TODO: This compares names with all projects in the DB. What about finished project names? Should it be possible to have the same name as finished project years ago?
-    public Optional<ProjectDto> getProjectByName(String name) {
-        SelectConditionStep<Record> condition = getDslContext().select().from(PROJECT)
-            .where(PROJECT.NAME.eq(name));
-        return Optional.of(mapRecordToDto(condition.fetchSingleInto(PROJECT)));
+    public void deleteProject(UUID id) {
+        deleteMany(table -> table.ID.eq(id));
+    }
+
+    @Override
+    protected ProjectRecord mapDtoToRecord(ProjectDto project, ProjectRecord projectRecord) {
+        if (project.getId() != null) {
+            projectRecord.setId(project.getId());
+        }
+        projectRecord.setName(project.getName());
+        projectRecord.setFtePercentage(project.getFtePercentage());
+        projectRecord.setStartDate(getConverter().localDateToSqlDate(project.getStartDate()));
+        projectRecord.setEndDate(getConverter().localDateToSqlDate(project.getEndDate()));
+        projectRecord.setProjectManagerId(project.getProjectManagerId());
+        return projectRecord;
+    }
+
+    @Override
+    protected ProjectDto mapRecordToDto(ProjectRecord projectRecord) {
+        return getConverter().projectRecordToProjectDto(projectRecord);
     }
 }
-
