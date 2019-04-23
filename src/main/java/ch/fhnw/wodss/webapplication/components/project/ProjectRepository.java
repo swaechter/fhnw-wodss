@@ -2,7 +2,10 @@ package ch.fhnw.wodss.webapplication.components.project;
 
 import ch.fhnw.wodss.webapplication.utils.Converter;
 import ch.fhnw.wodss.webapplication.utils.GenericCrudRepository;
-import org.jooq.*;
+import org.jooq.DSLContext;
+import org.jooq.Record;
+import org.jooq.SelectConditionStep;
+import org.jooq.SelectSeekStep1;
 import org.jooq.generated.tables.Project;
 import org.jooq.generated.tables.records.ProjectRecord;
 import org.springframework.stereotype.Repository;
@@ -29,9 +32,12 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
         return createOne(project);
     }
 
-    // TODO: ORDER BY Start Date possible?
+    // TODO@Thibo Test Case dafür schreiben
     public List<ProjectDto> getProjects(LocalDate fromDate, LocalDate toDate, UUID projectManagerId) {
-        return readMany(table -> table.ID.isNotNull());
+        // Be aware of overlapping start and end dates: https://stackoverflow.com/a/17014131
+        Date startDate = getConverter().localDateToSqlDate(fromDate);
+        Date endDate = getConverter().localDateToSqlDate(toDate);
+        return readMany(table -> table.PROJECT_MANAGER_ID.eq(projectManagerId).and(table.START_DATE.lessOrEqual(endDate).and(table.END_DATE.greaterOrEqual(startDate))));
     }
 
     public Optional<ProjectDto> getProjectById(UUID id) {
@@ -74,6 +80,7 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
     }
 
     public List<ProjectDto> getAllAssignedProjects(LocalDate fromDate, LocalDate toDate, UUID employeeId) {
+        // Be aware of overlapping start and end dates: https://stackoverflow.com/a/17014131
         Date startDate = getConverter().localDateToSqlDate(fromDate);
         Date endDate = getConverter().localDateToSqlDate(toDate);
 

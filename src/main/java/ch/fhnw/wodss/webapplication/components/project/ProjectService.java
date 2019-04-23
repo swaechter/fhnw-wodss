@@ -74,7 +74,7 @@ public class ProjectService {
         fromDate = fromDate != null ? fromDate : LocalDate.of(1900, 1, 1);
         toDate = toDate != null ? toDate : LocalDate.of(2100, 1, 1);
 
-        return getAllProjectsAccordingToPermission(found.getRole(), fromDate, toDate, employee.getId());
+        return getAllProjectsAccordingToPermission(found.getRole(), fromDate, toDate, employee.getId(), projectManagerId);
     }
 
     public ProjectDto getProject(UUID id, EmployeeDto employee) {
@@ -141,22 +141,16 @@ public class ProjectService {
     }
 
     private Optional<ProjectDto> getSingleProjectAccordingToPermission(Role role, UUID projectId, UUID employeeId) {
-        if (role == Role.ADMINISTRATOR) {
+        if (role == Role.ADMINISTRATOR || role == Role.PROJECTMANAGER) {
             return projectRepository.getProjectById(projectId);
-
-        } else if (role == Role.PROJECTMANAGER) {
-            return projectRepository.getProjectById(projectId);
-
         } else {
             return projectRepository.getProjectIfAssigned(projectId, employeeId);
         }
     }
 
-    private List<ProjectDto> getAllProjectsAccordingToPermission(Role role, LocalDate fromDate, LocalDate toDate, UUID employeeId) {
-        if (role == Role.ADMINISTRATOR) {
-            return projectRepository.getProjects(fromDate, toDate, employeeId);
-        } else if (role == Role.PROJECTMANAGER) {
-            return projectRepository.getProjects(fromDate, toDate, employeeId);
+    private List<ProjectDto> getAllProjectsAccordingToPermission(Role role, LocalDate fromDate, LocalDate toDate, UUID employeeId, UUID projectManagerId) {
+        if (role == Role.ADMINISTRATOR || role == Role.PROJECTMANAGER) {
+            return projectRepository.getProjects(fromDate, toDate, projectManagerId);
         } else {
             return projectRepository.getAllAssignedProjects(fromDate, toDate, employeeId);
         }
