@@ -2,7 +2,11 @@ package ch.fhnw.wodss.webapplication.components;
 
 import ch.fhnw.wodss.webapplication.components.project.ProjectDto;
 import ch.fhnw.wodss.webapplication.components.token.Token;
+import ch.fhnw.wodss.webapplication.configuration.TransactionConfiguration;
+import ch.fhnw.wodss.webapplication.exceptions.EntityNotFoundException;
 import net.minidev.json.JSONObject;
+import org.flywaydb.core.Flyway;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -18,6 +22,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -31,7 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(initializers = IntegrationTests.Initializer.class)
+//@ContextConfiguration(initializers = IntegrationTests.Initializer.class, classes = TransactionConfiguration.class) // Everything explodes
+@ContextConfiguration(initializers = IntegrationTests.Initializer.class) // Non Transactional tests work
 @Testcontainers
 public class IntegrationTests {
 
@@ -39,19 +45,16 @@ public class IntegrationTests {
     private TestRestTemplate template;
 
     @Container
-    private PostgreSQLContainer dbContainer = new PostgreSQLContainer("postgres:11.2").withDatabaseName("dev_wodss_db").withUsername("user").withPassword("password");
+    private static final PostgreSQLContainer DB_CONTAINER = new PostgreSQLContainer("postgres:11.2").withDatabaseName("dev_wodss_db").withUsername("user").withPassword("password");
 
     private JSONObject request = new JSONObject();
     private Token token;
     private HttpHeaders headers = new HttpHeaders();
     private static ProjectDto expected = new ProjectDto();
 
-    public class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        public Initializer() {
-
-        }
+    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues.of("spring.datasource.url=" + dbContainer.getJdbcUrl(), "spring.datasource.username=" + dbContainer.getUsername(), "spring.datasource.password=" + dbContainer.getPassword()).applyTo(configurableApplicationContext.getEnvironment());
+            TestPropertyValues.of("spring.datasource.url=" + DB_CONTAINER.getJdbcUrl(), "spring.datasource.username=" + DB_CONTAINER.getUsername(), "spring.datasource.password=" + DB_CONTAINER.getPassword()).applyTo(configurableApplicationContext.getEnvironment());
         }
     }
 
@@ -64,6 +67,7 @@ public class IntegrationTests {
         expected.setName("IP6 Philipp Lüthi & Thibault Gagnaux");
         expected.setFtePercentage(2L);
     }
+
 
     @Nested
     public class whenDeveloper {
@@ -108,6 +112,7 @@ public class IntegrationTests {
     }
 
     @Nested
+    @Transactional("transactionManager")
     public class whenAdministrator {
         @BeforeEach
         public void setupAdministrator() {
