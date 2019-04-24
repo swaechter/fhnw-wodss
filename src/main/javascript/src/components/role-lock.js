@@ -22,11 +22,10 @@ export default class RoleLock extends Component {
                         <div class="container">
                             <h1 class="display-4">Access deinied</h1>
                             <p class="lead">You are not allowed to see this content!</p>
-                            <Link className="btn btn-primary btn-lg" href="/" role="button">Take me Home</Link>
+                            <Link className="btn btn-primary btn-lg" href="/my-allocation" role="button">Take me Home</Link>
                         </div>
                     </div>
                 )
         }
     }
 }
-
