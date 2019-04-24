@@ -60,10 +60,8 @@ export async function doPut(url, payload, token=null) {
 
 export async function doDelete(url, token=null) {
     let headers = getHeader(token)
-    let json = fetch(new URL(url, apiServerUrl), {
+    return fetch(new URL(url, apiServerUrl), {
         method: 'DELETE',
         headers: headers,
-    }).then(handleErrors)
-    .then(res => res.json())
-    return json;
+    }).then(handleErrors);
 }

@@ -32,7 +32,7 @@ export default class Layout extends Component {
                         <NavigationItem href='/admin/contracts' title='Manage Contracts'/>
                         <NavigationItem href='/admin/projects' title='Manage Projects'/>
                     </SideMenu>
-                    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style={{marginTop: 20}}>
                         {children}
                     </main>
                 </div>

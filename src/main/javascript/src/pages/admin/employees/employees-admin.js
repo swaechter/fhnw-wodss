@@ -17,18 +17,64 @@ export default class EmployeesAdminPage extends Component {
         this.props.fetchAdminEmployees();
     }
 
+    createEmployee() {
+        alert("New employee triggered:" + JSON.stringify(data))
+    }
+
+    updateEmployee(data) {
+        alert("Employee updated:" + JSON.stringify(data))
+    }
+
+    deleteEmployee(id) {
+        this.props.deleteAdminEmployee(id);
+    }
+
     render() {
         return (
             <Layout>
                 <RoleLock allowedRoles={['Administrator']}>
-                    <h2>Employees Page (Administrator)</h2>
-                    {this.props.admin_employees.map(i => (
-                        <div>
-                            <p>Email address: {i.emailAddress}</p>
-                            <p>First name: {i.firstName}</p>
-                            <p>Last name: {i.lastName}</p>
-                        </div>
-                    ))}
+                    <h2>Manage Employees (Administrator)</h2>
+                    <table class="table ">
+                        <thead>
+                        <tr>
+                            <th scope="col">Email</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Activated</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">
+                                Actions
+                                &nbsp;&nbsp;&nbsp;
+                                <button onClick={() => {
+                                    this.createEmployee()
+                                }}>Create
+                                </button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {this.props.admin_employees.map(employee => (
+                            <tr key={employee.id}>
+                                <td>{employee.emailAddress}</td>
+                                <td>{employee.firstName}</td>
+                                <td>{employee.lastName}</td>
+                                <td>{employee.active + ''}</td>
+                                <td>{employee.role}</td>
+                                <td>
+                                    <button onClick={() => {
+                                        this.updateEmployee(employee)
+                                    }}>Update
+                                    </button>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <button onClick={() => {
+                                        this.deleteEmployee(employee.id)
+                                    }}>Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
                 </RoleLock>
             </Layout>
         );
