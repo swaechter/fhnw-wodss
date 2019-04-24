@@ -14,7 +14,8 @@ function getHeader(token) {
 
 function handleErrors(response) {
     if (!response.ok) {
-        throw Error(response.statusText);
+        // TODO Philipp: Read proper Spring error message
+        throw Error("Internal errror");//response.statusText);
     }
     return response;
 }

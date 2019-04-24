@@ -1,18 +1,17 @@
-import {doDelete, doGet, getUrl} from "../services/api.service";
+import {doDelete, doGet, doPost, getUrl} from "../services/api.service";
 import {getCurrentToken} from "../services/auth.service";
 
 /*
  * action types
  */
 
+export const SET_ADMIN_ERROR = 'SET_ADMIN_ERROR';
+export const CLEAR_ADMIN_ERROR = 'CLEAR_ADMIN_ERROR';
 export const CREATE_ADMIN_EMPLOYEES_SUCCESS = 'CREATE_ADMIN_EMPLOYEES_SUCCESS';
-export const CREATE_ADMIN_EMPLOYEES_FAIL = 'CREATE_ADMIN_EMPLOYEES_FAIL';
-export const FETCH_ADMIN_EMPLOYEES_SUCCESS = 'FETCH_ADMIN_EMPLOYEES_SUCCESS';
-export const FETCH_ADMIN_EMPLOYEES_FAIL = 'FETCH_ADMIN_EMPLOYEES_FAIL';
+export const FETCH_ALL_ADMIN_EMPLOYEES_SUCCESS = 'FETCH_ALL_ADMIN_EMPLOYEES_SUCCESS';
+export const FETCH_SINGLE_ADMIN_EMPLOYEES_SUCCESS = 'FETCH_SINGLE_ADMIN_EMPLOYEES_SUCCESS';
 export const UPDATE_ADMIN_EMPLOYEES_SUCCESS = 'UPDATE_ADMIN_EMPLOYEES_SUCCESS';
-export const UPDATE_ADMIN_EMPLOYEES_FAIL = 'UPDATE_ADMIN_EMPLOYEES_FAIL';
 export const DELETE_ADMIN_EMPLOYEES_SUCCESS = 'DELETE_ADMIN_EMPLOYEES_SUCCESS';
-export const DELETE_ADMIN_EMPLOYEES_FAIL = 'DELETE_ADMIN_EMPLOYEES_FAIL';
 /*
  * other constants
  */
@@ -22,34 +21,32 @@ export const DELETE_ADMIN_EMPLOYEES_FAIL = 'DELETE_ADMIN_EMPLOYEES_FAIL';
  * action creators
  */
 
-const createAdminEmployeesSuccess = (employees) => ({
+export const setAdminError = (error) => ({
+    type: SET_ADMIN_ERROR,
+    error
+});
+
+export const clearAdminError = () => ({
+    type: CLEAR_ADMIN_ERROR,
+});
+
+const createAdminEmployeesSuccess = (employee) => ({
     type: CREATE_ADMIN_EMPLOYEES_SUCCESS,
+    employee
+});
+
+const fetchAllAdminEmployeesSuccess = (employees) => ({
+    type: FETCH_ALL_ADMIN_EMPLOYEES_SUCCESS,
     employees
 });
 
-const createAdminEmployeesFail = (error) => ({
-    type: CREATE_ADMIN_EMPLOYEES_FAIL,
-    error
+const fetchSingleAdminEmployeesSuccess = (employee) => ({
+    type: FETCH_SINGLE_ADMIN_EMPLOYEES_SUCCESS,
+    employee
 });
-
-const fetchAdminEmployeesSuccess = (employees) => ({
-    type: FETCH_ADMIN_EMPLOYEES_SUCCESS,
-    employees
-});
-
-const fetchAdminEmployeesFail = (error) => ({
-    type: FETCH_ADMIN_EMPLOYEES_FAIL,
-    error
-});
-
 const updateAdminEmployeesSuccess = (employees) => ({
     type: UPDATE_ADMIN_EMPLOYEES_SUCCESS,
     employees
-});
-
-const updateAdminEmployeesFail = (error) => ({
-    type: UPDATE_ADMIN_EMPLOYEES_FAIL,
-    error
 });
 
 const deleteAdminEmployeesSuccess = (id) => ({
@@ -57,23 +54,37 @@ const deleteAdminEmployeesSuccess = (id) => ({
     id
 });
 
-const deleteAdminEmployeesFail = (error) => ({
-    type: DELETE_ADMIN_EMPLOYEES_FAIL,
-    error
-});
 
 /**
  * async function calls
  */
-export function fetchAdminEmployees() {
+
+export function createAdminEmployee(employee, password, role) {
     return async (dispatch) => {
-        let url = getUrl("/api/employee");
         try {
+            let url = getUrl("/api/employee");
+            let token = await getCurrentToken(dispatch);
+            url.searchParams.append('password', password);
+            url.searchParams.append('role', role);
+            let json = await doPost(url, employee, token);
+            dispatch(createAdminEmployeesSuccess(json));
+            dispatch(fetchAllAdminEmployees())
+        } catch (error) {
+            //alert("createAdminEmployee: " + JSON.stringify(error));
+            dispatch(setAdminError("Internal error"));
+        }
+    }
+}
+
+export function fetchAllAdminEmployees() {
+    return async (dispatch) => {
+        try {
+            let url = getUrl("/api/employee");
             let token = await getCurrentToken(dispatch);
             let json = await doGet(url, token);
-            dispatch(fetchAdminEmployeesSuccess(json))
+            dispatch(fetchAllAdminEmployeesSuccess(json))
         } catch (error) {
-            dispatch(fetchAdminEmployeesFail(error))
+            dispatch(setAdminError(error))
         }
     }
 }
@@ -86,9 +97,9 @@ export function deleteAdminEmployee(id) {
             let token = await getCurrentToken(dispatch);
             await doDelete(url, token);
             dispatch(deleteAdminEmployeesSuccess(id))
-            dispatch(fetchAdminEmployees())
+            dispatch(fetchAllAdminEmployees())
         } catch (error) {
-            dispatch(deleteAdminEmployeesFail(error))
+            dispatch(setAdminError(error))
         }
     }
 }

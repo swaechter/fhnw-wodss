@@ -9,7 +9,6 @@ import { Link } from 'preact-router/match';
 @connect(reducers, actions)
 export default class RoleLock extends Component {
     render({ allowedRoles, children }) {
-        console.log()
         let allowed = allowedRoles
             .map(str => str.toUpperCase())
             .includes(this.props.auth.employee.role.toUpperCase())

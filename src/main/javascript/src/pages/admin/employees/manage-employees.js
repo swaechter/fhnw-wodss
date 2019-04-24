@@ -5,24 +5,22 @@ import reducers from '../../../reducers';
 import * as actions from '../../../actions';
 import Layout from '../../../components/layout';
 import RoleLock from '../../../components/role-lock';
+import {Link} from "preact-router/match";
 
 @connect(reducers, actions)
-export default class EmployeesAdminPage extends Component {
+export default class ManageEmployeesPage extends Component {
 
     constructor(props) {
         super(props);
-    }
-
-    componentDidMount() {
-        this.props.fetchAdminEmployees();
+        this.props.fetchAllAdminEmployees();
     }
 
     createEmployee() {
-        alert("New employee triggered:" + JSON.stringify(data))
+        //alert("New employee triggered:" + JSON.stringify(data))
     }
 
     updateEmployee(data) {
-        alert("Employee updated:" + JSON.stringify(data))
+        //alert("Employee updated:" + JSON.stringify(data))
     }
 
     deleteEmployee(id) {
@@ -45,9 +43,8 @@ export default class EmployeesAdminPage extends Component {
                             <th scope="col">
                                 Actions
                                 &nbsp;&nbsp;&nbsp;
-                                <button onClick={() => {
-                                    this.createEmployee()
-                                }}>Create
+                                <button>
+                                    <Link href="/admin/employees/create" role="button">Create</Link>
                                 </button>
                             </th>
                         </tr>
@@ -76,7 +73,7 @@ export default class EmployeesAdminPage extends Component {
                         </tbody>
                     </table>
                 </RoleLock>
-            </Layout>
-        );
-    }
-}
+                < /Layout>
+                    );
+                    }
+                    }
