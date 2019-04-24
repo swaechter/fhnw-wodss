@@ -123,14 +123,17 @@ public class EmployeeDto {
         this.role = role;
     }
 
+    @JsonIgnore
     public boolean isAdministrator() {
         return role.equals(Role.ADMINISTRATOR);
     }
 
+    @JsonIgnore
     public boolean isProjectManager() {
         return role.equals(Role.PROJECTMANAGER);
     }
 
+    @JsonIgnore
     public boolean isDeveloper() {
         return role.equals(Role.DEVELOPER);
     }
