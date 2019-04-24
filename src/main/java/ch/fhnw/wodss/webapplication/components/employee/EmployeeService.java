@@ -141,6 +141,7 @@ public class EmployeeService {
         employee.setFirstName("NONE");
         employee.setLastName("NONE");
         employee.setEmailAddress(UUID.randomUUID() + "@NONE.NONE");
+        employee.setActive(false);
         employeeRepository.updateEmployee(employee);
     }
 }
