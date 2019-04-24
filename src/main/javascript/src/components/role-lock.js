@@ -6,7 +6,6 @@ import reducers from '../reducers';
 import Layout from './layout';
 import { Link } from 'preact-router/match';
 
-
 @connect(reducers, actions)
 export default class RoleLock extends Component {
     render({ allowedRoles, children }) {
