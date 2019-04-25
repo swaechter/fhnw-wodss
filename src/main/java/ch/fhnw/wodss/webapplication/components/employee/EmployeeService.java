@@ -27,10 +27,6 @@ public class EmployeeService {
     }
 
     public EmployeeDto createEmployee(EmployeeDto employee, String password, Role role, EmployeeDto authenticatedEmployee) {
-        if (authenticatedEmployee.isActive()) {
-            throw new InvalidActionException("Only guests can register new employees");
-        }
-
         Optional<EmployeeDto> existingEmployee = employeeRepository.getEmployeeByEmailAddress(employee.getEmailAddress());
         if (existingEmployee.isPresent()) {
             throw new InvalidActionException("The given email address is already in use");
