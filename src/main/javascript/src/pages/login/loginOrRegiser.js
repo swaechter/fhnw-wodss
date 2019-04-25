@@ -22,7 +22,7 @@ export default class LoginOrRegiseterPage extends Component {
             <div>
                 <Navbar />
                 <div class="container-fluid">
-                    <main role="main" class="col-md-5 col-lg-4 ml-md-auto mr-md-auto">
+                    <main role="main" class="col-md-5 col-lg-4 ml-md-auto mr-md-auto" style={{marginTop: 20}}>
                         {form}
                     </main>
                 </div>

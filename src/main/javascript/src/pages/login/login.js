@@ -67,7 +67,7 @@ export default class LoginForm extends Component {
                     </div>
                     <div class='row'>
                         <div class='col'>
-                            <button onClick={this.props.toggleRegister} class="btn btn-secondary btn-block">Register</button>
+                            <button onClick={this.props.toggleRegister} class="btn btn-secondary btn-block" type="button">Register</button>
                         </div>
                         <div class='col'>
                             {this.props.auth.loginState == loginState.FETCHING_JWT

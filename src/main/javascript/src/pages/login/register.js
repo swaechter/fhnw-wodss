@@ -85,7 +85,7 @@ export default class RegisterForm extends Component {
                     </div>
                     <div class='row'>
                         <div class='col'>
-                            <button onClick={this.props.toggleRegister} type='button' class="btn btn-secondary btn-block ">Back to login</button>
+                            <button onClick={this.props.toggleRegister} type="button" class="btn btn-secondary btn-block ">Back to login</button>
                         </div>
                         <div class='col'>
                             <button type="submit" class="btn btn-primary btn-block ">Register</button>
