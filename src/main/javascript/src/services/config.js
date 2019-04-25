@@ -1,1 +1,1 @@
-export const apiServerUrl = 'https://fhnw-wodss-philipp.herokuapp.com/';
+export const apiServerUrl = 'http://localhost:8000/';
