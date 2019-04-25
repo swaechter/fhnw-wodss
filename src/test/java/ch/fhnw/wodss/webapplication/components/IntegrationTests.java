@@ -173,7 +173,6 @@ public class IntegrationTests {
             ProjectDto project = Objects.requireNonNull(response.getBody());
             newProject.setId(project.getId());
             assertProjectDto(newProject, project);
-            template.exchange("/api/project/{id}", HttpMethod.DELETE, entity, ProjectDto.class, newProject.getId());
         }
 
         @Test
