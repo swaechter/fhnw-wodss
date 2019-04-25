@@ -28,13 +28,14 @@ export default class MyAllocationsPage extends Component {
     componentDidMount() {
         this.props.fetchProjectsAsync();
         this.props.fetchContractsAsync();
-        this.props.fetchAllocationsAsync(this.props.auth.employee.id);
+        let from = this.state.from;
+        let to = this.state.to;
+        this.props.fetchAllocationsAsync(this.props.auth.employee.id,null,from,to);
     }
 
     updateDisplayElements = (allocations, projects, contracts) => {
         let dates = getDateRange(this.state.from, this.state.to)
-        let reducedAllocations = filterAllocations(this.state.from, this.state.to, allocations)
-        let displayAllocations = this.createOutputDataStructure(dates, reducedAllocations, projects, contracts)
+        let displayAllocations = this.createOutputDataStructure(dates, allocations, projects, contracts)
         return displayAllocations
     }
 
@@ -52,11 +53,11 @@ export default class MyAllocationsPage extends Component {
     }
 
     allocationToDisplayallocation = (alloc, projects, contracts) => {
-        let contractPercentage = contracts.find((contract) => contract.id==alloc.contractId).pensumPercentage
+        let contractPercentage = contracts.find((contract) => contract.id == alloc.contractId).pensumPercentage
         let project = projects.find((project) => project.id == alloc.projectId)
-        let projectName = project? project.name : ''
+        let projectName = project ? project.name : ''
         return {
-            'pensumPercentage': 100*alloc.pensumPercentage/contractPercentage,
+            'pensumPercentage': 100 * alloc.pensumPercentage / contractPercentage,
             'color': getObjectColor(projectName),
             'projectName': projectName
         }
@@ -68,6 +69,7 @@ export default class MyAllocationsPage extends Component {
             from: removeTimeUTC(from),
             to: removeTimeUTC(to)
         })
+        this.props.fetchAllocationsAsync(this.props.auth.employee.id,null,from,to);
     }
 
 
