@@ -21,7 +21,6 @@ export default class MyAllocationsPage extends Component {
         this.state = {
             from: monday,
             to: friday,
-            displayAllocations: []
         }
     }
 
@@ -65,7 +64,6 @@ export default class MyAllocationsPage extends Component {
 
     updateDateRange = (from, to) => {
         this.setState({
-            ...this.state,
             from: removeTimeUTC(from),
             to: removeTimeUTC(to)
         })
