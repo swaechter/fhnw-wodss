@@ -1,22 +1,26 @@
 import { loginUserSuccess, loginUserFail } from "../actions";
 import { apiServerUrl } from "./config";
+import { handleErrors } from "./api.service"
 var jwtDecode = require('jwt-decode');
 
 export async function fetchToken(credentials) {
-    let token = await fetch(new URL('/api/token', apiServerUrl), {
-        method: 'POST',
-        headers: new Headers({
-            'Content-Type': 'application/json',
-            "Accept": "application/json",
-            'Access-Control-Allow-Origin': '*'
-        }),
-        body: JSON.stringify(credentials)
+    let response = await fetch(new URL('/api/token', apiServerUrl), {
+    method: 'POST',
+    headers: new Headers({
+        'Content-Type': 'application/json',
+        "Accept": "application/json",
+        'Access-Control-Allow-Origin': '*'
+    }),
+    body: JSON.stringify(credentials)
     })
-        .then(res => res.json())
-        .then(json => json.token)
 
-    setStoredToken(token);
-    return token;
+    if(response.ok){
+        let json = await response.json()
+        setStoredToken(json.token);
+        return json.token;
+    }
+            
+    throw Error("Login failed. Check your credentials or contact your administrator")
 }
 
 export async function logout() {

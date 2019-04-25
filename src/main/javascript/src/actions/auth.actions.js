@@ -1,4 +1,5 @@
 import { fetchToken, logout, getStoredTokenIfValid } from "../services/auth.service";
+import { clearError, setError } from "./error.actions";
 
 /*
  * action types
@@ -48,11 +49,16 @@ function logoutUser() {
  * async function calls
  */
 export function loginUserAsync(credentials) {
-	return (dispatch) => {
-		dispatch(loginUserBegin());
-		fetchToken(credentials)
-			.then(token => dispatch(loginUserSuccess(token)))
-			.catch(err => dispatch(loginUserFail(err)));
+	return async (dispatch) => {
+		try{
+			dispatch(loginUserBegin());
+			dispatch(clearError())
+			let token = await fetchToken(credentials)
+			dispatch(loginUserSuccess(token))
+		}catch(error){
+			dispatch(loginUserFail(error))
+			dispatch(setError(error.message))
+		}
 	}
 }
 
@@ -64,9 +70,11 @@ export function restoreLoginAsync() {
 }
 
 export function logoutUserAsync() {
-	return (dispatch) => 
-	logout()
+	return (dispatch) => {
+		dispatch(clearError())
+		logout()
 		.then(() => dispatch(logoutUser()))
+	}
 }
 
 

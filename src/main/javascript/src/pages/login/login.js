@@ -5,6 +5,7 @@ import { connect } from 'preact-redux';
 import { route } from 'preact-router';
 import { loginState } from '../../actions';
 import Navbar from '../../components/navbar';
+import Error from '../../components/error';
 
 @connect(reducers, actions)
 export default class LoginPage extends Component {
@@ -42,6 +43,7 @@ export default class LoginPage extends Component {
                 <div class="container-fluid">
                     <main role="main" class="col-md-5 col-lg-4 ml-md-auto mr-md-auto">
                         <h2>Login</h2>
+                        <Error/>
                         <form onSubmit={this.handleSubmit}>
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Email address</label>
@@ -63,7 +65,7 @@ export default class LoginPage extends Component {
                                     onChange={this.handleInputChange} />
                             </div>
                             {(this.props.auth.loginState == loginState.LOGGED_OUT) ?
-                                (<button type="submit" class="btn btn-primary">Submit</button>) :
+                                (<button type="submit" class="btn btn-primary">Login</button>) :
                                 (<button class="btn btn-primary" type="button" disabled>
                                     <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                                     Loggin in
