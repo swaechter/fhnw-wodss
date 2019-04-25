@@ -13,6 +13,7 @@ import CreateEmployeePage from "./admin/employees/create-employee";
 import UpdateEmployeePage from "./admin/employees/update-employee";
 import ContractsAdminPage from "./admin/contracts/contracts-admin";
 import ProjectsAdminPage from "./admin/projects/projects-admin";
+import ProjectDetailPage from "./projects/project-detail";
 
 export default class App extends Component {
 
@@ -22,6 +23,7 @@ export default class App extends Component {
                 <Router history={createHashHistory()}>
                     <MyAllocationsPage path='/my-allocation'/>
                     <ProjectPage path='/project'/>
+                    <ProjectDetailPage path='/project/:id'/>
                     <ManageEmployeesPage path='/admin/employees'/>
                     <CreateEmployeePage path='/admin/employees/create'/>
                     <UpdateEmployeePage path='/admin/employees/update/:id'/>
