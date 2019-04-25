@@ -27,8 +27,8 @@ export default class MyAllocationsPage extends Component {
 
     componentDidMount() {
         this.props.fetchProjectsAsync();
-        this.props.fetchAllocationsAsync();
         this.props.fetchContractsAsync();
+        this.props.fetchAllocationsAsync(this.props.auth.employee.id);
     }
 
     updateDisplayElements = (allocations, projects, contracts) => {
@@ -53,10 +53,12 @@ export default class MyAllocationsPage extends Component {
 
     allocationToDisplayallocation = (alloc, projects, contracts) => {
         let contractPercentage = contracts.find((contract) => contract.id==alloc.contractId).pensumPercentage
+        let project = projects.find((project) => project.id == alloc.projectId)
+        let projectName = project? project.name : ''
         return {
-            'pensumPercentage': alloc.pensumPercentage/contractPercentage,
-            'color': getObjectColor(alloc.projectId),
-            'projectName': projects.find((project) => project.id == alloc.projectId).name
+            'pensumPercentage': 100*alloc.pensumPercentage/contractPercentage,
+            'color': getObjectColor(projectName),
+            'projectName': projectName
         }
     }
 
