@@ -21,8 +21,7 @@ export function allocations(state = initialState(), action) {
 					startDate: removeTimeUTC(new Date(item.startDate)),
 					endDate: removeTimeUTC(new Date(item.endDate))}
 				})
-			let joinedArray = [...state, ...newEntries]
-			return unique(joinedArray, (item) => item.id)
+			return newEntries
 		case FETCH_ALLOCATIONS_FAIL:
 			return [];
 		default:
