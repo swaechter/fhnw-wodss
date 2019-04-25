@@ -12,10 +12,10 @@ export const checkDateRangeOverlap = (start1, end1, start2, end2) => {
     return (end2 >= start1 && start2 <= end1)
 }
 
-export const getMonday = (date) => {
+export const getUTCMonday = (date) => {
     let day = date.getDay() || 7;
     if (day !== 1)
-        date.setHours(-24 * (day - 1));
+        date.setUTCHours(-24 * (day - 1));
     return date;
 }
 
@@ -24,8 +24,8 @@ export const getDateRange = (startDate, stopDate) => {
     let dateArray = new Array();
     let currentDate = removeTimeUTC(startDate);
     while (currentDate <= stopDate) {
-        dateArray.push(removeTimeUTC(new Date(currentDate)));
-        currentDate = removeTimeUTC(new Date(currentDate).setDate(new Date(currentDate).getDate() + 1));
+        dateArray.push(new Date(Date.UTC(currentDate.getUTCFullYear(),currentDate.getUTCMonth(), currentDate.getUTCDate())))
+        currentDate = new Date(currentDate.getTime() + 86400000) // + 1 day in ms
     }
     return dateArray;
 }

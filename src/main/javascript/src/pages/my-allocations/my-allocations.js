@@ -6,7 +6,7 @@ import { connect } from 'preact-redux';
 import Layout from '../../components/layout';
 import DayContainer from './day-container';
 import { filterAllocations } from '../../utils/filters';
-import { getMonday, getDateRange, removeTimeUTC, checkDateRangeOverlap, addDays } from '../../utils/date';
+import { getUTCMonday, getDateRange, removeTimeUTC, checkDateRangeOverlap, addDays } from '../../utils/date';
 import { getObjectColor } from '../../utils/colors';
 import FromToDatePicker from '../../components/from-to-datepicker';
 
@@ -16,7 +16,7 @@ export default class MyAllocationsPage extends Component {
     constructor(props) {
         super(props)
         let today = removeTimeUTC(new Date())
-        let monday = getMonday(today)
+        let monday = getUTCMonday(today)
         let friday = addDays(monday, 4)
         this.state = {
             from: monday,
