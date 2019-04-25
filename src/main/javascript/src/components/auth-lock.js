@@ -3,7 +3,8 @@ import { connect } from 'preact-redux';
 import * as actions from '../actions';
 import { loginState } from '../actions';
 import reducers from '../reducers';
-import LoginPage from '../pages/login/login';
+import LoginOrRegiseterPage from '../pages/login/loginOrRegiser';
+
 
 
 @connect(reducers, actions)
@@ -12,9 +13,8 @@ export default class AuthLock extends Component {
         switch(this.props.auth.loginState){
             case loginState.LOGGED_IN:
                 return ({children})
-            case loginState.FETCHING_JWT:
-            case loginState.LOGGED_OUT:
-                return (<LoginPage/>)
+            default:
+                return (<LoginOrRegiseterPage/>)
         }
 	}
 }
