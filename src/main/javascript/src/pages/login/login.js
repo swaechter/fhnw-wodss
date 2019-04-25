@@ -12,8 +12,8 @@ export default class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            emailAddress: "simone.waechter@students.fhnw.ch",
-            rawPassword: "123456aA"
+            emailAddress: "",
+            rawPassword: ""
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this)

@@ -27,7 +27,6 @@ export default class Layout extends Component {
                     <SideMenu>
                         <NavigationItem href='/my-allocation' title='My Allocations'/>
                         <NavigationItem href='/project' title='Projects'/>
-                        <NavigationItem href='/todo' title='Todo`s'/>
                         <NavigationItem href='/admin/employees' title='Manage Employees'/>
                         <NavigationItem href='/admin/contracts' title='Manage Contracts'/>
                         <NavigationItem href='/admin/projects' title='Manage Projects'/>

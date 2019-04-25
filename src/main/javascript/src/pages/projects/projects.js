@@ -1,5 +1,4 @@
 import { h, Component } from 'preact';
-import TodoItem from '../todo/todo-item';
 
 import reducers from '../../reducers';
 import * as actions from '../../actions';
