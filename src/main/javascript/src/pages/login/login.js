@@ -54,7 +54,6 @@ export default class LoginForm extends Component {
                             onChange={this.handleInputChange}
                             placeholder="Enter email"
                             autocomplete="email" />
-                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
