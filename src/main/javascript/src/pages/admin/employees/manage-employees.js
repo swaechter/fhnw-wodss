@@ -12,18 +12,13 @@ export default class ManageEmployeesPage extends Component {
 
     constructor(props) {
         super(props);
+    }
+
+    componentDidMount() {
         this.props.fetchAllAdminEmployees();
     }
 
-    createEmployee() {
-        //alert("New employee triggered:" + JSON.stringify(data))
-    }
-
-    updateEmployee(data) {
-        //alert("Employee updated:" + JSON.stringify(data))
-    }
-
-    deleteEmployee(id) {
+    anonymizeEmployee(id) {
         this.props.deleteAdminEmployee(id);
     }
 
@@ -57,14 +52,12 @@ export default class ManageEmployeesPage extends Component {
                                 <td>{employee.active + ''}</td>
                                 <td>{employee.role}</td>
                                 <td>
-                                    <button className="btn btn-primary" onClick={() => {
-                                        this.updateEmployee(employee)
-                                    }}>Update
-                                    </button>
+                                    <Link className="btn btn-primary" href={`/admin/employees/update/${employee.id}`}
+                                          role="button">Update</Link>
                                     &nbsp;&nbsp;&nbsp;
                                     <button className="btn btn-danger" onClick={() => {
-                                        this.deleteEmployee(employee.id)
-                                    }}>Delete
+                                        this.anonymizeEmployee(employee.id)
+                                    }}>Anonymize
                                     </button>
                                 </td>
                             </tr>
@@ -72,7 +65,7 @@ export default class ManageEmployeesPage extends Component {
                         </tbody>
                     </table>
                 </RoleLock>
-                < /Layout>
-                    );
-                    }
-                    }
+            </Layout>
+        );
+    }
+}

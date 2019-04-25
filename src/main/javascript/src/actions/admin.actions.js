@@ -1,4 +1,4 @@
-import {doDelete, doGet, doPost, getUrl} from "../services/api.service";
+import {doDelete, doGet, doPost, doPut, getUrl} from "../services/api.service";
 import {getCurrentToken} from "../services/auth.service";
 import {clearError, setError} from "./error.actions";
 
@@ -34,9 +34,9 @@ const fetchSingleAdminEmployeesSuccess = (employee) => ({
     type: FETCH_SINGLE_ADMIN_EMPLOYEES_SUCCESS,
     employee
 });
-const updateAdminEmployeesSuccess = (employees) => ({
+const updateAdminEmployeesSuccess = (employee) => ({
     type: UPDATE_ADMIN_EMPLOYEES_SUCCESS,
-    employees
+    employee
 });
 
 const deleteAdminEmployeesSuccess = (id) => ({
@@ -59,7 +59,7 @@ export function createAdminEmployee(employee, password, role) {
             let json = await doPost(url, employee, token);
             dispatch(clearError());
             dispatch(createAdminEmployeesSuccess(json));
-            dispatch(fetchAllAdminEmployees())
+            dispatch(fetchAllAdminEmployees());
         } catch (error) {
             dispatch(setError(error.message));
         }
@@ -73,13 +73,26 @@ export function fetchAllAdminEmployees() {
             let token = await getCurrentToken(dispatch);
             let json = await doGet(url, token);
             dispatch(clearError());
-            dispatch(fetchAllAdminEmployeesSuccess(json))
+            dispatch(fetchAllAdminEmployeesSuccess(json));
         } catch (error) {
-            dispatch(setError(error.message))
+            dispatch(setError(error.message));
         }
     }
 }
 
+export function updateAdminEmployee(id, employee) {
+    return async (dispatch) => {
+        try {
+            let url = getUrl("/api/employee/" + id);
+            let token = await getCurrentToken(dispatch);
+            let json = await doPut(url, employee, token);
+            dispatch(clearError());
+            dispatch(updateAdminEmployeesSuccess(json));
+        } catch (error) {
+            dispatch(setError(error.message));
+        }
+    }
+}
 
 export function deleteAdminEmployee(id) {
     return async (dispatch) => {
@@ -88,10 +101,10 @@ export function deleteAdminEmployee(id) {
             let token = await getCurrentToken(dispatch);
             await doDelete(url, token);
             dispatch(clearError());
-            dispatch(deleteAdminEmployeesSuccess(id))
-            dispatch(fetchAllAdminEmployees())
+            dispatch(deleteAdminEmployeesSuccess(id));
+            dispatch(fetchAllAdminEmployees());
         } catch (error) {
-            dispatch(setError(error.message))
+            dispatch(setError(error.message));
         }
     }
 }
