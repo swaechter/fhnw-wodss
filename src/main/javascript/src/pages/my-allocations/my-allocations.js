@@ -6,7 +6,7 @@ import { connect } from 'preact-redux';
 import Layout from '../../components/layout';
 import DayContainer from './day-container';
 import { filterAllocations } from '../../utils/filters';
-import { getUTCMonday, getDateRange, removeTimeUTC, checkDateRangeOverlap, addDays } from '../../utils/date';
+import { getUTCMonday, getBusinessDays, removeTimeUTC, checkDateRangeOverlap, addDays } from '../../utils/date';
 import { getObjectColor } from '../../utils/colors';
 import FromToDatePicker from '../../components/from-to-datepicker';
 
@@ -33,7 +33,7 @@ export default class MyAllocationsPage extends Component {
     }
 
     updateDisplayElements = (allocations, projects, contracts) => {
-        let dates = getDateRange(this.state.from, this.state.to)
+        let dates = getBusinessDays(this.state.from, this.state.to)
         let displayAllocations = this.createOutputDataStructure(dates, allocations, projects, contracts)
         return displayAllocations
     }

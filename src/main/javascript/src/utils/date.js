@@ -19,15 +19,22 @@ export const getUTCMonday = (date) => {
     return date;
 }
 
-export const getDateRange = (startDate, stopDate) => {
+export const getBusinessDays = (startDate, stopDate) => {
     stopDate = removeTimeUTC(stopDate)
     let dateArray = new Array();
     let currentDate = removeTimeUTC(startDate);
     while (currentDate <= stopDate) {
-        dateArray.push(new Date(Date.UTC(currentDate.getUTCFullYear(),currentDate.getUTCMonth(), currentDate.getUTCDate())))
+        let date = new Date(Date.UTC(currentDate.getUTCFullYear(),currentDate.getUTCMonth(), currentDate.getUTCDate()))
+        if(isBusinessDay(date)){
+            dateArray.push(date)
+        }
         currentDate = new Date(currentDate.getTime() + 86400000) // + 1 day in ms
     }
     return dateArray;
+}
+
+function isBusinessDay(date){
+    return !(date.getDay() == 0 || date.getDay() == 6) 
 }
 
 export const addDays = (date, days) => {
