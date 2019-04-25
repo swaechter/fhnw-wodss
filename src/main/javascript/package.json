@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
+    "start": "if-env NODE_ENV=production && npm run -s watch || npm run -s dev",
     "build": "preact build --clean --no-prerender --dest ../resources/public",
     "watch": "npm run build && preact watch",
     "dev": "preact watch",
