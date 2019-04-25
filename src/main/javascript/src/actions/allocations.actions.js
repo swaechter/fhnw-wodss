@@ -1,5 +1,6 @@
 import { doGet, getUrl } from "../services/api.service";
 import { getCurrentToken } from "../services/auth.service";
+import { dateToString } from "../utils/date";
 
 /*
  * action types
@@ -37,12 +38,14 @@ const fetchAllocationsFail = (error) => ({
 /**
  * async function calls
  */
-export function fetchAllocationsAsync(employeeId=null,projectId=null) {
+export function fetchAllocationsAsync(employeeId=null,projectId=null,fromDate=null,toDate=null) {
 	return async (dispatch) => {
 		dispatch(fetchAllocationsBegin());
 		let url = getUrl("/api/allocation");
 		if (employeeId) url.searchParams.append('employeeId',employeeId)
 		if (projectId) url.searchParams.append('projectId',projectId)
+		if (fromDate) url.searchParams.append('fromDate',dateToString(fromDate))
+		if (toDate) url.searchParams.append('toDate',dateToString(toDate))
 		try {
 			let token = await getCurrentToken(dispatch);
 			let json = await doGet(url, token)

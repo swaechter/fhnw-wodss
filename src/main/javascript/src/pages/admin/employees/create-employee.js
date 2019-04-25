@@ -5,58 +5,49 @@ import {connect} from "preact-redux";
 import reducers from "../../../reducers";
 import * as actions from "../../../actions";
 import Error from "../../../components/error";
+import {Link} from "preact-router/match";
 
 @connect(reducers, actions)
 export default class CreateEmployeePage extends Component {
 
     constructor(props) {
         super(props);
-        this.clearValues();
-    };
 
-    componentDidMount() {
-        this.props.clearError();
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.clearFields();
     }
 
-    clearValues() {
-        this._emailAddress = '';
-        this._firstName = '';
-        this._lastName = '';
-        this._password = '';
-        this._role = 'ADMINISTRATOR';
+    clearFields() {
+        this.setState({
+            emailAddress: '',
+            firstName: '',
+            lastName: '',
+            password: '',
+            role: 'ADMINISTRATOR'
+        });
     }
 
-    handleChange = (event) => {
+    handleChange(event) {
+        const id = event.target.id;
         const value = event.target.value;
-        switch (event.target.id) {
-            case "emailAddress":
-                this._emailAddress = value;
-                break;
-            case "firstName":
-                this._firstName = value;
-                break;
-            case "lastName":
-                this._lastName = value;
-                break;
-            case "password":
-                this._password = value;
-                break;
-            case "role":
-                this._role = value;
-                break;
-        }
-    };
+        this.setState({
+            [id]: value
+        });
+    }
 
-    createEmployee() {
-        const employee = {
-            'emailAddress': this._emailAddress,
-            'firstName': this._firstName,
-            'lastName': this._lastName,
-            'active': true
+    handleSubmit(event) {
+        let role = this.state.role;
+        let password = this.state.password;
+        let employee = {
+            'emailAddress': this.state.emailAddress,
+            'firstName': this.state.firstName,
+            'lastName': this.state.lastName,
+            'active': false
         };
-        const password = this._password;
-        const role1 = this._role;
-        this.props.createAdminEmployee(employee, password, role1);
+        this.props.createAdminEmployee(employee, password, role);
+        this.clearFields();
+        event.preventDefault();
     }
 
     render() {
@@ -68,33 +59,39 @@ export default class CreateEmployeePage extends Component {
                             <div className="form-group">
                                 <label htmlFor="emailAddress">Email address</label>
                                 <input className="form-control" id="emailAddress" type="email" placeholder="Enter email"
-                                       required minLength="1" maxLength="120" onChange={this.handleChange}/>
+                                       required minLength="1" maxLength="120"
+                                       value={this.state.emailAddress} onChange={this.handleChange}/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="firstName">First name</label>
                                 <input className="form-control" id="firstName" type="text"
                                        placeholder="Enter first name"
-                                       required minLength="1" maxLength="50" onChange={this.handleChange}/>
+                                       required minLength="1" maxLength="50"
+                                       value={this.state.firstName} onChange={this.handleChange}/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="lastName">Last name</label>
                                 <input className="form-control" id="lastName" type="text" placeholder="Enter last name"
-                                       required minLength="1" maxLength="50" onChange={this.handleChange}/>
+                                       required minLength="1" maxLength="50"
+                                       value={this.state.lastName} onChange={this.handleChange}/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Password</label>
                                 <input className="form-control" id="password" type="password" placeholder="Password"
-                                       required onChange={this.handleChange}/>
+                                       required
+                                       value={this.state.password} onChange={this.handleChange}/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="role">Role</label>
-                                <select className="form-control" id="role" required onChange={this.handleChange}>
+                                <select className="form-control" id="role" required value={this.state.role}
+                                        onChange={this.handleChange}>
                                     <option value="ADMINISTRATOR">Administrator</option>
                                     <option value="PROJECTMANAGER">Project Manager</option>
                                     <option value="DEVELOPER">Developer</option>
                                 </select>
                             </div>
-                            <button onClick={() => this.createEmployee()} type="submit"
+                            <Link className="btn btn-primary" href="/admin/employees" role="button">Back to overview</Link>
+                            <button onClick={this.handleSubmit} type="submit"
                                     className="btn btn-primary float-right">Submit
                             </button>
                         </form>

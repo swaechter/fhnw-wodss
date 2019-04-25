@@ -43,9 +43,8 @@ export default class ManageEmployeesPage extends Component {
                             <th scope="col">
                                 Actions
                                 &nbsp;&nbsp;&nbsp;
-                                <button>
-                                    <Link href="/admin/employees/create" role="button">Create</Link>
-                                </button>
+                                <Link className="btn btn-success" href="/admin/employees/create"
+                                      role="button">Create</Link>
                             </th>
                         </tr>
                         </thead>
@@ -58,12 +57,12 @@ export default class ManageEmployeesPage extends Component {
                                 <td>{employee.active + ''}</td>
                                 <td>{employee.role}</td>
                                 <td>
-                                    <button onClick={() => {
+                                    <button className="btn btn-primary" onClick={() => {
                                         this.updateEmployee(employee)
                                     }}>Update
                                     </button>
                                     &nbsp;&nbsp;&nbsp;
-                                    <button onClick={() => {
+                                    <button className="btn btn-danger" onClick={() => {
                                         this.deleteEmployee(employee.id)
                                     }}>Delete
                                     </button>
