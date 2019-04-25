@@ -4,6 +4,7 @@ import RoleLock from "../../../components/role-lock";
 import {connect} from "preact-redux";
 import reducers from "../../../reducers";
 import * as actions from "../../../actions";
+import Error from "../../../components/error";
 
 @connect(reducers, actions)
 export default class CreateEmployeePage extends Component {
@@ -14,7 +15,7 @@ export default class CreateEmployeePage extends Component {
     };
 
     componentDidMount() {
-        this.props.clearAdminError();
+        this.props.clearError();
     }
 
     clearValues() {
@@ -59,49 +60,45 @@ export default class CreateEmployeePage extends Component {
     }
 
     render() {
-        let error = '';
-        if (this.props.admin_error.length > 0) {
-            error = <div className="alert alert-danger" role="alert">
-                {this.props.admin_error}
-            </div>
-        }
         return (
             <Layout>
                 <RoleLock allowedRoles={['Administrator']}>
-                    {error}
-                    <form>
-                        <div className="form-group">
-                            <label htmlFor="emailAddress">Email address</label>
-                            <input className="form-control" id="emailAddress" type="email" placeholder="Enter email"
-                                   required minLength="1" maxLength="120" onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="firstName">First name</label>
-                            <input className="form-control" id="firstName" type="text" placeholder="Enter first name"
-                                   required minLength="1" maxLength="50" onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="lastName">Last name</label>
-                            <input className="form-control" id="lastName" type="text" placeholder="Enter last name"
-                                   required minLength="1" maxLength="50" onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <input className="form-control" id="password" type="password" placeholder="Password"
-                                   required onChange={this.handleChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="role">Role</label>
-                            <select className="form-control" id="role" required onChange={this.handleChange}>
-                                <option value="ADMINISTRATOR">Administrator</option>
-                                <option value="PROJECTMANAGER">Project Manager</option>
-                                <option value="DEVELOPER">Developer</option>
-                            </select>
-                        </div>
-                        <button onClick={() => this.createEmployee()} type="submit"
-                                className="btn btn-primary float-right">Submit
-                        </button>
-                    </form>
+                    <Error>
+                        <form>
+                            <div className="form-group">
+                                <label htmlFor="emailAddress">Email address</label>
+                                <input className="form-control" id="emailAddress" type="email" placeholder="Enter email"
+                                       required minLength="1" maxLength="120" onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="firstName">First name</label>
+                                <input className="form-control" id="firstName" type="text"
+                                       placeholder="Enter first name"
+                                       required minLength="1" maxLength="50" onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="lastName">Last name</label>
+                                <input className="form-control" id="lastName" type="text" placeholder="Enter last name"
+                                       required minLength="1" maxLength="50" onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="password">Password</label>
+                                <input className="form-control" id="password" type="password" placeholder="Password"
+                                       required onChange={this.handleChange}/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="role">Role</label>
+                                <select className="form-control" id="role" required onChange={this.handleChange}>
+                                    <option value="ADMINISTRATOR">Administrator</option>
+                                    <option value="PROJECTMANAGER">Project Manager</option>
+                                    <option value="DEVELOPER">Developer</option>
+                                </select>
+                            </div>
+                            <button onClick={() => this.createEmployee()} type="submit"
+                                    className="btn btn-primary float-right">Submit
+                            </button>
+                        </form>
+                    </Error>
                 </RoleLock>
             </Layout>
         );

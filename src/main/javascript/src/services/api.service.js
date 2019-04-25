@@ -1,4 +1,4 @@
-import { apiServerUrl } from "./config";
+import {apiServerUrl} from "./config";
 
 function getHeader(token) {
     let header = new Headers({
@@ -12,54 +12,58 @@ function getHeader(token) {
     return header;
 }
 
-function handleErrors(response) {
+async function handleErrors(response) {
     if (!response.ok) {
-        // TODO Philipp: Read proper Spring error message
-        throw Error("Internal errror");//response.statusText);
+        let errorBody = await response.json();
+        if (errorBody.message !== undefined && errorBody.message.length > 0) {
+            throw Error(errorBody.message);
+        } else {
+            throw Error("Unknown error");
+        }
     }
     return response;
 }
 
-export function getUrl(url){
+export function getUrl(url) {
     return new URL(url, apiServerUrl)
 }
 
-export async function doGet(url, token=null) {
+export async function doGet(url, token = null) {
     let headers = getHeader(token)
     let json = fetch(new URL(url, apiServerUrl), {
         method: 'GET',
         headers: headers,
     }).then(handleErrors)
-    .then(res => res.json())
+        .then(res => res.json())
     return json;
 }
 
 
-export async function doPost(url, payload, token=null) {
+export async function doPost(url, payload, token = null) {
     let headers = getHeader(token)
     let json = fetch(new URL(url, apiServerUrl), {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(payload)
     }).then(handleErrors)
-    .then(res => res.json())
+        .then(res => res.json())
     return json;
 }
 
 
-export async function doPut(url, payload, token=null) {
+export async function doPut(url, payload, token = null) {
     let headers = getHeader(token)
     let json = fetch(new URL(url, apiServerUrl), {
         method: 'PUT',
         headers: headers,
         body: JSON.stringify(payload)
     }).then(handleErrors)
-    .then(res => res.json())
+        .then(res => res.json())
     return json;
 }
 
 
-export async function doDelete(url, token=null) {
+export async function doDelete(url, token = null) {
     let headers = getHeader(token)
     return fetch(new URL(url, apiServerUrl), {
         method: 'DELETE',
