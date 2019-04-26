@@ -57,6 +57,7 @@ export default class CreateEmployeePage extends Component {
             <Layout>
                 <RoleLock allowedRoles={['Administrator']}>
                     <Error>
+                        <h2>Create Employee</h2>
                         <form>
                             <div className="form-group">
                                 <label htmlFor="emailAddress">Email address</label>
@@ -92,7 +93,7 @@ export default class CreateEmployeePage extends Component {
                                     <option value="DEVELOPER">Developer</option>
                                 </select>
                             </div>
-                            <Link className="btn btn-primary" href="/admin/employees" role="button">Back to overview</Link>
+                            <Link href="/admin/employees" role="button">Back to overview</Link>
                             <button onClick={this.handleSubmit} type="submit"
                                     className="btn btn-primary float-right">Create
                             </button>
