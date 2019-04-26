@@ -9,6 +9,7 @@ import { dateToString } from "../utils/date";
 export const FETCH_ALLOCATIONS_BEGIN = 'FETCH_ALLOCATIONS_BEGIN';
 export const FETCH_ALLOCATIONS_SUCCESS = 'FETCH_ALLOCATIONS_SUCCESS';
 export const FETCH_ALLOCATIONS_FAIL = 'FETCH_ALLOCATIONS_FAIL';
+export const CLEAR_ALLOCATIONS = 'CLEAR_ALLOCATION';
 
 /*
  * other constants
@@ -21,6 +22,10 @@ export const FETCH_ALLOCATIONS_FAIL = 'FETCH_ALLOCATIONS_FAIL';
  */
 const fetchAllocationsBegin = () => ({
 	type: FETCH_ALLOCATIONS_BEGIN
+})
+
+export const clearAllocations = () => ({
+	type: CLEAR_ALLOCATIONS
 })
 
 

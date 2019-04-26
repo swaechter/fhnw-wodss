@@ -1,4 +1,4 @@
-import { Component } from "preact";
+import { h, Component } from 'preact';
 import { connect } from "preact-redux";
 import Layout from "../../components/layout";
 import reducers from "../../reducers";
@@ -6,7 +6,7 @@ import * as actions from "../../actions";
 
 
 @connect(reducers, actions)
-class ProjectDetailPage extends Component {
+export default class ProjectAllocationPage extends Component {
 
   render() {
     return (
@@ -17,5 +17,3 @@ class ProjectDetailPage extends Component {
     );
   }
 }
-
-export default ProjectDetailPage;
