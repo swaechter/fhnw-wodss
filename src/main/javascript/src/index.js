@@ -9,18 +9,18 @@ import { createLogger } from 'redux-logger'
 
 
 const logger = createLogger({
-	// ...options
+    // ...options
 });
 
 const store = createStore(
-	reducers,
-	applyMiddleware(thunk, logger)
+    reducers,
+    applyMiddleware(thunk, logger)
 );
 
 export default () => (
-	<div id="app">
-		<Provider store={store}>
-			<App />
-		</Provider>
-	</div>
+    <div id="app">
+        <Provider store={store}>
+            <App />
+        </Provider>
+    </div>
 );

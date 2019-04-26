@@ -8,13 +8,13 @@ import Redirect from '../components/redirect';
 import ProjectPage from './projects/projects';
 import AuthLock from '../components/auth-lock';
 import MyAllocationsPage from './my-allocations/my-allocations';
-import ManageEmployeesPage from "./admin/employees/manage-employees";
-import CreateEmployeePage from "./admin/employees/create-employee";
-import UpdateEmployeePage from "./admin/employees/update-employee";
-import ManageContractsPage from "./admin/contracts/manage-contracts";
-import CreateContractPage from "./admin/contracts/create-contract";
-import ManageProjectsPage from "./admin/projects/manage-projects";
-import CreateProjectPage from "./admin/projects/create-projects";
+import ManageEmployeesPage from './admin/employees/manage-employees';
+import CreateEmployeePage from './admin/employees/create-employee';
+import UpdateEmployeePage from './admin/employees/update-employee';
+import ContractsAdminPage from './admin/contracts/contracts-admin';
+import ProjectsAdminPage from './admin/projects/projects-admin';
+import ProjectManagePage from './projects/project-manage';
+import ProjectAllocationPage from './projects/project-allocation';
 
 export default class App extends Component {
 
@@ -24,14 +24,14 @@ export default class App extends Component {
                 <Router history={createHashHistory()}>
                     <MyAllocationsPage path='/my-allocation'/>
                     <ProjectPage path='/project'/>
+                    <ProjectManagePage path='/project/manage/:id'/>
+                    <ProjectAllocationPage path='/project/allocation/:id'/>
                     <ManageEmployeesPage path='/admin/employees'/>
                     <CreateEmployeePage path='/admin/employees/create'/>
                     <UpdateEmployeePage path='/admin/employees/update/:id'/>
-                    <ManageContractsPage path='/admin/contracts'/>
-                    <CreateContractPage path='/admin/contracts/create'/>
-                    <ManageProjectsPage path='/admin/projects'/>
-                    <CreateProjectPage path='/admin/projects/create'/>
-                    <Redirect default to="/my-allocation"/>
+                    <ContractsAdminPage path='/admin/contracts'/>
+                    <ProjectsAdminPage path='/admin/projects'/>
+                    <Redirect default to='/my-allocation'/>
                 </Router>
             </AuthLock>
         );

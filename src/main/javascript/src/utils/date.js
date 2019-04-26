@@ -1,10 +1,7 @@
 
 export const removeTimeUTC = (date) => {
-    let result = new Date(date)
-    result.setUTCHours(0)
-    result.setUTCMinutes(0)
-    result.setUTCSeconds(0)
-    result.setUTCMilliseconds(0)
+    let result = new Date(date);
+    result.setUTCHours(0, 0, 0, 0);
     return result
 }
 

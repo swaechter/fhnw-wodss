@@ -1,22 +1,56 @@
-import { h, Component } from 'preact';
+import {h, Component} from "preact";
 
-import reducers from '../../reducers';
-import * as actions from '../../actions';
-import { connect } from 'preact-redux';
-import Layout from '../../components/layout';
+import reducers from "../../reducers";
+import * as actions from "../../actions";
+import {connect} from "preact-redux";
+import Layout from "../../components/layout";
+import {Link} from "preact-router/match";
+import Error from "../../components/error";
 
 @connect(reducers, actions)
 export default class ProjectPage extends Component {
 
+    componentDidMount() {
+        this.props.clearError();
+        this.props.fetchProjectsAsync();
+    }
 
-    render() {
+    render(props, state) {
         return (
             <Layout>
-                <h2>ProjectPage</h2>
-                <div class="jumbotron" id="app">
-                    <button onClick={this.props.fetchProjectsAsync}>Lade Projekte</button>
-                    <p>{JSON.stringify(this.props.projects)}</p>
-                </div>
+                <h2>Projects</h2>
+                <Error>
+                    <table className="table ">
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">End Date</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {props.projects.map(project => (
+                            <tr key={project.id}>
+                                <td>{project.name}</td>
+                                <td>{project.startDate}</td>
+                                <td>{project.endDate}</td>
+                                <td>
+                                    <Link
+                                        activeClassName="btn btn-primary"
+                                        href={`/project/manage/${
+                                            project.id
+                                            }`}
+                                        role="button"
+                                    >
+                                        Manage
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </Error>
             </Layout>
         );
     }
