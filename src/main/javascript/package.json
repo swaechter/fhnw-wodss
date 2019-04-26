@@ -1,59 +1,43 @@
 {
-  "private": true,
-  "name": "projekt-planung-wodss",
-  "version": "0.0.1",
-  "license": "MIT",
-  "scripts": {
-    "start": "if-env NODE_ENV=production && npm run -s watch || npm run -s dev",
-    "build": "preact build --clean --no-prerender --dest ../resources/public",
-    "watch": "npm run build && preact watch",
-    "dev": "preact watch",
-    "lint": "eslint **/*.{js, jsx} --quiet",
-    "format": "prettier --write \"src/**/*.{js,jsx}\""
-  },
-  "eslintConfig": {
-    "extends": "eslint-config-synacor"
-  },
-  "eslintIgnore": [
-    "build/*"
-  ],
-  "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^10.0.1",
-    "babel-plugin-fast-async": "^6.1.2",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "eslint": "^4.5.0",
-    "eslint-config-prettier": "^4.1.0",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-config-standard-preact": "^1.1.6",
-    "eslint-config-synacor": "^1.1.0",
-    "eslint-plugin-import": "^2.17.2",
-    "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-node": "^8.0.1",
-    "eslint-plugin-promise": "^4.1.1",
-    "eslint-plugin-react": "^7.12.4",
-    "eslint-plugin-standard": "^4.0.0",
-    "fast-async": "^6.3.8",
-    "if-env": "^1.0.0",
-    "preact-cli": "^3.0.0-next.14",
-    "preact-render-to-string": "^4.1.0",
-    "prettier": "^1.17.0",
-    "webpack": "^4.30.0"
-  },
-  "dependencies": {
-    "bootstrap": "^4.3.1",
-    "flatpickr": "^4.5.7",
-    "history": "^4.9.0",
-    "jquery": "^3.3.1",
-    "jwt-decode": "^2.2.0",
-    "popper.js": "^1.14.7",
-    "preact": "^8.2.1",
-    "preact-redux": "^2.0.3",
-    "preact-router": "^2.5.5",
-    "redux": "^3.6.0",
-    "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
-  }
+    "private": true,
+    "name": "projekt-planung-wodss",
+    "version": "0.0.1",
+    "license": "MIT",
+    "scripts": {
+        "start": "if-env NODE_ENV=production && npm run -s watch || npm run -s dev",
+        "build": "preact build --clean --no-prerender --dest ../resources/public",
+        "watch": "npm run build && preact watch",
+        "dev": "preact watch",
+        "lint": "eslint src"
+    },
+    "eslintConfig": {
+        "extends": "eslint-config-synacor"
+    },
+    "eslintIgnore": [
+        "build/*"
+    ],
+    "devDependencies": {
+        "babel-plugin-fast-async": "^6.1.2",
+        "eslint": "^4.5.0",
+        "eslint-config-synacor": "^1.1.0",
+        "fast-async": "^6.3.8",
+        "if-env": "^1.0.0",
+        "preact-cli": "^3.0.0-next.14",
+        "preact-render-to-string": "^4.1.0",
+        "webpack": "^4.30.0"
+    },
+    "dependencies": {
+        "bootstrap": "^4.3.1",
+        "flatpickr": "^4.5.7",
+        "history": "^4.9.0",
+        "jquery": "^3.3.1",
+        "jwt-decode": "^2.2.0",
+        "popper.js": "^1.14.7",
+        "preact": "^8.2.1",
+        "preact-redux": "^2.0.3",
+        "preact-router": "^2.5.5",
+        "redux": "^3.6.0",
+        "redux-logger": "^3.0.6",
+        "redux-thunk": "^2.3.0"
+    }
 }
