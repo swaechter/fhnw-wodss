@@ -1,7 +1,7 @@
 import {
 	FETCH_PROJECTS_BEGIN,
 	FETCH_PROJECTS_SUCCESS,
-	FETCH_PROJECTS_FAIL, FETCH_PROJECTS_AND_ITS_ALLOCATION_BEGIN
+	FETCH_PROJECTS_FAIL
 } from "../actions";
 
 const initialState = () => {
@@ -19,8 +19,6 @@ export function projects(state = initialState(), action) {
 		default:
 			return state;
 	}
-
-	{project, allocations}
 }
 
 
