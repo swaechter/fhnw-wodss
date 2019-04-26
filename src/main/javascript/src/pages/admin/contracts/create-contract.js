@@ -40,7 +40,7 @@ export default class CreateContractPage extends Component {
         });
     }
 
-    handleSubmit(event) {
+    handleSubmit() {
         this.props.createAdminContract({
             'startDate': this.state.startDate,
             'endDate': this.state.endDate,
@@ -48,7 +48,6 @@ export default class CreateContractPage extends Component {
             'employeeId': this.state.employeeId
         });
         this.clearFields();
-        event.preventDefault();
     }
 
     render() {
@@ -57,7 +56,7 @@ export default class CreateContractPage extends Component {
                 <RoleLock allowedRoles={['Administrator']}>
                     <Error>
                         <h2>Create Contract</h2>
-                        <form>
+                        <form onSubmit={event => this.handleSubmit(event)}>
                             <div className="form-group">
                                 <label htmlFor="startDate">Start Date</label>
                                 <input className="form-control" id="startDate" type="date"
@@ -89,8 +88,7 @@ export default class CreateContractPage extends Component {
                                 </select>
                             </div>
                             <Link href="/admin/contracts" role="button">Back to overview</Link>
-                            <button onClick={this.handleSubmit} type="submit"
-                                    className="btn btn-primary float-right">Create
+                            <button type="submit" className="btn btn-primary float-right">Create
                             </button>
                         </form>
                     </Error>

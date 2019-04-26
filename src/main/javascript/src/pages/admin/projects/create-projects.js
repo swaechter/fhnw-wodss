@@ -40,7 +40,7 @@ export default class CreateProjectPage extends Component {
         });
     }
 
-    handleSubmit(event) {
+    handleSubmit() {
         this.props.createAdminProject({
             'name': this.state.name,
             'ftePercentage': this.state.ftePercentage * 100,
@@ -49,7 +49,6 @@ export default class CreateProjectPage extends Component {
             'projectManagerId': this.state.projectManagerId
         });
         this.clearFields();
-        event.preventDefault();
     }
 
     render() {
@@ -58,7 +57,7 @@ export default class CreateProjectPage extends Component {
                 <RoleLock allowedRoles={['Administrator']}>
                     <Error>
                         <h2>Create Project</h2>
-                        <form>
+                        <form onSubmit={event => this.handleSubmit(event)}>
                             <div className="form-group">
                                 <label htmlFor="name">Name</label>
                                 <input className="form-control" id="name" type="text" placeholder="Enter project name"
@@ -69,7 +68,8 @@ export default class CreateProjectPage extends Component {
                                 <label htmlFor="ftePercentage">FTE</label>
                                 <input className="form-control" id="ftePercentage" type="number"
                                        placeholder="Enter FTE"
-                                       required value={this.state.ftePercentage} onChange={this.handleChange}/>
+                                       required min="0" max="9223372036854775"
+                                       value={this.state.ftePercentage} onChange={this.handleChange}/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="startDate">Start Date</label>
@@ -94,8 +94,7 @@ export default class CreateProjectPage extends Component {
                                 </select>
                             </div>
                             <Link href="/admin/projects" role="button">Back to overview</Link>
-                            <button onClick={this.handleSubmit} type="submit"
-                                    className="btn btn-primary float-right">Create
+                            <button className="btn btn-primary float-right">Create
                             </button>
                         </form>
                     </Error>

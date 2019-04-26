@@ -27,6 +27,7 @@ export default class UpdateEmployeePage extends Component {
     }
 
     async componentDidMount() {
+        await this.props.clearError();
         await this.props.fetchAdminEmployees();
         const employee = this.props.admin_employees.find(item => item.id === this.props.id);
         if (employee != null) {
@@ -47,7 +48,7 @@ export default class UpdateEmployeePage extends Component {
         });
     }
 
-    handleSubmit(event) {
+    handleSubmit() {
         this.props.updateAdminEmployee(this.props.id, {
             'emailAddress': this.state.emailAddress,
             'firstName': this.state.firstName,
@@ -74,7 +75,7 @@ export default class UpdateEmployeePage extends Component {
                     <RoleLock allowedRoles={['Administrator']}>
                         <Error>
                             <h2>Update Employee</h2>
-                            <form>
+                            <form onSubmit={event => this.handleSubmit(event)}>
                                 <div className="form-group">
                                     <label htmlFor="emailAddress">Email address</label>
                                     <input className="form-control" id="emailAddress" type="email"
@@ -104,10 +105,8 @@ export default class UpdateEmployeePage extends Component {
                                         <option value="false">Disabled</option>
                                     </select>
                                 </div>
-                                <Link href="/admin/employees" role="button">Back to
-                                    overview</Link>
-                                <button onClick={this.handleSubmit} type="submit"
-                                        className="btn btn-primary float-right">Update
+                                <Link href="/admin/employees" role="button">Back to overview</Link>
+                                <button className="btn btn-primary float-right">Update
                                 </button>
                             </form>
                         </Error>
