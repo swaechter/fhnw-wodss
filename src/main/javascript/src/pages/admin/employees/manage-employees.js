@@ -15,7 +15,7 @@ export default class ManageEmployeesPage extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchAllAdminEmployees();
+        this.props.fetchAdminEmployees();
     }
 
     anonymizeEmployee(id) {

@@ -7,8 +7,7 @@ import {clearError, setError} from "./error.actions";
  */
 
 export const CREATE_ADMIN_EMPLOYEES_SUCCESS = 'CREATE_ADMIN_EMPLOYEES_SUCCESS';
-export const FETCH_ALL_ADMIN_EMPLOYEES_SUCCESS = 'FETCH_ALL_ADMIN_EMPLOYEES_SUCCESS';
-export const FETCH_SINGLE_ADMIN_EMPLOYEES_SUCCESS = 'FETCH_SINGLE_ADMIN_EMPLOYEES_SUCCESS';
+export const FETCH_ADMIN_EMPLOYEES_SUCCESS = 'FETCH_ADMIN_EMPLOYEES_SUCCESS';
 export const UPDATE_ADMIN_EMPLOYEES_SUCCESS = 'UPDATE_ADMIN_EMPLOYEES_SUCCESS';
 export const DELETE_ADMIN_EMPLOYEES_SUCCESS = 'DELETE_ADMIN_EMPLOYEES_SUCCESS';
 /*
@@ -25,15 +24,11 @@ const createAdminEmployeesSuccess = (employee) => ({
     employee
 });
 
-const fetchAllAdminEmployeesSuccess = (employees) => ({
-    type: FETCH_ALL_ADMIN_EMPLOYEES_SUCCESS,
+const fetchAdminEmployeesSuccess = (employees) => ({
+    type: FETCH_ADMIN_EMPLOYEES_SUCCESS,
     employees
 });
 
-const fetchSingleAdminEmployeesSuccess = (employee) => ({
-    type: FETCH_SINGLE_ADMIN_EMPLOYEES_SUCCESS,
-    employee
-});
 const updateAdminEmployeesSuccess = (employee) => ({
     type: UPDATE_ADMIN_EMPLOYEES_SUCCESS,
     employee
@@ -59,21 +54,21 @@ export function createAdminEmployee(employee, password, role) {
             let json = await doPost(url, employee, token);
             dispatch(clearError());
             dispatch(createAdminEmployeesSuccess(json));
-            dispatch(fetchAllAdminEmployees());
+            dispatch(fetchAdminEmployees());
         } catch (error) {
             dispatch(setError(error.message));
         }
     }
 }
 
-export function fetchAllAdminEmployees() {
+export function fetchAdminEmployees() {
     return async (dispatch) => {
         try {
             let url = getUrl("/api/employee");
             let token = await getCurrentToken(dispatch);
             let json = await doGet(url, token);
             dispatch(clearError());
-            dispatch(fetchAllAdminEmployeesSuccess(json));
+            dispatch(fetchAdminEmployeesSuccess(json));
         } catch (error) {
             dispatch(setError(error.message));
         }
@@ -102,7 +97,7 @@ export function deleteAdminEmployee(id) {
             await doDelete(url, token);
             dispatch(clearError());
             dispatch(deleteAdminEmployeesSuccess(id));
-            dispatch(fetchAllAdminEmployees());
+            dispatch(fetchAdminEmployees());
         } catch (error) {
             dispatch(setError(error.message));
         }
