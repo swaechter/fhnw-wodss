@@ -6,6 +6,7 @@ import reducers from "../../../reducers";
 import * as actions from "../../../actions";
 import Error from "../../../components/error";
 import {Link} from "preact-router/match";
+import CustomError from "../../../components/error-custom";
 
 @connect(reducers, actions)
 export default class UpdateEmployeePage extends Component {
@@ -25,9 +26,8 @@ export default class UpdateEmployeePage extends Component {
         };
     }
 
-
     async componentDidMount() {
-        await this.props.fetchAllAdminEmployees();
+        await this.props.fetchAdminEmployees();
         const employee = this.props.admin_employees.find(item => item.id === this.props.id);
         if (employee != null) {
             this.setState({
@@ -48,27 +48,32 @@ export default class UpdateEmployeePage extends Component {
     }
 
     handleSubmit(event) {
-        event.preventDefault();
         this.props.updateAdminEmployee(this.props.id, {
             'emailAddress': this.state.emailAddress,
             'firstName': this.state.firstName,
             'lastName': this.state.lastName,
             'active': this.state.active
         });
-        this.setState({
-            emailAddress: '',
-            firstName: '',
-            lastName: '',
-            active: true
-        });
     }
 
     render() {
-        if (this.state.emailAddress != null) {
+        const employee = this.props.admin_employees.find(item => item.id === this.props.id);
+        if (this.props.error !== 'undefined' && this.props.error != null && this.props.error.length > 0) {
             return (
                 <Layout>
                     <RoleLock allowedRoles={['Administrator']}>
                         <Error>
+                            <Link href="/admin/employees" role="button">Back to overview</Link>
+                        </Error>
+                    </RoleLock>
+                </Layout>);
+        }
+        if (this.props.admin_employees.length === 0 || (this.props.admin_employees.length > 0 && employee != null)) {
+            return (
+                <Layout>
+                    <RoleLock allowedRoles={['Administrator']}>
+                        <Error>
+                            <h2>Update Employee</h2>
                             <form>
                                 <div className="form-group">
                                     <label htmlFor="emailAddress">Email address</label>
@@ -99,7 +104,7 @@ export default class UpdateEmployeePage extends Component {
                                         <option value="false">Disabled</option>
                                     </select>
                                 </div>
-                                <Link className="btn btn-primary" href="/admin/employees" role="button">Back to
+                                <Link href="/admin/employees" role="button">Back to
                                     overview</Link>
                                 <button onClick={this.handleSubmit} type="submit"
                                         className="btn btn-primary float-right">Update
@@ -113,6 +118,9 @@ export default class UpdateEmployeePage extends Component {
             return (
                 <Layout>
                     <RoleLock allowedRoles={['Administrator']}>
+                        <CustomError message={"Employee not found"}>
+                            <Link href="/admin/employees" role="button">Back to overview</Link>
+                        </CustomError>
                     </RoleLock>
                 </Layout>
             );

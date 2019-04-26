@@ -9,18 +9,29 @@ import {Link} from "preact-router/match";
 import Error from "../../../components/error";
 
 @connect(reducers, actions)
-export default class ManageEmployeesPage extends Component {
+export default class ManageContractsPage extends Component {
 
     constructor(props) {
         super(props);
     }
 
     componentDidMount() {
+        this.props.fetchAdminContracts();
         this.props.fetchAdminEmployees();
     }
 
-    anonymizeEmployee(id) {
-        this.props.deleteAdminEmployee(id);
+    deleteContract(id) {
+        this.props.deleteAdminContract(id);
+    }
+
+    getEmployeeNameForContract(contract) {
+        let value = contract.employeeId;
+        this.props.admin_employees.map(employee => {
+            if (employee.id === contract.employeeId) {
+                value = employee.firstName + " " + employee.lastName;
+            }
+        });
+        return value;
     }
 
     render() {
@@ -28,37 +39,31 @@ export default class ManageEmployeesPage extends Component {
             <Layout>
                 <RoleLock allowedRoles={['Administrator']}>
                     <Error>
-                        <h2>Manage Employees</h2>
+                        <h2>Manage Contracts</h2>
                         <table class="table ">
                             <thead>
                             <tr>
-                                <th scope="col">Email</th>
-                                <th scope="col">First Name</th>
-                                <th scope="col">Last Name</th>
-                                <th scope="col">Activated</th>
-                                <th scope="col">Role</th>
+                                <th scope="col">Start Date</th>
+                                <th scope="col">End Date</th>
+                                <th scope="col">Pensum Percentage</th>
+                                <th scope="col">Employee</th>
                                 <th scope="col">
-                                    <Link className="btn btn-success" href="/admin/employees/create"
+                                    <Link className="btn btn-success" href="/admin/contracts/create"
                                           role="button">Create</Link>
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
-                            {this.props.admin_employees.map(employee => (
-                                <tr key={employee.id}>
-                                    <td>{employee.emailAddress}</td>
-                                    <td>{employee.firstName}</td>
-                                    <td>{employee.lastName}</td>
-                                    <td>{employee.active + ''}</td>
-                                    <td>{employee.role}</td>
+                            {this.props.admin_contracts.map(contract => (
+                                <tr key={contract.id}>
+                                    <td>{contract.startDate}</td>
+                                    <td>{contract.endDate}</td>
+                                    <td>{contract.pensumPercentage}</td>
+                                    <td>{this.getEmployeeNameForContract(contract)}</td>
                                     <td>
-                                        <Link className="btn btn-primary"
-                                              href={`/admin/employees/update/${employee.id}`}
-                                              role="button">Update</Link>
-                                        &nbsp;&nbsp;&nbsp;
                                         <button className="btn btn-danger" onClick={() => {
-                                            this.anonymizeEmployee(employee.id)
-                                        }}>Anonymize
+                                            this.deleteContract(contract.id)
+                                        }}>Delete
                                         </button>
                                     </td>
                                 </tr>
