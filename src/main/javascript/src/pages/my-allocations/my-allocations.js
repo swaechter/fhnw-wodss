@@ -6,7 +6,7 @@ import { connect } from 'preact-redux';
 import Layout from '../../components/layout';
 import DayContainer from './day-container';
 import { filterAllocations } from '../../utils/filters';
-import { getMonday, getDateRange, removeTimeUTC, checkDateRangeOverlap, addDays } from '../../utils/date';
+import { getUTCMonday, getBusinessDays, removeTimeUTC, checkDateRangeOverlap, addDays } from '../../utils/date';
 import { getObjectColor } from '../../utils/colors';
 import FromToDatePicker from '../../components/from-to-datepicker';
 
@@ -16,25 +16,25 @@ export default class MyAllocationsPage extends Component {
     constructor(props) {
         super(props)
         let today = removeTimeUTC(new Date())
-        let monday = getMonday(today)
+        let monday = getUTCMonday(today)
         let friday = addDays(monday, 4)
         this.state = {
             from: monday,
             to: friday,
-            displayAllocations: []
         }
     }
 
     componentDidMount() {
         this.props.fetchProjectsAsync();
         this.props.fetchContractsAsync();
-        this.props.fetchAllocationsAsync(this.props.auth.employee.id);
+        let from = this.state.from;
+        let to = this.state.to;
+        this.props.fetchAllocationsAsync(this.props.auth.employee.id,null,from,to);
     }
 
     updateDisplayElements = (allocations, projects, contracts) => {
-        let dates = getDateRange(this.state.from, this.state.to)
-        let reducedAllocations = filterAllocations(this.state.from, this.state.to, allocations)
-        let displayAllocations = this.createOutputDataStructure(dates, reducedAllocations, projects, contracts)
+        let dates = getBusinessDays(this.state.from, this.state.to)
+        let displayAllocations = this.createOutputDataStructure(dates, allocations, projects, contracts)
         return displayAllocations
     }
 
@@ -52,11 +52,11 @@ export default class MyAllocationsPage extends Component {
     }
 
     allocationToDisplayallocation = (alloc, projects, contracts) => {
-        let contractPercentage = contracts.find((contract) => contract.id==alloc.contractId).pensumPercentage
+        let contractPercentage = contracts.find((contract) => contract.id == alloc.contractId).pensumPercentage
         let project = projects.find((project) => project.id == alloc.projectId)
-        let projectName = project? project.name : ''
+        let projectName = project ? project.name : ''
         return {
-            'pensumPercentage': 100*alloc.pensumPercentage/contractPercentage,
+            'pensumPercentage': 100 * alloc.pensumPercentage / contractPercentage,
             'color': getObjectColor(projectName),
             'projectName': projectName
         }
@@ -64,10 +64,10 @@ export default class MyAllocationsPage extends Component {
 
     updateDateRange = (from, to) => {
         this.setState({
-            ...this.state,
             from: removeTimeUTC(from),
             to: removeTimeUTC(to)
         })
+        this.props.fetchAllocationsAsync(this.props.auth.employee.id,null,from,to);
     }
 
 

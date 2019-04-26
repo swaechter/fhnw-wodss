@@ -37,7 +37,7 @@ export default class Flatpickr extends Component {
   }
 
   render(props) {
-    return <input id="flatpickr-instance" />;
+    return <input class='form-control' type="text" id="flatpickr-instance" />;
   }
 
   create() {

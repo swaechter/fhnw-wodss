@@ -12,9 +12,11 @@ export default class CreateEmployeePage extends Component {
 
     constructor(props) {
         super(props);
-
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    componentDidMount() {
         this.clearFields();
     }
 
@@ -92,7 +94,7 @@ export default class CreateEmployeePage extends Component {
                             </div>
                             <Link className="btn btn-primary" href="/admin/employees" role="button">Back to overview</Link>
                             <button onClick={this.handleSubmit} type="submit"
-                                    className="btn btn-primary float-right">Submit
+                                    className="btn btn-primary float-right">Create
                             </button>
                         </form>
                     </Error>
@@ -101,4 +103,3 @@ export default class CreateEmployeePage extends Component {
         );
     }
 }
-
