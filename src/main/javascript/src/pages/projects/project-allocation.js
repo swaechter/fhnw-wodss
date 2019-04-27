@@ -72,7 +72,7 @@ export default class ProjectAllocationPage extends Component {
     }
 
     render() {
-        const project = this.props.admin_projects.find(item => item.id === this.props.id && item.projectManagerId === this.props.auth.employee.id);
+        const project = this.props.admin_projects.find(item => item.id === this.props.id && (item.projectManagerId === this.props.auth.employee.id || this.props.auth.employee.role === 'ADMINISTRATOR'));
         if (this.props.error !== 'undefined' && this.props.error != null && this.props.error.length > 0) {
             return (
                 <Layout>
@@ -118,7 +118,8 @@ export default class ProjectAllocationPage extends Component {
                                            required min="0" max="100"
                                            value={this.state.pensumPercentage} onChange={this.handleChange}/>
                                 </div>
-                                <Link href="/admin/employees" role="button">Back to overview</Link>
+                                <Link href={`/project/manage/${this.props.id}`}
+                                      role="button">Back to overview</Link>
                                 <button className="btn btn-primary float-right">Create
                                 </button>
                             </form>
