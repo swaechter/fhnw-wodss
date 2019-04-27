@@ -80,7 +80,6 @@ export default class CreateContractPage extends Component {
                                 <label htmlFor="employeeId">Employee</label>
                                 <select className="form-control" id="employeeId" required
                                         value={this.state.employeeId} onChange={this.handleChange}>
-                                    // qs = qs.filter(q => q.id !== action.id);
                                     {this.props.admin_employees.filter(i => i.active === true).map(employee =>
                                         <option key={employee.id}
                                                 value={employee.id}>{employee.firstName} {employee.lastName} ({employee.emailAddress})</option>
