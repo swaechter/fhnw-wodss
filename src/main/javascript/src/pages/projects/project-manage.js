@@ -62,7 +62,8 @@ export default class ProjectManagePage extends Component {
     render(props, state) {
         if (props.projects && props.projects.length > 0 && props.allocations && props.contracts && props.admin_employees) {
             const project = props.projects[0];
-            const allocatedEmployees = this.calculateAllocatedFtesPerEmployee(props.allocations, props.contracts, props.admin_employees);
+            // TODO: Check if that works
+            const allocatedEmployees = props.allocations.length > 0 ? this.calculateAllocatedFtesPerEmployee(props.allocations, props.contracts, props.admin_employees) : {};
             const progress = this.calculateTotalAllocatedFtes(props.allocations) / project.ftePercentage * 100;
             return (
                 <Layout>

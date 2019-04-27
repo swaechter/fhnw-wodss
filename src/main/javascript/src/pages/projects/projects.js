@@ -6,10 +6,10 @@ import {connect} from "preact-redux";
 import Layout from "../../components/layout";
 import {Link} from "preact-router/match";
 import Error from "../../components/error";
+import { loginState } from "../../actions";
 
 @connect(reducers, actions)
 export default class ProjectPage extends Component {
-
     componentDidMount() {
         this.props.clearError();
         this.props.fetchProjectsAsync();
@@ -36,8 +36,11 @@ export default class ProjectPage extends Component {
                                 <td>{project.startDate}</td>
                                 <td>{project.endDate}</td>
                                 <td>
+                                    {(props.auth.employee.role === "ADMINISTRATOR" || props.auth.employee.id === project.projectManagerId)
+                                      ?(
                                     <Link className="btn btn-primary" href={`/project/manage/${project.id}`}
-                                          role="button">Manage</Link>
+                                          role="button">Manage</Link>)
+                                      : null}
                                 </td>
                             </tr>
                         ))}
