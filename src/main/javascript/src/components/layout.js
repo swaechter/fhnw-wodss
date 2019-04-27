@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import {Component} from 'preact';
 import NavigationItem from './navigation-item';
 import Navbar from './navbar';
 import SideMenu from './menu';
@@ -6,6 +6,7 @@ import SideMenu from './menu';
 import {connect} from 'preact-redux';
 import reducers from '../reducers';
 import * as actions from '../actions';
+import OptionalRoleLock from "./optional-role-lock";
 
 @connect(reducers, actions)
 export default class Layout extends Component {
@@ -27,9 +28,15 @@ export default class Layout extends Component {
                     <SideMenu>
                         <NavigationItem href='/my-allocation' title='My Allocations'/>
                         <NavigationItem href='/project' title='Projects'/>
-                        <NavigationItem href='/admin/employees' title='Manage Employees'/>
-                        <NavigationItem href='/admin/contracts' title='Manage Contracts'/>
-                        <NavigationItem href='/admin/projects' title='Manage Projects'/>
+                        <OptionalRoleLock allowedRoles={['Administrator']}>
+                            <NavigationItem href='/admin/employees' title='Manage Employees'/>
+                        </OptionalRoleLock>
+                        <OptionalRoleLock allowedRoles={['Administrator']}>
+                            <NavigationItem href='/admin/contracts' title='Manage Contracts'/>
+                        </OptionalRoleLock>
+                        <OptionalRoleLock allowedRoles={['Administrator']}>
+                            <NavigationItem href='/admin/projects' title='Manage Projects'/>
+                        </OptionalRoleLock>
                     </SideMenu>
                     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style={{marginTop: 20}}>
                         {children}
