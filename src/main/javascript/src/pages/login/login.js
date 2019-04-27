@@ -71,12 +71,12 @@ export default class LoginForm extends Component {
                         <div class='col'>
                             {this.props.auth.loginState == loginState.FETCHING_JWT
                                     ?(
-                                        <button class="btn btn-primary" type="button" disabled>
+                                        <button class="btn btn-primary btn-block" type="button" disabled>
                                             <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" />
                                             Logging in
                                         </button>
                                     )
-                                    : (<button type="submit" class="btn btn-primary btn-block ">Login</button>)
+                                    : (<button type="submit" class="btn btn-primary btn-block">Login</button>)
                             }
                         </div>
                     </div>
