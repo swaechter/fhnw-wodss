@@ -60,6 +60,16 @@ export default class ProjectManagePage extends Component {
         return value;
     }
 
+    getEmployeeNameForProject(project) {
+        let value = project.projectManagerId;
+        this.props.admin_employees.map(employee => {
+            if (employee.id === project.projectManagerId) {
+                value = employee.firstName + " " + employee.lastName;
+            }
+        });
+        return value;
+    }
+
     deleteAllocation(id) {
         this.props.deleteAllocationAsync(id);
     }
@@ -83,6 +93,12 @@ export default class ProjectManagePage extends Component {
                                 aria-valuemax={project.ftePercentage}
                             />
                         </div>
+                        <h3 style={{marginTop: 20}}>Project Information</h3>
+                        <p><b>Name:</b>&nbsp;{project.name}</p>
+                        <p><b>Start Date:</b>&nbsp;{project.startDate}</p>
+                        <p><b>End Date:</b>&nbsp;{project.endDate}</p>
+                        <p><b>Required FTE:</b>&nbsp;{project.ftePercentage / 100}</p>
+                        <p><b>Project Manager:</b>&nbsp;{this.getEmployeeNameForProject(project)}</p>
                         <h3 style={{marginTop: 20}}>Assigned Developers</h3>
                         <table className="table ">
                             <thead>
