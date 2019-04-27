@@ -1,4 +1,4 @@
-import {h, Component} from "preact";
+import {Component} from "preact";
 import {connect} from "preact-redux";
 import Layout from "../../components/layout";
 import reducers from "../../reducers";
@@ -35,24 +35,35 @@ export default class ProjectManagePage extends Component {
         }, {});
     };
 
+    getEmployeeNameForAllocation(allocation) {
+        let value = allocation.contractId;
+        this.props.contracts.filter(contract => contract.id === allocation.contractId).map(contract => {
+            this.props.admin_employees.filter(employee => employee.id === contract.employeeId).map(employee => {
+                value = employee.firstName + " " + employee.lastName;
+            })
+        });
+        return value;
+    }
+
+    getEmployeeNameForProject(project) {
+        let value = project.projectManagerId;
+        this.props.admin_employees.map(employee => {
+            if (employee.id === project.projectManagerId) {
+                value = employee.firstName + " " + employee.lastName;
+            }
+        });
+        return value;
+    }
+
+    deleteAllocation(id) {
+        this.props.deleteAllocationAsync(id);
+    }
 
     render(props, state) {
-        if (props.projects && props.projects.length > 0
-            && props.allocations && props.allocations.length > 0
-            && props.contracts && props.contracts.length > 0
-            && props.admin_employees && props.admin_employees.length > 0) {
+        if (props.projects && props.projects.length > 0 && props.allocations && props.contracts && props.admin_employees) {
             const project = props.projects[0];
             const allocatedEmployees = this.calculateAllocatedFtesPerEmployee(props.allocations, props.contracts, props.admin_employees);
             const progress = this.calculateTotalAllocatedFtes(props.allocations) / project.ftePercentage * 100;
-            const allocatedDevelopersTableData = Object.entries(allocatedEmployees).forEach(([key, value]) => {
-                console.log(key, value.employee.firstName, value.employee.lastName, value.employee.role, value.workingDays / 100);
-                return <tr key={key}>
-                    <td>{value.employee.firstName}</td>
-                    <td>{value.employee.lastName}</td>
-                    <td>{value.employee.role}</td>
-                    <td>{value.workingDays / 100}</td>
-                </tr>
-            });
             return (
                 <Layout>
                     <h2>Projects</h2>
@@ -67,7 +78,13 @@ export default class ProjectManagePage extends Component {
                                 aria-valuemax={project.ftePercentage}
                             />
                         </div>
-                        <h3 style={{marginTop: 20}}>Allocated Developers</h3>
+                        <h3 style={{marginTop: 20}}>Project Information</h3>
+                        <p><b>Name:</b>&nbsp;{project.name}</p>
+                        <p><b>Start Date:</b>&nbsp;{project.startDate}</p>
+                        <p><b>End Date:</b>&nbsp;{project.endDate}</p>
+                        <p><b>Required FTE:</b>&nbsp;{project.ftePercentage / 100}</p>
+                        <p><b>Project Manager:</b>&nbsp;{this.getEmployeeNameForProject(project)}</p>
+                        <h3 style={{marginTop: 20}}>Assigned Developers</h3>
                         <table className="table ">
                             <thead>
                             <tr>
@@ -78,7 +95,16 @@ export default class ProjectManagePage extends Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {allocatedDevelopersTableData}
+                            {Array.from(Object.entries(allocatedEmployees)).map(([employeeId, result]) => {
+                                return (
+                                    <tr key={result.employeeId}>
+                                        <td>{result.employee.firstName}</td>
+                                        <td>{result.employee.lastName}</td>
+                                        <td>{result.employee.role}</td>
+                                        <td>{result.workingDays / 100}</td>
+                                    </tr>
+                                )
+                            })}
                             </tbody>
                         </table>
                         <h3 style={{marginTop: 20}}>Allocations </h3>
@@ -88,9 +114,11 @@ export default class ProjectManagePage extends Component {
                                 <th scope="col">Start Date</th>
                                 <th scope="col">End Date</th>
                                 <th scope="col">Pensum Percentage</th>
-                                <th scope="col">Contract Id</th>
-                                <th scope="col">Project Id</th>
-                                <th>Action</th>
+                                <th scope="col">Employee</th>
+                                <th scope="col">
+                                    <Link className="btn btn-primary" href={`/project/allocation/${project.id}`}
+                                          role="button">Assign</Link>
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -103,23 +131,18 @@ export default class ProjectManagePage extends Component {
                                         {allocation.endDate.toDateString()}
                                     </td>
                                     <td>{allocation.pensumPercentage}</td>
-                                    <td>{allocation.contractId}</td>
-                                    <td>{allocation.projectId}</td>
+                                    <td>{this.getEmployeeNameForAllocation(allocation)}</td>
                                     <td>
-                                        <Link
-                                            activeClassName="btn btn-primary"
-                                            href={`/project/allocation/${
-                                                props.id
-                                                }`}
-                                            role="button"
-                                        >
-                                            Create
-                                        </Link>
+                                        <button className="btn btn-danger" onClick={() => {
+                                            this.deleteAllocation(allocation.id)
+                                        }}>Delete
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
                             </tbody>
                         </table>
+                        <Link href="/project" role="button">Back to projects</Link>
                     </Error>
                 </Layout>
             );

@@ -1,6 +1,7 @@
-import {doGet, getUrl} from "../services/api.service";
+import {doDelete, doGet, getUrl} from "../services/api.service";
 import {getCurrentToken} from "../services/auth.service";
 import {dateToString} from "../utils/date";
+import {clearError, setError} from "./error.actions";
 
 /*
  * action types
@@ -10,6 +11,7 @@ export const FETCH_ALLOCATIONS_BEGIN = 'FETCH_ALLOCATIONS_BEGIN';
 export const FETCH_ALLOCATIONS_SUCCESS = 'FETCH_ALLOCATIONS_SUCCESS';
 export const FETCH_ALLOCATIONS_FAIL = 'FETCH_ALLOCATIONS_FAIL';
 export const CLEAR_ALLOCATIONS = 'CLEAR_ALLOCATION';
+export const DELETE_ALLOCATION_SUCCESS = 'DELETE_ALLOCATION_SUCCESS';
 
 /*
  * other constants
@@ -38,6 +40,10 @@ const fetchAllocationsFail = (error) => ({
     error
 })
 
+const deleteAllocationSuccess = (id) => ({
+    type: DELETE_ALLOCATION_SUCCESS,
+    id
+})
 
 /**
  * async function calls
@@ -56,6 +62,20 @@ export function fetchAllocationsAsync(employeeId = null, projectId = null, fromD
             dispatch(fetchAllocationsSuccess(json))
         } catch (error) {
             dispatch(fetchAllocationsFail(error))
+        }
+    }
+}
+
+export function deleteAllocationAsync(id) {
+    return async (dispatch) => {
+        let url = getUrl("/api/allocation/" + id);
+        try {
+            let token = await getCurrentToken(dispatch);
+            await doDelete(url, token);
+            dispatch(clearError());
+            dispatch(deleteAllocationSuccess(id));
+        } catch (error) {
+            dispatch(setError(error.message));
         }
     }
 }
