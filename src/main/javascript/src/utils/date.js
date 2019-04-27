@@ -1,7 +1,6 @@
 
 export const removeTimeUTC = (date) => {
-    let result = new Date(date);
-    result.setUTCHours(0, 0, 0, 0);
+    let result = new Date(Date.UTC(date.getFullYear(),date.getMonth(), date.getDate()))
     return result
 }
 
