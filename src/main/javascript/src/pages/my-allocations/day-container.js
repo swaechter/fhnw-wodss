@@ -1,6 +1,5 @@
 import { h, Component, options } from 'preact';
 import PlanningItem from './planning-item';
-import { getObjectColor } from '../../utils/colors'
 
 
 export default class DayContainer extends Component {

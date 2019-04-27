@@ -7,7 +7,7 @@ import Layout from '../../components/layout';
 import DayContainer from './day-container';
 import { filterAllocations } from '../../utils/filters';
 import { getUTCMonday, getBusinessDays, removeTimeUTC, checkDateRangeOverlap, addDays } from '../../utils/date';
-import { getObjectColor } from '../../utils/colors';
+import { UUIDToColor } from '../../utils/colors';
 import FromToDatePicker from '../../components/from-to-datepicker';
 
 @connect(reducers, actions)
@@ -55,11 +55,13 @@ export default class MyAllocationsPage extends Component {
         let contractPercentage = contracts.find((contract) => contract.id == alloc.contractId).pensumPercentage
         let project = projects.find((project) => project.id == alloc.projectId)
         let projectName = project ? project.name : ''
-        return {
+        let projectColor = project ? UUIDToColor(project.id) : '#FFFFFF'
+        const data = {
             'pensumPercentage': 100 * alloc.pensumPercentage / contractPercentage,
-            'color': getObjectColor(projectName),
+            'color': projectColor,
             'projectName': projectName
         }
+        return data
     }
 
     updateDateRange = (from, to) => {
