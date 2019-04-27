@@ -29,17 +29,17 @@ export async function logout() {
 }
 
 export async function getCurrentToken(dispatch) {
-    let currentToken = await getStoredTokenIfValid()
     try {
+        let currentToken = await getStoredTokenIfValid()
         if (shouldRenewToken(currentToken)) {
             currentToken = await renewToken(currentToken)
             dispatch(loginUserSuccess(currentToken))
         }
+        return currentToken;
     }
     catch (e) {
         dispatch(loginUserFail(e))
     }
-    return currentToken;
 }
 
 async function renewToken(oldToken) {

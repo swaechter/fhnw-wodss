@@ -54,7 +54,9 @@ export default class MyAllocationsPage extends Component {
     }
 
     allocationToDisplayallocation = (alloc, projects, contracts) => {
-        let contractPercentage = contracts.find((contract) => contract.id == alloc.contractId).pensumPercentage
+        let contract = contracts.find((contract) => contract.id == alloc.contractId)
+        if (!contract) return {}
+        let contractPercentage = contract.pensumPercentage
         let project = projects.find((project) => project.id == alloc.projectId)
         let projectName = project ? project.name : ''
         let projectColor = project ? UUIDToColor(project.id) : '#FFFFFF'
