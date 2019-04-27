@@ -65,7 +65,7 @@ export default class ProjectManagePage extends Component {
 }
 
     render(props, state) {
-        const allLoaded = (this.isEmpty(props.projects)
+        const allLoaded = !(this.isEmpty(props.projects)
           || this.isEmpty(props.allocations)
           || this.isEmpty(props.admin_employees)
           || this.isEmpty(props.contracts));
