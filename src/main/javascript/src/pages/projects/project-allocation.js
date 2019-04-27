@@ -12,7 +12,7 @@ export default class ProjectAllocationPage extends Component {
         return (
             <Layout>
                 <h2>Project Detail Page</h2>
-                <p>Placeholder</p>
+                <p>Called with Project ID: {this.props.id}</p>
             </Layout>
         );
     }

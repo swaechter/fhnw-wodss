@@ -1,5 +1,5 @@
 import {
-    CLEAR_ALLOCATIONS,
+    CLEAR_ALLOCATIONS, DELETE_ALLOCATION_SUCCESS,
     FETCH_ALLOCATIONS_BEGIN,
     FETCH_ALLOCATIONS_FAIL,
     FETCH_ALLOCATIONS_SUCCESS
@@ -26,6 +26,10 @@ export function allocations(state = initialState(), action) {
         case CLEAR_ALLOCATIONS:
         case FETCH_ALLOCATIONS_FAIL:
             return [];
+        case DELETE_ALLOCATION_SUCCESS:
+            let allocations = state.slice();
+            allocations = allocations.filter(allocation => allocation.id !== action.id);
+            return allocations;
         default:
             return state;
     }

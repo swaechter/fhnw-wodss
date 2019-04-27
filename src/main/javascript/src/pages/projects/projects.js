@@ -1,4 +1,4 @@
-import {h, Component} from "preact";
+import {Component} from "preact";
 
 import reducers from "../../reducers";
 import * as actions from "../../actions";
@@ -26,7 +26,7 @@ export default class ProjectPage extends Component {
                             <th scope="col">Name</th>
                             <th scope="col">Start Date</th>
                             <th scope="col">End Date</th>
-                            <th>Action</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -36,15 +36,8 @@ export default class ProjectPage extends Component {
                                 <td>{project.startDate}</td>
                                 <td>{project.endDate}</td>
                                 <td>
-                                    <Link
-                                        activeClassName="btn btn-primary"
-                                        href={`/project/manage/${
-                                            project.id
-                                            }`}
-                                        role="button"
-                                    >
-                                        Manage
-                                    </Link>
+                                    <Link className="btn btn-primary" href={`/project/manage/${project.id}`}
+                                          role="button">Manage</Link>
                                 </td>
                             </tr>
                         ))}
