@@ -30,7 +30,7 @@ public class TokenService {
             Date expirationDate = new Date(nowDate.getTime() + VALIDATION_DURATION_IN_MS);
             return new Token(Jwts.builder()
                 .setIssuer("FHNW wodss")
-                .setSubject("Login token")
+                .setSubject(employee.getEmailAddress())
                 .claim("employee", employee)
                 .setIssuedAt(nowDate)
                 .setExpiration(expirationDate)
