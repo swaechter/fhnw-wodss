@@ -42,7 +42,9 @@ export default class MyAllocationsPage extends Component {
         let result = []
         dates.map((date) => {
             let activeAlloc = filterAllocations(date, date, allocations)
-            let displayAlloc = activeAlloc.map((alloc) => this.allocationToDisplayallocation(alloc, projects, contracts))
+            let displayAlloc = activeAlloc
+                .sort((alloc1, alloc2) => alloc2.startDate-alloc1.startDate)
+                .map((alloc) => this.allocationToDisplayallocation(alloc, projects, contracts))
             result.push({
                 'date': date,
                 'allocations': displayAlloc
