@@ -14,7 +14,7 @@ export default class ProjectManagePage extends Component {
         this.props.fetchProjectAsyncById(this.props.id);
         this.props.fetchAllocationsAsync(null, this.props.id, null, null);
         this.props.fetchContractsAsync();
-        this.props.fetchAllAdminEmployees();
+        this.props.fetchAdminEmployees();
     }
 
     calculateTotalAllocatedFtes = (allocations) => {
