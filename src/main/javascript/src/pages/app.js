@@ -5,16 +5,18 @@ import {createHashHistory} from 'history';
 import {Component} from 'preact';
 import {Router} from 'preact-router';
 import Redirect from '../components/redirect';
-import ProjectPage from './projects/projects';
 import AuthLock from '../components/auth-lock';
+import ProjectPage from './projects/projects';
+import ProjectManagePage from './projects/project-manage';
+import ProjectAllocationPage from './projects/project-allocation';
 import MyAllocationsPage from './my-allocations/my-allocations';
 import ManageEmployeesPage from './admin/employees/manage-employees';
 import CreateEmployeePage from './admin/employees/create-employee';
 import UpdateEmployeePage from './admin/employees/update-employee';
-import ContractsAdminPage from './admin/contracts/contracts-admin';
-import ProjectsAdminPage from './admin/projects/projects-admin';
-import ProjectManagePage from './projects/project-manage';
-import ProjectAllocationPage from './projects/project-allocation';
+import ManageContractsPage from './admin/contracts/manage-contracts';
+import CreateContractPage from './admin/contracts/create-contract';
+import ManageProjectsPage from './admin/projects/manage-projects';
+import CreateProjectPage from './admin/projects/create-projects';
 
 export default class App extends Component {
 
@@ -29,8 +31,10 @@ export default class App extends Component {
                     <ManageEmployeesPage path='/admin/employees'/>
                     <CreateEmployeePage path='/admin/employees/create'/>
                     <UpdateEmployeePage path='/admin/employees/update/:id'/>
-                    <ContractsAdminPage path='/admin/contracts'/>
-                    <ProjectsAdminPage path='/admin/projects'/>
+                    <ManageContractsPage path='/admin/contracts'/>
+                    <CreateContractPage path='/admin/contracts/create'/>
+                    <ManageProjectsPage path='/admin/projects'/>
+                    <CreateProjectPage path='/admin/projects/create'/>
                     <Redirect default to='/my-allocation'/>
                 </Router>
             </AuthLock>
