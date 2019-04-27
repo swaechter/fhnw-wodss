@@ -23,8 +23,7 @@ export default class ProjectManagePage extends Component {
     };
 
     calculateAllocatedFtesPerEmployee = (allocations, contracts, employees) => {
-        // Calculate the values via reduce
-        var allocatedFtesPerEmployee = allocations.reduce((acc, allocation) => {
+        return allocations.reduce((acc, allocation) => {
             let allocatedEmployee = employees.find(employee => employee.id === contracts.find(c => c.id === allocation.contractId).employeeId);
             let allocatedFtes = getBusinessDays(allocation.startDate, allocation.endDate).length * allocation.pensumPercentage;
             if (acc[allocatedEmployee.id]) {
@@ -34,20 +33,6 @@ export default class ProjectManagePage extends Component {
             }
             return acc;
         }, {});
-
-        // Convert to array so we can use the map function on it
-        var data = [];
-        Object.entries(allocatedFtesPerEmployee).forEach(([key, value]) => {
-            data.push({
-                'id': value.employee.id,
-                'firstName': value.employee.firstName,
-                'lastName': value.employee.lastName,
-                'emailAddress': value.employee.emailAddress,
-                'role': value.employee.role,
-                'workingDays': value.workingDays
-            });
-        });
-        return data;
     };
 
     getEmployeeNameForAllocation(allocation) {
@@ -110,14 +95,16 @@ export default class ProjectManagePage extends Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {allocatedEmployees.map(allocatedEmployee => (
-                                <tr key={allocatedEmployee.id}>
-                                    <td>{allocatedEmployee.firstName}</td>
-                                    <td>{allocatedEmployee.lastName}</td>
-                                    <td>{allocatedEmployee.role}</td>
-                                    <td>{allocatedEmployee.workingDays / 100}</td>
-                                </tr>
-                            ))}
+                            {Array.from(Object.entries(allocatedEmployees)).map(([employeeId, result]) => {
+                                return (
+                                    <tr key={result.employeeId}>
+                                        <td>{result.employee.firstName}</td>
+                                        <td>{result.employee.lastName}</td>
+                                        <td>{result.employee.role}</td>
+                                        <td>{result.workingDays / 100}</td>
+                                    </tr>
+                                )
+                            })}
                             </tbody>
                         </table>
                         <h3 style={{marginTop: 20}}>Allocations </h3>
