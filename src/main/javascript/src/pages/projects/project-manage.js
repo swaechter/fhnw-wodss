@@ -19,11 +19,17 @@ export default class ProjectManagePage extends Component {
     }
 
     calculateTotalAllocatedFtes = (allocations) => {
+        if (this.isEmpty(allocations)) {
+            return {}
+        }
         let reducer = (acc, allocation) => acc + getBusinessDays(allocation.startDate, allocation.endDate).length * allocation.pensumPercentage;
         return allocations.reduce(reducer, 0);
     };
 
     calculateAllocatedFtesPerEmployee = (allocations, contracts, employees) => {
+        if (this.isEmpty(allocations) || this.isEmpty(contracts) || this.isEmpty(employees)) {
+            return {}
+        }
         return allocations.reduce((acc, allocation) => {
             let allocatedEmployee = employees.find(employee => employee.id === contracts.find(c => c.id === allocation.contractId).employeeId);
             let allocatedFtes = getBusinessDays(allocation.startDate, allocation.endDate).length * allocation.pensumPercentage;
@@ -66,9 +72,7 @@ export default class ProjectManagePage extends Component {
 
     render(props, state) {
         const allLoaded = !(this.isEmpty(props.projects)
-          || this.isEmpty(props.allocations)
           || this.isEmpty(props.admin_employees)
-          || this.isEmpty(props.contracts));
         const project = props.projects.find(project => project.id === props.id);
         const isManager = project && project.projectManagerId === props.auth.employee.id;
 
