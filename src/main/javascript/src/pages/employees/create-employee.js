@@ -1,10 +1,10 @@
 import {Component} from 'preact';
-import Layout from "../../../components/layout";
-import RoleLock from "../../../components/role-lock";
+import Layout from "../../components/layout";
+import RoleLock from "../../components/role-lock";
 import {connect} from "preact-redux";
-import reducers from "../../../reducers";
-import * as actions from "../../../actions";
-import Error from "../../../components/error";
+import reducers from "../../reducers";
+import * as actions from "../../actions";
+import Error from "../../components/error";
 import {Link} from "preact-router/match";
 
 @connect(reducers, actions)

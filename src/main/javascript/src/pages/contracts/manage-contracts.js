@@ -1,12 +1,12 @@
 import {Component} from 'preact';
 import {connect} from 'preact-redux';
 
-import reducers from '../../../reducers';
-import * as actions from '../../../actions';
-import Layout from '../../../components/layout';
-import RoleLock from '../../../components/role-lock';
+import reducers from '../../reducers';
+import * as actions from '../../actions';
+import Layout from '../../components/layout';
+import RoleLock from '../../components/role-lock';
 import {Link} from "preact-router/match";
-import Error from "../../../components/error";
+import Error from "../../components/error";
 
 @connect(reducers, actions)
 export default class ManageContractsPage extends Component {
