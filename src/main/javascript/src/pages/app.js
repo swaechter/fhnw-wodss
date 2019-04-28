@@ -11,11 +11,11 @@ import ProjectCreatePage from './projects/project-create';
 import ProjectManagePage from './projects/project-manage';
 import ProjectAllocationPage from './projects/project-allocation';
 import MyAllocationsPage from './my-allocations/my-allocations';
-import ManageEmployeesPage from './admin/employees/manage-employees';
-import CreateEmployeePage from './admin/employees/create-employee';
-import UpdateEmployeePage from './admin/employees/update-employee';
-import ManageContractsPage from './admin/contracts/manage-contracts';
-import CreateContractPage from './admin/contracts/create-contract';
+import ManageEmployeesPage from './employees/manage-employees';
+import CreateEmployeePage from './employees/create-employee';
+import UpdateEmployeePage from './employees/update-employee';
+import ManageContractsPage from './contracts/manage-contracts';
+import CreateContractPage from './contracts/create-contract';
 
 export default class App extends Component {
 
