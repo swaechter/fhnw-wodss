@@ -6,7 +6,7 @@
     "scripts": {
         "start": "if-env NODE_ENV=production && npm run -s watch || npm run -s dev",
         "build": "preact build --clean --no-prerender --dest ../resources/public",
-        "watch": "npm run build && preact watch",
+        "watch": "preact watch",
         "dev": "preact watch",
         "lint": "eslint src"
     },

@@ -7,16 +7,15 @@ import {Router} from 'preact-router';
 import Redirect from '../components/redirect';
 import AuthLock from '../components/auth-lock';
 import ProjectPage from './projects/projects';
+import ProjectCreatePage from './projects/project-create';
 import ProjectManagePage from './projects/project-manage';
 import ProjectAllocationPage from './projects/project-allocation';
 import MyAllocationsPage from './my-allocations/my-allocations';
-import ManageEmployeesPage from './admin/employees/manage-employees';
-import CreateEmployeePage from './admin/employees/create-employee';
-import UpdateEmployeePage from './admin/employees/update-employee';
-import ManageContractsPage from './admin/contracts/manage-contracts';
-import CreateContractPage from './admin/contracts/create-contract';
-import ManageProjectsPage from './admin/projects/manage-projects';
-import CreateProjectPage from './admin/projects/create-projects';
+import ManageEmployeesPage from './employees/manage-employees';
+import CreateEmployeePage from './employees/create-employee';
+import UpdateEmployeePage from './employees/update-employee';
+import ManageContractsPage from './contracts/manage-contracts';
+import CreateContractPage from './contracts/create-contract';
 
 export default class App extends Component {
 
@@ -26,6 +25,7 @@ export default class App extends Component {
                 <Router history={createHashHistory()}>
                     <MyAllocationsPage path='/my-allocation'/>
                     <ProjectPage path='/project'/>
+                    <ProjectCreatePage path='/project/create'/>
                     <ProjectManagePage path='/project/manage/:id'/>
                     <ProjectAllocationPage path='/project/allocation/:id'/>
                     <ManageEmployeesPage path='/admin/employees'/>
@@ -33,8 +33,6 @@ export default class App extends Component {
                     <UpdateEmployeePage path='/admin/employees/update/:id'/>
                     <ManageContractsPage path='/admin/contracts'/>
                     <CreateContractPage path='/admin/contracts/create'/>
-                    <ManageProjectsPage path='/admin/projects'/>
-                    <CreateProjectPage path='/admin/projects/create'/>
                     <Redirect default to='/my-allocation'/>
                 </Router>
             </AuthLock>

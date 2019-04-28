@@ -16,7 +16,7 @@ RUN cd /workspace && ./gradlew --no-daemon downloadDependencies
 COPY src ./workspace/src
 
 # Copy and build the project
-RUN cd /workspace && ./gradlew --no-daemon flywayMigrate -i && ./gradlew --no-daemon --info clean build
+RUN cd /workspace && ./gradlew --no-daemon flywayMigrate -i && ./gradlew --no-daemon --info clean build -x test
 
 # Define the production environment
 FROM openjdk:11-jre-slim
