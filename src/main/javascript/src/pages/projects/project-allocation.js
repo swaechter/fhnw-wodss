@@ -56,6 +56,7 @@ export default class ProjectAllocationPage extends Component {
             'endDate': this.state.endDate,
             'pensumPercentage': this.state.pensumPercentage
         });
+        this.clearFields();
     }
 
     getEmployeesWithTheirContractsAsObjects = () => {

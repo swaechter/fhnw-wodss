@@ -68,10 +68,12 @@ export default class ProjectPage extends Component {
                                                       role="button">Manage</Link>)
                                             : null}
                                         &nbsp;
-                                        <button className="btn btn-danger" onClick={() => {
-                                            this.deleteProject(project.id)
-                                        }}>Delete
-                                        </button>
+                                        <OptionalRoleLock allowedRoles={['Administrator']}>
+                                            <button className="btn btn-danger" onClick={() => {
+                                                this.deleteProject(project.id)
+                                            }}>Delete
+                                            </button>
+                                        </OptionalRoleLock>
                                     </td>
                                 </tr>
                             ))}
