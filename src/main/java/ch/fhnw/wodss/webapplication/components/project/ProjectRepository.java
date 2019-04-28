@@ -5,7 +5,7 @@ import ch.fhnw.wodss.webapplication.utils.GenericCrudRepository;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.SelectConditionStep;
-import org.jooq.SelectSeekStep1;
+import org.jooq.SelectLimitPercentStep;
 import org.jooq.generated.tables.Project;
 import org.jooq.generated.tables.records.ProjectRecord;
 import org.jooq.impl.DSL;
@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.jooq.generated.tables.Allocation.ALLOCATION;
 import static org.jooq.generated.tables.Contract.CONTRACT;
@@ -58,12 +59,14 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
     }
 
     public Optional<ProjectDto> getProjectIfAssigned(UUID projectId, UUID employeeId) {
-        SelectConditionStep<Record> condition = getDslContext().select().from(ALLOCATION)
-            .join(PROJECT).on(ALLOCATION.PROJECT_ID.eq(PROJECT.ID))
+        SelectLimitPercentStep<Record> condition = getDslContext().select().from(PROJECT)
+            .join(ALLOCATION).on(PROJECT.ID.eq(ALLOCATION.PROJECT_ID))
             .join(CONTRACT).on(ALLOCATION.CONTRACT_ID.eq(CONTRACT.ID))
             .where(CONTRACT.EMPLOYEE_ID.eq(employeeId))
-            .and(ALLOCATION.PROJECT_ID.eq(projectId));
-        return Optional.of(mapRecordToDto(condition.fetchSingleInto(PROJECT)));
+            .and(ALLOCATION.PROJECT_ID.eq(projectId))
+            .limit(1);
+
+        return Optional.ofNullable(mapRecordToDto(condition.fetchSingleInto(PROJECT)));
     }
 
     public List<ProjectDto> getAllAssignedProjects(LocalDate fromDate, LocalDate toDate, UUID employeeId) {
@@ -71,14 +74,15 @@ public class ProjectRepository extends GenericCrudRepository<ProjectDto, Project
         Date startDate = getConverter().localDateToSqlDate(fromDate);
         Date endDate = getConverter().localDateToSqlDate(toDate);
 
-        SelectSeekStep1<Record, Date> condition = getDslContext().select().from(ALLOCATION)
-            .join(PROJECT).on(ALLOCATION.PROJECT_ID.eq(PROJECT.ID))
+        SelectConditionStep<Record> condition = getDslContext().select().from(PROJECT)
+            .join(ALLOCATION).on(PROJECT.ID.eq(ALLOCATION.PROJECT_ID))
             .join(CONTRACT).on(ALLOCATION.CONTRACT_ID.eq(CONTRACT.ID))
             .where(PROJECT.START_DATE.lessOrEqual(endDate)).and(PROJECT.END_DATE.greaterOrEqual(startDate))
-            .and(CONTRACT.EMPLOYEE_ID.eq(employeeId))
-            .orderBy(PROJECT.START_DATE);
+            .and(CONTRACT.EMPLOYEE_ID.eq(employeeId));
 
-        return getConverter().projectRecordListToProjectDtoList(condition.fetchInto(PROJECT));
+        // Remove all duplicated projects because we did a JOIN which can result in duplicated projects (One project joined with two project assigned allocations => two rows)
+        List<ProjectDto> potentiallyDuplicatedProjects = getConverter().projectRecordListToProjectDtoList(condition.fetchInto(PROJECT));
+        return potentiallyDuplicatedProjects.stream().filter(distinctByKey(ProjectDto::getId)).collect(Collectors.toList());
     }
 
     public void deleteProject(UUID id) {

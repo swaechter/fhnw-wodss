@@ -7,7 +7,10 @@ import org.jooq.impl.TableImpl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 // Inspired by: https://github.com/jOOQ/jOOQ/issues/5984
@@ -61,6 +64,12 @@ public abstract class GenericCrudRepository<DTO, Record extends UpdatableRecord<
 
     protected void deleteMany(Function<Table, Condition> function) {
         dslContext.delete(table).where(function.apply(table)).execute();
+    }
+
+    // Idea: https://stackoverflow.com/a/27872852
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 
     protected DSLContext getDslContext() {
