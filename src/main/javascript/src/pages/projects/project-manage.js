@@ -71,12 +71,16 @@ export default class ProjectManagePage extends Component {
     }
 
     render(props, state) {
-        const allLoaded = !(this.isEmpty(props.projects) || this.isEmpty(props.admin_employees))
+        const allLoaded = !(this.isEmpty(props.projects) || this.isEmpty(props.admin_employees));
         const project = props.projects.find(project => project.id === props.id);
-        const isManager = project && project.projectManagerId === props.auth.employee.id || props.auth.employee.role === 'ADMINISTRATOR';
+        const isManager = project && (project.projectManagerId === props.auth.employee.id || props.auth.employee.role === 'ADMINISTRATOR');
 
-        if (!allLoaded) {
-            return <h1>Loading...</h1>;
+        if (allLoaded && !isManager) {
+            return (
+                <Layout>
+                    <CustomError message={'You are not manager of this Project'}/>
+                </Layout>
+            )
         } else if (allLoaded && isManager) {
             const allocatedEmployees = this.calculateAllocatedFtesPerEmployee(props.allocations, props.contracts, props.admin_employees);
             const progress = this.calculateTotalAllocatedFtes(props.allocations) / project.ftePercentage * 100;
@@ -165,9 +169,9 @@ export default class ProjectManagePage extends Component {
         } else {
             return (
                 <Layout>
-                    <CustomError message={'You are not manager of this Project'}/>
+                    <h1>Loading...</h1>
                 </Layout>
-            )
+            );
         }
     }
 }
