@@ -1,14 +1,14 @@
-import {Component} from 'preact';
-import Layout from "../../../components/layout";
-import RoleLock from "../../../components/role-lock";
+import {Component} from 'preact/dist/preact';
+import Layout from "../../components/layout";
+import RoleLock from "../../components/role-lock";
 import {connect} from "preact-redux";
-import reducers from "../../../reducers";
-import * as actions from "../../../actions";
-import Error from "../../../components/error";
+import reducers from "../../reducers";
+import * as actions from "../../actions";
+import Error from "../../components/error";
 import {Link} from "preact-router/match";
 
 @connect(reducers, actions)
-export default class CreateProjectPage extends Component {
+export default class ProjectCreatePage extends Component {
 
     constructor(props) {
         super(props);
@@ -93,7 +93,7 @@ export default class CreateProjectPage extends Component {
                                     )};
                                 </select>
                             </div>
-                            <Link href="/admin/projects" role="button">Back to overview</Link>
+                            <Link href="/project" role="button">Back to overview</Link>
                             <button className="btn btn-primary float-right">Create
                             </button>
                         </form>

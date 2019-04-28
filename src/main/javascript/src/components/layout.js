@@ -29,13 +29,10 @@ export default class Layout extends Component {
                         <NavigationItem href='/my-allocation' title='My Allocations'/>
                         <NavigationItem href='/project' title='Projects'/>
                         <OptionalRoleLock allowedRoles={['Administrator']}>
-                            <NavigationItem href='/admin/employees' title='Manage Employees'/>
+                            <NavigationItem href='/admin/employees' title='Employees'/>
                         </OptionalRoleLock>
                         <OptionalRoleLock allowedRoles={['Administrator']}>
-                            <NavigationItem href='/admin/contracts' title='Manage Contracts'/>
-                        </OptionalRoleLock>
-                        <OptionalRoleLock allowedRoles={['Administrator']}>
-                            <NavigationItem href='/admin/projects' title='Manage Projects'/>
+                            <NavigationItem href='/admin/contracts' title='Contracts'/>
                         </OptionalRoleLock>
                     </SideMenu>
                     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4" style={{marginTop: 20}}>
