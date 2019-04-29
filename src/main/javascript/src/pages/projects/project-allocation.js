@@ -48,7 +48,7 @@ export default class ProjectAllocationPage extends Component {
         });
     }
 
-    handleSubmit() {
+    handleSubmit(event) {
         this.props.createAllocationAsync({
             'contractId': this.state.contractId,
             'projectId': this.props.id,
@@ -57,6 +57,7 @@ export default class ProjectAllocationPage extends Component {
             'pensumPercentage': this.state.pensumPercentage
         });
         this.clearFields();
+        event.preventDefault();
     }
 
     getEmployeesWithTheirContractsAsObjects = () => {
