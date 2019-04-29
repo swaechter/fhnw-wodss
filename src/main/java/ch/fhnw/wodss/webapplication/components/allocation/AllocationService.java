@@ -156,6 +156,7 @@ public class AllocationService {
 
         List<AllocationDto> allocationDtos = new ArrayList<>();
         for (AllocationDto allocationDto : allocationRepository.getAllocationsByContractId(selectedContract.get().getId())) {
+            allocationDtos.add(!allocationDto.getId().equals(allocation) ? allocationDto : allocation);
         }
         ensureNoOverbooking(selectedContract.get(), allocationDtos, allocation);
 
