@@ -73,15 +73,15 @@ export default class ProjectManagePage extends Component {
     render(props, state) {
         const project = props.projects.find(project => project.id === props.id);
         const allLoaded = !this.isEmpty(props.admin_employees) && project;
-        const isManager = project && (project.projectManagerId === props.auth.employee.id || props.auth.employee.role === 'ADMINISTRATOR');
+        const hasPermission = (project && project.projectManagerId === props.auth.employee.id) || props.auth.employee.role === 'ADMINISTRATOR';
 
-        if (allLoaded && !isManager) {
+        if (allLoaded && !hasPermission) {
             return (
                 <Layout>
                     <CustomError message={'You are not manager of this Project'}/>
                 </Layout>
             )
-        } else if (allLoaded && isManager) {
+        } else if (allLoaded && hasPermission) {
             const allocatedEmployees = this.calculateAllocatedFtesPerEmployee(props.allocations, props.contracts, props.admin_employees);
             const progress = this.calculateTotalAllocatedFtes(props.allocations) / project.ftePercentage * 100;
             return (
