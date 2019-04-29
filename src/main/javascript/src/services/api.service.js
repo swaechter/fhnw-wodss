@@ -15,9 +15,12 @@ function getHeader(token) {
 async function handleErrors(response) {
     if (!response.ok) {
         let errorBody = await response.json();
-        //alert(JSON.stringify(errorBody));
         if (errorBody.message !== undefined && errorBody.message.length > 0) {
-            throw Error(errorBody.message);
+            if (errorBody.errors !== undefined && Array.isArray(errorBody.errors)) {
+                throw Error("Validation failed");
+            } else {
+                throw Error(errorBody.message);
+            }
         } else {
             throw Error("Unknown error");
         }
