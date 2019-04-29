@@ -60,7 +60,9 @@ public class AllocationService {
 
         List<AllocationDto> allocationDtos = allocationRepository.getAllocationsByContractId(selectedContract.get().getId());
         allocationDtos.add(allocation);
-        ensureNoOverbooking(selectedContract.get(), allocationDtos, allocation);
+        if(!ensureNoOverbooking(selectedContract.get(), allocationDtos, allocation)) {
+            throw new InvalidActionException("Adding the given allocation would overbook the contract");
+        }
 
         Optional<AllocationDto> createdAllocation = allocationRepository.saveAllocation(allocation);
         if (createdAllocation.isEmpty()) {
@@ -158,7 +160,9 @@ public class AllocationService {
         for (AllocationDto allocationDto : allocationRepository.getAllocationsByContractId(selectedContract.get().getId())) {
             allocationDtos.add(!allocationDto.getId().equals(allocation) ? allocationDto : allocation);
         }
-        ensureNoOverbooking(selectedContract.get(), allocationDtos, allocation);
+        if(!ensureNoOverbooking(selectedContract.get(), allocationDtos, allocation)) {
+            throw new InvalidActionException("Adding the given allocation would overbook the contract");
+        }
 
         Optional<AllocationDto> updatedAllocation = allocationRepository.updateAllocation(allocation);
         if (updatedAllocation.isEmpty()) {
@@ -190,7 +194,7 @@ public class AllocationService {
         allocationRepository.deleteAllocation(id);
     }
 
-    private void ensureNoOverbooking(ContractDto contract, List<AllocationDto> existingAllocations, AllocationDto newAllocation) {
+    private boolean ensureNoOverbooking(ContractDto contract, List<AllocationDto> existingAllocations, AllocationDto newAllocation) {
         // Get the working days and store them in a hash map to check the daily pensum percentage
         Short zero = 0;
         Map<LocalDate, Short> contractDateMap = new HashMap<>();
@@ -210,11 +214,12 @@ public class AllocationService {
         }
 
         // Check all contract days for overbooking
-        for (Map.Entry<LocalDate, Short> entry : contractDateMap.entrySet())
+        for (Map.Entry<LocalDate, Short> entry : contractDateMap.entrySet()) {
             if (entry.getValue() > contract.getPensumPercentage()) {
-                throw new InvalidActionException("Adding the given allocation would overbook the contract on the " + entry.getKey());
+                return false;
             }
-
+        }
+        return true;
     }
 
     // Idea taken from: https://stackoverflow.com/questions/4600034/calculate-number-of-weekdays-between-two-dates-in-java/4600057
