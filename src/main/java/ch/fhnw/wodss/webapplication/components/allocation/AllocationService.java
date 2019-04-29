@@ -59,9 +59,8 @@ public class AllocationService {
         }
 
         List<AllocationDto> allocationDtos = allocationRepository.getAllocationsByContractId(selectedContract.get().getId());
-        if (!canAllocationBeCreatedWithoutOverbooking(selectedContract.get(), allocationDtos, allocation)) {
-            throw new InvalidActionException("Allocation can't be created because it would overbook the employee");
-        }
+        allocationDtos.add(allocation);
+        ensureNoOverbooking(selectedContract.get(), allocationDtos, allocation);
 
         Optional<AllocationDto> createdAllocation = allocationRepository.saveAllocation(allocation);
         if (createdAllocation.isEmpty()) {
@@ -155,10 +154,10 @@ public class AllocationService {
             throw new InsufficientPermissionException("Only an administrator or the assigned project manager of the project can update this allocation");
         }
 
-        List<AllocationDto> allocationDtos = allocationRepository.getAllocationsByContractId(selectedContract.get().getId());
-        if (!canAllocationBeCreatedWithoutOverbooking(selectedContract.get(), allocationDtos, allocation)) {
-            throw new InvalidActionException("Allocation can't be created because it would overbook the employee");
+        List<AllocationDto> allocationDtos = new ArrayList<>();
+        for (AllocationDto allocationDto : allocationRepository.getAllocationsByContractId(selectedContract.get().getId())) {
         }
+        ensureNoOverbooking(selectedContract.get(), allocationDtos, allocation);
 
         Optional<AllocationDto> updatedAllocation = allocationRepository.updateAllocation(allocation);
         if (updatedAllocation.isEmpty()) {
@@ -190,56 +189,63 @@ public class AllocationService {
         allocationRepository.deleteAllocation(id);
     }
 
-    private boolean canAllocationBeCreatedWithoutOverbooking(ContractDto contract, List<AllocationDto> existingAllocations, AllocationDto newAllocation) {
-        // Get the working days and calculate the number of working days in percentages (250% = I have to work 2.5 days during the time period
-        Integer contractWorkingDaysInPercentages = getWorkingDaysForDateRange(contract.getStartDate(), contract.getEndDate()) * contract.getPensumPercentage();
+    private void ensureNoOverbooking(ContractDto contract, List<AllocationDto> existingAllocations, AllocationDto newAllocation) {
+        // Get the working days and store them in a hash map to check the daily pensum percentage
+        Short zero = 0;
+        Map<LocalDate, Short> contractDateMap = new HashMap<>();
+        List<LocalDate> contractDateList = getBusinessDaysForDateRange(contract.getStartDate(), contract.getEndDate());
+        contractDateList.forEach(contractDate -> contractDateMap.put(contractDate, zero));
 
-        // Substract all existing allocations
-        for (AllocationDto allocationDto : existingAllocations) {
-            // Get the working days of the contract and substract them
-            Integer allocationWorkingDayInPercentages = getWorkingDaysForDateRange(allocationDto.getStartDate(), allocationDto.getEndDate()) * allocationDto.getPensumPercentage();
-            contractWorkingDaysInPercentages -= allocationWorkingDayInPercentages;
+        // Add the pensum of all allocations
+        for (AllocationDto allocation : existingAllocations) {
+            // Get their working days
+            List<LocalDate> allocationDateList = getBusinessDaysForDateRange(allocation.getStartDate(), allocation.getEndDate());
+
+            // Add them to the hash map
+            for (LocalDate allocationDate : allocationDateList) {
+                Short newPensumPercentage = (short) (contractDateMap.get(allocationDate) + allocation.getPensumPercentage());
+                contractDateMap.put(allocationDate, newPensumPercentage);
+            }
         }
 
-        if (contractWorkingDaysInPercentages < 0) {
-            throw new IllegalStateException("The contract is already overbooked - this looks like an internal data error!");
-        }
+        // Check all contract days for overbooking
+        for (Map.Entry<LocalDate, Short> entry : contractDateMap.entrySet())
+            if (entry.getValue() > contract.getPensumPercentage()) {
+                throw new InvalidActionException("Adding the given allocation would overbook the contract on the " + entry.getKey());
+            }
 
-        // Get the working days percentage for the new allocation
-        Integer allocationWorkingDayInPercentages = getWorkingDaysForDateRange(newAllocation.getStartDate(), newAllocation.getEndDate()) * newAllocation.getPensumPercentage();
-
-        // Check the overbooking
-        contractWorkingDaysInPercentages -= allocationWorkingDayInPercentages;
-        return contractWorkingDaysInPercentages >= 0.0;
     }
 
     // Idea taken from: https://stackoverflow.com/questions/4600034/calculate-number-of-weekdays-between-two-dates-in-java/4600057
     // Changes: Don't make date check exclusive
-    private Integer getWorkingDaysForDateRange(LocalDate startDate, LocalDate endDate) {
+    private List<LocalDate> getBusinessDaysForDateRange(LocalDate startDate, LocalDate endDate) {
+        List<LocalDate> dates = new ArrayList<>();
+
         Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(convertLocalDateToLocaleDate(startDate));
 
         Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTime(convertLocalDateToLocaleDate(endDate));
 
-        int workingDays = 0;
-
         if (endCalendar.before(startCalendar)) {
             throw new IllegalStateException("The end date can't be before the start date");
         }
 
         if (startCalendar.equals(endCalendar)) {
-            return 0;
+            dates.add(startDate);
+            return dates;
         }
 
         while (!startCalendar.after(endCalendar)) {
             int day = startCalendar.get(Calendar.DAY_OF_WEEK);
             if (day != Calendar.SATURDAY && day != Calendar.SUNDAY) {
-                workingDays++;
+                // Java date API .... https://stackoverflow.com/questions/344380/why-is-january-month-0-in-java-calendar
+                LocalDate date = LocalDate.of(startCalendar.get(Calendar.YEAR), startCalendar.get(Calendar.MONTH) + 1, startCalendar.get(Calendar.DAY_OF_MONTH));
+                dates.add(date);
             }
             startCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
-        return workingDays;
+        return dates;
     }
 
     private Date convertLocalDateToLocaleDate(LocalDate localDate) {
