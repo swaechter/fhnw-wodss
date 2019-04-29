@@ -71,8 +71,8 @@ export default class ProjectManagePage extends Component {
     }
 
     render(props, state) {
-        const allLoaded = !(this.isEmpty(props.projects) || this.isEmpty(props.admin_employees));
         const project = props.projects.find(project => project.id === props.id);
+        const allLoaded = !this.isEmpty(props.admin_employees) && project;
         const isManager = project && (project.projectManagerId === props.auth.employee.id || props.auth.employee.role === 'ADMINISTRATOR');
 
         if (allLoaded && !isManager) {
