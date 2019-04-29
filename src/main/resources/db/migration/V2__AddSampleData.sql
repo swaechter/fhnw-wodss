@@ -1,5 +1,3 @@
-delete from allocation ; delete from contract ; delete from project ; delete from employee ;
-
 /* Create an employee account for each team member */
 INSERT INTO employee (id, first_name, last_name, email_address, password_hash, is_active, role) VALUES ('6bae2bc7-9d1e-457d-ac92-dd78e467b7d1', 'Simon', 'Wächter', 'simon.waechter@students.fhnw.ch', '$2a$10$S7G/79ca.oiLxEFOWf3JauDqHJ2c9UautlF65kkY9PpY04Zyo0rIi', true, 'ADMINISTRATOR');
 INSERT INTO employee (id, first_name, last_name, email_address, password_hash, is_active, role) VALUES ('8d7a6f19-676d-42de-8f3a-039588a49c5f', 'Philipp', 'Lüthi', 'philipp.luethi@students.fhnw.ch', '$2a$10$xjyUmWTl4Fnli1EVIc6zmupK.TfQxpzxIn5L2r.ZTmW8khhxKLLXy', true, 'ADMINISTRATOR');
