@@ -61,9 +61,9 @@ export default {
             localStorage.removeItem('token');
             this.$router.push({ name: 'login' });
           }
-          this.loggedInEmployeeName = `${this.loggedInEmployee.firstName} ${this.loggedInEmployee.lastName}`;
-          this.loggedInRole = this.loggedInEmployee.role;
-          this.loggedInId = String(this.loggedInEmployee.id);
+          this.loggedInEmployeeName = `${this.loggedInEmployee.employee.firstName} ${this.loggedInEmployee.employee.lastName}`;
+          this.loggedInRole = this.loggedInEmployee.employee.role;
+          this.loggedInId = String(this.loggedInEmployee.employee.id);
         } catch (error) {
           localStorage.removeItem('token');
           this.$router.push({ name: 'login' });
