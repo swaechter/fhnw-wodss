@@ -64,7 +64,7 @@ public class IntegrationTests {
         expected.setStartDate(LocalDate.of(2019, 2, 1));
         expected.setEndDate(LocalDate.of(2019, 8, 16));
         expected.setName("IP6 Philipp Lüthi & Thibault Gagnaux");
-        expected.setFtePercentage(2L);
+        expected.setFtePercentage(200L);
     }
 
     @BeforeEach
