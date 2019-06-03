@@ -102,7 +102,7 @@ public class EmployeeService {
         }
 
         List<EmployeeDto> administratorEmployees = employeeRepository.getEmployees(Role.ADMINISTRATOR);
-        if (administratorEmployees.size() <= 1 && employee.getRole() != Role.ADMINISTRATOR) {
+        if (administratorEmployees.size() == 1 && administratorEmployees.get(0).isAdministrator() && employee.getRole() != Role.ADMINISTRATOR) {
             throw new InvalidActionException("It's not possible to downgrade the last administrator");
         }
 
